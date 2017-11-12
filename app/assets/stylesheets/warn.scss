@@ -1,0 +1,11 @@
+.centered-flash {
+    position: fixed;
+    z-index: 104;
+    margin-top: 20vh;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.fa-windows-close {
+    cursor: pointer;
+}

@@ -1,0 +1,30 @@
+// Place all the styles related to the dashboard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.dashcontainer {
+    margin-top: 90px;
+}
+body{
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+.menu{
+    //border-radius: 10px;
+   // background: white;
+    padding: 15px;
+}
+.heading-colored{
+    margin-bottom: 5px !important;
+}
+
+.painel_content{
+    margin-top: 2vh;
+}
+
+h4{
+    @extend .heading-colored;
+}
+.gtco-nav{
+     background-color: gray !important;
+}

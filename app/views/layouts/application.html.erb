@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cripto Câmbio &mdash; Exchange</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+</head>
+<body>
+  
+<nav class="gtco-nav" role="navigation">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-2 col-xs-12">
+					<div id="gtco-logo"><a href="index.html">Cpt<em>cambio</em></a></div>
+				</div>
+				<div class="col-xs-10 text-right menu-1 main-nav">
+					<ul>
+						<li class="active">
+							<% if current_user.nil? %>
+								<a href="/" data-nav-section="home">Home</a></li>
+							<% else %>
+								<a href="/dashboard/index" class="external" data-nav-section="home">Home</a></li>
+							<% end %>
+						<li><a href="/exchange" data-nav-section="exchange">Exchange</a></li>
+						<li><a href="#" data-nav-section="practice-areas">Vantagens</a></li>
+						<li><a href="#" data-nav-section="our-team">Missão</a></li>
+						<% if current_user.nil? %>
+						<li class="btn-cta"><a href="/sign_in" class="external" data-nav-section="contact"><span>Login</span></a></li>
+						<li class="btn-cta"><a href="<%= new_user_path %>" class="external" data-nav-section="contact"><span>Cadastro</span></a></li>
+						<% else %>
+						<li class="btn-cta"><a href="/sign_out" class="external" data-nav-section="contact"><span>Logout</span></a></li>
+						<% end %>
+						<!-- For external page link -->
+						<!--<li><a href="http://freehtml5.co/" class="external">External</a></li>-->
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</nav>
+
+<div class="centered-flash">
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>">
+      <%= value %>
+      <i class="fa fa-window-close pointer" aria-hidden="true"></i>
+    </div>
+  <% end %>
+  
+</div>
+  <%= yield %>
+
+
+<div id="footer">
+  
+</div>
+
+</body>
+</html>

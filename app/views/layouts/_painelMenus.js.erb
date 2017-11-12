@@ -1,0 +1,6 @@
+$( ".painel_content" ).html( "<%= escape_javascript( render( :partial => "layouts/#{params[:partial]}") ) %>" );
+
+$('.submit').click(function() {
+    $('.editForm').submit();
+    $('.submit').prop('disabled', true);
+});

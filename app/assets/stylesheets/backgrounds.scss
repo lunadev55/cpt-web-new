@@ -1,0 +1,9 @@
+.gtco-cover{
+    background-image: url(https://static.noticiasaominuto.com/stockimages/1920/naom_59bb7bed18b82.jpg?1509122374);
+}
+body{
+    @extend .gtco-cover;
+}
+.register {
+    background-color: white;
+}

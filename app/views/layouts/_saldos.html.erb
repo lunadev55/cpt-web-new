@@ -1,0 +1,27 @@
+<% if current_user != nil  %>
+					<% @saldos = eval(get_saldo(current_user)) %>
+					<div col="row">
+						<div class="col-md-12"><h5><i class="fa fa-user" aria-hidden="true"></i> - <%= current_user.email %></h5></div>
+					</div>
+					<div col="row">
+						<div class="col-md-12">
+							<h4 class="heading-colored">Seu saldo</h4>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'btc.png' %>" width="20px" height="20px" alt="Bitcoin"> </div>
+							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["BTC"],8).truncate(8) %> BTC</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'litecoin.png' %>" width="20px" height="20px" alt="Litecoin"> </div>
+							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["LTC"],8).truncate(8) %> LTC</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'doge.png' %>" width="20px" height="20px" alt="Dogecoin"> </div>
+							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["DOGE"],5).truncate(5) %> DOGE</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'eth.png' %>" width="20px" height="20px" alt="Ethereum"> </div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["BRL"],2)).truncate(2) %> BRL</div>
+						</div>
+					</div>
+				<% end %>
