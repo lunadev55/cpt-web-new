@@ -1,0 +1,34 @@
+<h2>Overview</h2>
+<div class="well well-lg small-size">Informações gerais sobre sua conta. </div>
+    <div class="row">
+        <div class="col-md-3">
+            
+        </div>
+        <div class="col-md-5 ">
+            <h3>Saques / depósitos ativos</h3>
+            <div class="well well-lg">
+                <div class="row border-0">
+                    <div class="col-md-3 col-xs-3"><span class="border-0">Data</span></div>
+                    <div class="col-md-3 col-xs-3"><span class="border-0">Tipo</span></div>
+                    <div class="col-md-3 col-xs-3"><span class="border-0">Valor</span></div>
+                    <div class="col-md-3 col-xs-3"><span class="border-left-0">Status</span></div>
+                </div>
+                <div class="payments_details">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h4>Informações de login</h4>
+              <div class="well well-lg font-small">
+                <ul>
+                  <li>Qtd. de logins: <%= current_user.login_count %></li>
+                  <li>Última requisição: <%= current_user.last_request_at %></li>
+                  <li>Hora do login atual: <%= current_user.current_login_at %></li>
+                  <li>Último login: <%= current_user.last_login_at %></li>
+                  <li>IP atual: <%= current_user.current_login_ip %></li>
+                  <li>IP do último Login: <%= current_user.last_login_ip %></li>
+                </ul>
+              </div>
+        </div>
+    </div>

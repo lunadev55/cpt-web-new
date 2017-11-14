@@ -1,0 +1,11 @@
+
+<% if !@payments.nil? %>
+    <% @payments.each do |k| %>
+        <div class="row">
+            <div class="col-md-3"><%= k.created_at %></div>
+            <div class="col-md-3"><%= k.label %> <%= k.network %></div>
+            <div class="col-md-3"><%= k.volume %></div>
+            <div class="col-md-3"><%= k.status %></div>
+        </div>
+    <% end %>
+<% end %>

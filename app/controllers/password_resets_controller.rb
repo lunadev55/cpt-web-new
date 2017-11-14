@@ -21,7 +21,7 @@ class PasswordResetsController < ApplicationController
   def update
     @user = User.find_by(perishable_token: params[:id])
     if @user.update_attributes(password_reset_params)
-      flash[:success] = "Password successfully updated!"
+      flash[:success] = "Senha atualizada com sucesso!"
       redirect_to root_path
     else
       render :edit

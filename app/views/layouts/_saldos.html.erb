@@ -21,7 +21,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'eth.png' %>" width="20px" height="20px" alt="Ethereum"> </div>
-							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["BRL"],2)).truncate(2) %> BRL</div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["ETH"],2)).truncate(8) %> ETH </div>
 						</div>
 					</div>
 				<% end %>

@@ -1,1 +1,35 @@
 <h2>Realizar depósito</h2>
+<div class="well well-lg small-size">Formulário para adicionar saldo (depósito). </div>
+<div class="row">
+    <div class="col-md-4 well-lg"> <h3>Como Fundiona?</h3>
+    <ul>
+        <li>Selecione a moeda;</li>
+        <li>Gere um endereço;</li>
+        <li>Envie suas moedas.</li>
+    </ul>
+    <p class="warning well"> Por padrão nós não geramos endereços para os usuários.<br> Selecione uma moeda e clique em "gerar carteira".</p>
+    <p>Em caso de dúvidas, contate o suporte.</p>
+    </div>
+    <div class="col-md-6 well well-lg">
+        <ul class="nav nav-tabs">
+          <li data-currency-options="BTC" class="active pointer deposit_currency"><a>Bitcoin <% if !@total["BTC"].nil? %>(<%= @total["BTC"] %>)<% end %></a></li>
+          <li data-currency-options="LTC" class="pointer deposit_currency"><a>Litecoin <% if !@total["LTC"].nil? %>(<%= @total["LTC"] %>)<% end %></a></li>
+          <li data-currency-options="ETH" class="pointer deposit_currency"><a>Ethereum <% if !@total["ETH"].nil? %>(<%= @total["ETH"] %>)<% end %></a></li>
+          <li data-currency-options="DOGE" class="pointer deposit_currency"><a>Dogecoin <% if !@total["DOGE"].nil? %>(<%= @total["DOGE"] %>)<% end %></a></li>
+        </ul>
+        <div class="well">
+            <%= form_tag nil, remote: true, class: "editForm" %>
+            <%= hidden_field_tag :currency, @currency , class: 'hidden' %>
+            <%= submit_tag "Gerar carteira", class: "submit btn btn-warning" %>
+            </form>
+            <div class="qrcode" align="center">
+                <i class="fa fa-spinner fa-spin fa-5x" aria-hidden="true"></i>
+            </div>
+            <div class="wallets">
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2"></div>
+</div>

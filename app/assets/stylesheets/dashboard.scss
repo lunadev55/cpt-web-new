@@ -4,6 +4,11 @@
 .dashcontainer {
     margin-top: 90px;
 }
+.small-size{
+    padding: 6px;
+    font-size: 80%;
+    width: 30%;
+}
 body{
     background-repeat: no-repeat;
     width: 100%;
@@ -17,7 +22,12 @@ body{
 .heading-colored{
     margin-bottom: 5px !important;
 }
-
+.font-small{
+    font-size: 75%;
+}
+ul{
+    padding-left: 0px !important;
+}
 .painel_content{
     margin-top: 2vh;
 }
@@ -28,3 +38,8 @@ h4{
 .gtco-nav{
      background-color: gray !important;
 }
+.table_head{
+    border-radius: 1px;
+    border-color: black;
+}
+

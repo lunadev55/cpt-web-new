@@ -1,7 +1,16 @@
 <div class="col-md-6">
 <h2>Editar informações cadastrais</h2>
 <%= form_tag nil, class:"editForm", remote: true %>
-
+  <div class="form-group">
+    <%= label_tag :first_name, "Primeiro nome" %>
+    <%= text_field_tag :first_name, @user.first_name, class: 'form-control' %>
+  </div>
+  
+  <div class="form-group">
+    <%= label_tag :last_name, "Último nome" %>
+    <%= text_field_tag :last_name, @user.last_name, class: 'form-control' %>
+  </div>
+  
   <div class="form-group">
     <%= label_tag :email %>
     <%= email_field_tag :email, @user.email, class: 'form-control' %>

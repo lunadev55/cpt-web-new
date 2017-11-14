@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get 'dashboard/layouts/:partial', to: 'pages#partial'
   post '/users/new', to: 'users#create'
   post '/dashboard/layouts/:partial', to: 'jquery#dashboard_options'
+  get '/dashboard/payments_details', to: 'jquery#payments_details'
+  post '/cpay', to: 'jquery#coinpayments_deposit'
+  get '/dashboard/info/getwallets', to: 'jquery#get_wallets'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

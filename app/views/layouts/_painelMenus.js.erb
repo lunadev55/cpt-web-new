@@ -4,3 +4,25 @@ $('.submit').click(function() {
     $('.editForm').submit();
     $('.submit').prop('disabled', true);
 });
+
+$('.deposit_currency').click(function(e) {
+  $('.active').removeClass('active');
+  $('.currency_label').html($(this).data('currency-options'));
+  $('.qrcode').html('<i class="fa fa-spinner fa-spin fa-5x" aria-hidden="true"></i>');
+  $('.hidden').attr('value',$(this).data("currency-options"));
+  $(this).addClass('active');
+  $.ajax({
+    url: "/dashboard/info/getwallets",
+    data: { 
+        "currency": $(this).data('currency-options')
+    },
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+});

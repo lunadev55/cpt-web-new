@@ -5,7 +5,16 @@ $('.centered-flash').html('<% flash.each do |key, value| %><div class="alert ale
     $('.editForm').get(0).reset();
     $.get("/dashboard/layouts/editInfo");
 <% end %>
+$( ".qrcode" ).html( "<%= escape_javascript( render( :text => "Operação de solicitação concluída.<br> Endereço: #{@endereco}".html_safe) ) %>" );
 $('.submit').prop('disabled', false);
+$('.deposit_currency').click(function(e) {
+  
+  $('.active').removeClass('active');
+  $('.currency_label').html($(this).data('currency-options'));
+  $('.hidden').attr('value',$(this).data("currency-options"));
+  $(this).addClass('active');
+});
+
 $( ".fa-window-close" ).click(function() {
   $('.centered-flash').html('');
 });

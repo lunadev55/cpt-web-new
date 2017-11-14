@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     if @user.save
       if isNew != false
         flash[:success] = "Cadastrado com Sucesso!"
+        cpt_transaction_user(@user)
         redirect_to root_path
       else
         flash[:success] = "Sucesso!"
