@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   end
   def get_saldo(usuario)
     route = 'get_saldo'
-    params = {'username'=> usuario.username, 'id_original'=> usuario.id}
+    params = {'id_original'=> usuario.id}
     p a = cpt_push(route,params)
     a
   end
@@ -65,17 +65,16 @@ class ApplicationController < ActionController::Base
   def deliver_deposit_email(user,currency,amount,discounted)
     string_body = ""
     string_body << "Olá "
-    string_body << user.username.capitalize 
+    string_body << "#{user.first_name.capitalize} #{user.last_name.capitalize} "
     string_body << "<br>"
-    string_body << "Obrigado por utilizar nossos serviços!<br> Foi realizado um depósito de #{amount} #{currency} em sua conta.<br>"
-    string_body << "Foi creditado um total de #{discounted} #{currency} em sua conta, de acordo com nossa política."
+    string_body << "Obrigado por utilizar nossos serviços!<br> Foi realizado um depósito líquido de #{discounted} #{currency} em sua conta.<br>"
     string_body << "\n"
     string_body << "Caso queira verificar detalhes do depósito, acesse nosso sistema.<br>Bons negócios!"
     
     p string_body
     
     from = Email.new(email: 'no-reply@cptcambio.com')
-    subject = 'Reset senha - CPT Cambio'
+    subject = 'Depósito - CPT Cambio'
     to = Email.new(email: user.email)
     content = Content.new(type: 'text/html', value: string_body)
     mail = Mail.new(from, subject, to, content)

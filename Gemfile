@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.3'
 
 group :development do
-  gem 'sqlite3'
+  gem 'pg'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'annotate'
@@ -30,6 +30,8 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 gem 'rqrcode-with-patches'
 gem 'rqrcode'
+gem 'kaminari'
+gem 'aws-sdk', '~> 3'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'coinpayments'

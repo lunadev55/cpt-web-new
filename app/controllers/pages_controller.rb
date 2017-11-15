@@ -17,9 +17,11 @@ class PagesController < ApplicationController
           if @total["#{m.currency}"].nil?
               @total["#{m.currency}"] = 1
           else
-              @total["#{m.currency}"] = total["#{m.currency}"] + 1
+              @total["#{m.currency}"] = @total["#{m.currency}"] + 1
           end
       end
+    elsif params[:partial] == "depositHistory"
+      @pays = current_user.payment.where(status: "complete", label: "deposit").page params[:page]
     end
     
     render partial: "layouts/painelMenus"

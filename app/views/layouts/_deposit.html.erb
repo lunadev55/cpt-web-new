@@ -1,5 +1,5 @@
-<h2>Realizar depósito</h2>
-<div class="well well-lg small-size">Formulário para adicionar saldo (depósito). </div>
+<h2>Carteiras</h2>
+<div class="well well-lg small-size">Formulário para adicionar carteiras. </div>
 <div class="row">
     <div class="col-md-4 well-lg"> <h3>Como Fundiona?</h3>
     <ul>
@@ -12,10 +12,10 @@
     </div>
     <div class="col-md-6 well well-lg">
         <ul class="nav nav-tabs">
-          <li data-currency-options="BTC" class="active pointer deposit_currency"><a>Bitcoin <% if !@total["BTC"].nil? %>(<%= @total["BTC"] %>)<% end %></a></li>
-          <li data-currency-options="LTC" class="pointer deposit_currency"><a>Litecoin <% if !@total["LTC"].nil? %>(<%= @total["LTC"] %>)<% end %></a></li>
-          <li data-currency-options="ETH" class="pointer deposit_currency"><a>Ethereum <% if !@total["ETH"].nil? %>(<%= @total["ETH"] %>)<% end %></a></li>
-          <li data-currency-options="DOGE" class="pointer deposit_currency"><a>Dogecoin <% if !@total["DOGE"].nil? %>(<%= @total["DOGE"] %>)<% end %></a></li>
+          <li data-currency-options="BTC" class="active pointer histo_currency"><a class="padding-right-left-wallet">Bitcoin <% if !@total["BTC"].nil? %>(<%= @total["BTC"] %>)<% end %></a></li>
+          <li data-currency-options="LTC" class="pointer histo_currency"><a class="padding-right-left-wallet">Litecoin <% if !@total["LTC"].nil? %>(<%= @total["LTC"] %>)<% end %></a></li>
+          <li data-currency-options="ETH" class="pointer histo_currency"><a class="padding-right-left-wallet">Ethereum <% if !@total["ETH"].nil? %>(<%= @total["ETH"] %>)<% end %></a></li>
+          <li data-currency-options="DOGE" class="pointer histo_currency"><a class="padding-right-left-wallet">Dogecoin <% if !@total["DOGE"].nil? %>(<%= @total["DOGE"] %>)<% end %></a></li>
         </ul>
         <div class="well">
             <%= form_tag nil, remote: true, class: "editForm" %>

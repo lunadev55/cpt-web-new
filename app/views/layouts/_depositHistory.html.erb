@@ -1,1 +1,55 @@
-<h2>Histórico de depósitos</h2>
+<h2>Extrato geral</h2>
+<div class="well well-lg small-size">Consulte abaixo o extrato da sua conta. </div>
+<div class="row">
+    <div class="col-md-11  well">
+        <ul class="nav nav-tabs">
+          <li data-currency-options="ALL" class="active pointer deposit_currency"><a class="padding-right-left-wallet">Todos </a></li>
+          <li data-currency-options="BTC" class="pointer deposit_currency"><a class="padding-right-left-wallet">Bitcoin </a></li>
+          <li data-currency-options="LTC" class="pointer deposit_currency"><a class="padding-right-left-wallet">Litecoin </a></li>
+          <li data-currency-options="ETH" class="pointer deposit_currency"><a class="padding-right-left-wallet">Ethereum </a></li>
+          <li data-currency-options="DOGE" class="pointer deposit_currency"><a class="padding-right-left-wallet">Dogecoin </a></li>
+        </ul>
+        <div class="well row">
+            <%= form_tag nil, remote: true %>
+            <div class="form-group col-md-8 col-xs-8">
+                <%= label_tag :search, "Procurar por Hash" %>
+                <%= text_field_tag :search, nil, placeholder: "Tx_id do blockchain", class: "form-control" %><br>
+                <div class="row">
+                    <div class="col-md-4 col-xs-4"><button type="button" class="btn btn-info">Último mês</button></div>
+                    <div class="col-md-4 col-xs-4"><button type="button" class="btn btn-info">Última semana</button></div>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <%= label_tag :begin, "Início" %>
+                <%= date_field_tag :begin,nil, class: "form-control" %>
+                <%= label_tag :end, "Fim" %>
+                <%= date_field_tag :end,nil, class: "form-control" %><br>
+                <%= submit_tag "Ir", class: "btn btn-secondary" %>
+            </div>
+            </form>
+        </div>
+        <div class="table-responsive">
+        <table width="90%" class="table table-striped">
+            <tr>
+                <th>Status</th>
+                <th>Tipo</th>
+                <th>Volume (bruto)</th>
+                <th>Moeda</th>
+            </tr>
+            <% @pays.each do |k| %>
+            <tr>
+            <div class="result_lines">
+            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
+            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
+            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
+            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
+            </div>
+            </tr>
+            <% end %>
+        </table>
+        </div>
+        
+        <%= paginate @pays %>
+    </div>
+
+</div>

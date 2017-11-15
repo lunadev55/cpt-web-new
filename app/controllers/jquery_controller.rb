@@ -6,8 +6,15 @@ class JqueryController < ApplicationController
             editInfo
         elsif params[:partial] == "deposit"
             deposit
+        elsif params[:partial] == "depositHistory"
+            depositHist
         end
     end
+    
+    def depositHist
+        @pay = current_user.payment.find_by_txid(params[:search])
+    end
+    
     def get_wallets
         if params[:currency].nil?
             params[:currency] = "BTC"
@@ -83,9 +90,9 @@ class JqueryController < ApplicationController
                     if !wallet.nil?
                         p "carteira validada"
                         user = User.find(wallet.user_id)
-                        payment = Payment.find_by_txid(params["tx_id"])
+                        payment = Payment.find_by_txid(params["txn_id"])
                         p payment
-                        if (!user.nil? and payment.nil?)
+                        if payment.nil? && !user.nil? 
                             p "usuario validado"
                             pay = user.payment.new
                             pay.status = "incomplete"
