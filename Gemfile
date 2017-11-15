@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.3'
 
 group :development do
-  gem 'pg'
+  gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'annotate'

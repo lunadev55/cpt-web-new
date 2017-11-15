@@ -10,13 +10,8 @@ default: &default
   timeout: 5000
 
 development:
-  adapter: postgresql
-  encoding: unicode
-  database: cpt-core
-  username: <%= ENV['AMAZON_DB_USERNAME'] %>
-  password: <%= ENV['AMAZON_DB_PASS'] %>
-  host: <%= ENV['AMAZON_DB_LINK'] %>
-  port: <%= ENV['AMAZON_DB_PORT'] %>
+  <<: *default
+  database: db/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -26,10 +21,5 @@ test:
   database: db/test.sqlite3
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: cpt-core
-  username: <%= ENV['AMAZON_DB_USERNAME'] %>
-  password: <%= ENV['AMAZON_DB_PASS'] %>
-  host: <%= ENV['AMAZON_DB_LINK'] %>
-  port: <%= ENV['AMAZON_DB_PORT'] %>
+  <<: *default
+  database: db/production.sqlite3
