@@ -6,7 +6,11 @@ $('.centered-flash').html('<% flash.each do |key, value| %><div class="alert ale
     $.get("/dashboard/layouts/editInfo");
 <% end %>
 $( ".qrcode" ).html( "<%= escape_javascript( render( :text => "Operação de solicitação concluída.<br> Endereço: #{@endereco}".html_safe) ) %>" );
+<% if !(@pays.nil?) %>
+  $( ".result_lines" ).html( "<%= escape_javascript( render( :partial => "layouts/getpayments" )) %>" );
+<% end %>
 $('.submit').prop('disabled', false);
+$('.deposit_submit').prop('disabled', false);
 $('.deposit_currency').click(function(e) {
   
   $('.active').removeClass('active');

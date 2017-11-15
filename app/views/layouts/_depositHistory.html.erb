@@ -12,44 +12,58 @@
         <div class="well row">
             <%= form_tag nil, remote: true %>
             <div class="form-group col-md-8 col-xs-8">
-                <%= label_tag :search, "Procurar por Hash" %>
-                <%= text_field_tag :search, nil, placeholder: "Tx_id do blockchain", class: "form-control" %><br>
+                <h3>Como funciona?</h3>
                 <div class="row">
-                    <div class="col-md-4 col-xs-4"><button type="button" class="btn btn-info">Último mês</button></div>
-                    <div class="col-md-4 col-xs-4"><button type="button" class="btn btn-info">Última semana</button></div>
+                    <div class="col-md-6 col-xs-9 well padding-dep">
+                        <ul class="list-group">
+                            <li class="list-item">Selecione a moeda acima</li>
+                            <li class="list-item">Aplique filtros rápidos</li>
+                            <li class="list-item">Escolha a data de início / fim</li>
+                            <li class="list-item">Clique no item para detalhes</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="row">
+                <div class="col-md-4 col-xs-4"><button type="button" data-date-type="week" class="deposit_date_button btn btn-info">Último mês</button></div>
+                <div class="col-md-4 col-xs-4"><button type="button" data-date-type="month" class="deposit_date_button btn btn-info">Última semana</button></div>
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-4 col-xs-4">
                 <%= label_tag :begin, "Início" %>
-                <%= date_field_tag :begin,nil, class: "form-control" %>
+                <%= date_field_tag :begin,nil, class: "form-control", max: Date.today.to_s %>
                 <%= label_tag :end, "Fim" %>
-                <%= date_field_tag :end,nil, class: "form-control" %><br>
-                <%= submit_tag "Ir", class: "btn btn-secondary" %>
+                <%= date_field_tag :end,nil, class: "form-control", max: Date.today.to_s %><br>
+                <%= submit_tag "Ir", class: "deposit_submit btn btn-secondary" %>
+                <%= hidden_field_tag :currency, "ALL", class: "hidden_cur_op" %>
             </div>
             </form>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive result_lines">
         <table width="90%" class="table table-striped">
             <tr>
                 <th>Status</th>
                 <th>Tipo</th>
                 <th>Volume (bruto)</th>
                 <th>Moeda</th>
+                <th>ID de operação</th>
             </tr>
             <% @pays.each do |k| %>
             <tr>
-            <div class="result_lines">
-            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
-            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
-            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
-            <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
-            </div>
+            
+                <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
+                <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
+                <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
+                <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
+                <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.id %></td>
+            
             </tr>
             <% end %>
         </table>
+        <%= paginate @pays, left: 1, right: 3, remote: true %>
         </div>
         
-        <%= paginate @pays %>
+        
     </div>
 
 </div>

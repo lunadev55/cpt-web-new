@@ -7,19 +7,44 @@ class JqueryController < ApplicationController
         elsif params[:partial] == "deposit"
             deposit
         elsif params[:partial] == "depositHistory"
-            depositHist
+            get_payments
         end
     end
     
-    def depositHist
-        @pay = current_user.payment.find_by_txid(params[:search])
+    def get_payments
+        if params[:end] != nil && params[:end] != ""
+            date_final = Date.parse(params[:end])
+        else
+            date_final = Date.today.to_s
+        end
+        if params[:dateInicial] == "week"
+            data_inicial = (Date.today-7).to_s
+        elsif params[:dateInicial] == "month"
+            data_inicial = (Date.today-30).to_s
+        elsif params[:begin] != nil && params[:begin] != ""
+            data_inicial = Date.parse(params[:begin])
+        else
+            data_inicial = Date.today.to_s
+        end
+        if params[:currency] == "ALL"
+            if params[:dateInicial] == nil && params[:begin] == nil
+                @pays = current_user.payment.all.page params[:page]
+            else
+                @pays = current_user.payment.all.where('created_at BETWEEN ? AND ?', data_inicial.to_s, date_final.to_s).page params[:page]
+            end
+        else
+            if params[:dateInicial] == nil && params[:begin] == nil
+                @pays = current_user.payment.where(network: params[:currency]).page params[:page]
+            else
+                @pays = current_user.payment.all.where('network = ? AND created_at BETWEEN ? AND ?', params[:currency], data_inicial.to_s, date_final.to_s).page params[:page]
+            end
+        end
     end
-    
     def get_wallets
         if params[:currency].nil?
             params[:currency] = "BTC"
         end
-        @wallet = current_user.wallet.where(currency: params[:currency])
+        @wallet = current_user.wallet.where(currency: params[:currency]).page params[:page]
         p @wallet.nil?
     end
     def editInfo

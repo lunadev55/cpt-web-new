@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/dashboard/payments_details', to: 'jquery#payments_details'
   post '/cpay', to: 'jquery#coinpayments_deposit'
   get '/dashboard/info/getwallets', to: 'jquery#get_wallets'
+  get '/dashboard/info/getpayments', to: 'jquery#get_payments'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

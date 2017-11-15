@@ -1,0 +1,29 @@
+<table width="90%" class="table table-striped">
+                    <tr>
+                        <th>Status</th>
+                        <th>Tipo</th>
+                        <th>Volume (bruto)</th>
+                        <th>Moeda</th>
+                        <th>ID de operação</th>
+                    </tr>
+            <% if @pays.empty? %>
+                <tr class="info">
+                    <td class="info" colspan="5">Você Não possui extratos nessa modalidade!</td>
+                </tr>
+            </table>
+            <% else %>
+                
+                    <% @pays.each do |k| %>
+                    <tr>
+                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
+                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
+                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
+                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
+                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.id %></td>
+                    </tr>
+                    <% end %>
+                </table>
+                <%= paginate @pays, left: 1, right: 3, remote: true %>
+            <% end %>
+            
+            

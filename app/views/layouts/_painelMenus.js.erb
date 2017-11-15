@@ -1,12 +1,63 @@
 $( ".painel_content" ).html( "<%= escape_javascript( render( :partial => "layouts/#{params[:partial]}") ) %>" );
 
 $('.submit').click(function() {
+    $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
     $('.editForm').submit();
     $('.submit').prop('disabled', true);
 });
-$('.deposit_currency').click(function(e) {
-  console.log($(this).data('currency-options'));
+
+$('.deposit_submit').click(function() {
+    $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
+    $('.submit').prop('disabled', true);
 });
+
+$('.deposit_date_button').click(function(e) {
+  $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
+  option = $('.hidden_cur_op').prop('value');
+  date = $(this).data('date-type');
+  $.ajax({
+    url: "/dashboard/info/getpayments",
+    data: { 
+        "currency": option,
+        "dateInicial": date
+    },
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+
+});
+
+$('.deposit_currency').click(function(e) {
+  option = ($(this).data('currency-options'));
+  $('.active').removeClass('active');
+  $(this).addClass('active');
+  $('.hidden_cur_op').prop('value',option);
+  $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
+  $.ajax({
+    url: "/dashboard/info/getpayments",
+    data: { 
+        "currency": $(this).data('currency-options')
+    },
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+  
+  
+});
+
+
 $('.histo_currency').click(function(e) {
   $('.active').removeClass('active');
   $('.currency_label').html($(this).data('currency-options'));
