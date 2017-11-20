@@ -2,6 +2,8 @@ class PagesController < ApplicationController
   def index
 
   end
+  def send_coin_confirmation
+  end
   def partial
     if params[:partial] == "editInfo"
       if current_user.nil?
@@ -21,7 +23,11 @@ class PagesController < ApplicationController
           end
       end
     elsif params[:partial] == "depositHistory"
-      @pays = current_user.payment.where(status: "complete", label: "deposit").page params[:page]
+      @pays = current_user.payment.all.order(created_at: :desc).page params[:page]
+    elsif params[:partial] == "withdrawal"
+      @currency = "BTC"
+      @minimum = 0.001
+      @tax = 0.0007
     end
     
     render partial: "layouts/painelMenus"

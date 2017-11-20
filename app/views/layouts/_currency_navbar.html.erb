@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs">
+  <li data-currency-options="BTC" data-route="<%= route %>" class="active pointer <%= classe %>"><a class="padding-right-left-wallet">Bitcoin <% if !(btc.nil?) %>(<%= btc %>)<% end %></a></li>
+  <li data-currency-options="LTC" data-route="<%= route %>" class="pointer <%= classe %>"><a class="padding-right-left-wallet">Litecoin <% if !(ltc.nil?) %>(<%= ltc %>)<% end %> </a></li>
+  <li data-currency-options="ETH" data-route="<%= route %>" class="pointer <%= classe %>"><a class="padding-right-left-wallet">Ethereum <% if !(eth.nil?) %>(<%= eth %>)<% end %></a></li>
+  <li data-currency-options="DOGE" data-route="<%= route %>" class="pointer <%= classe %>"><a class="padding-right-left-wallet">Dogecoin <% if !(doge.nil?) %>(<%= doge %>)<% end %></a></li>
+</ul>

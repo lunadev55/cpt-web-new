@@ -1,0 +1,12 @@
+$( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
+$( ".withdrawal_form_element")[0].reset();
+$(".withdrawal_button").prop('disabled', false);
+$(".comission").html("");
+$(".total").html("");
+
+
+$('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
+
+$( ".fa-window-close" ).click(function() {
+  $('.centered-flash').html('');
+});

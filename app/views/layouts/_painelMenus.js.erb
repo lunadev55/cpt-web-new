@@ -1,15 +1,33 @@
 $( ".painel_content" ).html( "<%= escape_javascript( render( :partial => "layouts/#{params[:partial]}") ) %>" );
-
+$( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
 $('.submit').click(function() {
     $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
     $('.editForm').submit();
     $('.submit').prop('disabled', true);
 });
 
+$("tr[data-payment-detail]").click(function() {
+    option = ($(this).data('payment-detail'));
+    $('.modal-body').html('<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>');
+    $.ajax({
+    url: "/dashboard/info/getpayment/" + option,
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+});
+
 $('.deposit_submit').click(function() {
     $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
     $('.submit').prop('disabled', true);
 });
+
+
 
 $('.deposit_date_button').click(function(e) {
   $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
@@ -79,3 +97,74 @@ $('.histo_currency').click(function(e) {
     }
   });
 });
+
+
+// FUNÇÕES DO FORMULÁRIO DE SAQUE
+
+// Definir moeda
+$('.withdrawal_get').click(function() {
+    $('.active').removeClass('active');
+    $(this).addClass('active');
+    option = ($(this).data('route'));
+    currency = ($(this).data('currency-options'));
+    $('.hidden_cur_withd').prop("value",currency);
+    $.ajax({
+      url: (option + '/' + currency),
+      cache: false,
+      type: "GET",
+      success: function(response) {
+  
+      },
+      error: function(xhr) {
+  
+      }
+  });
+});
+
+
+// Cálculo de valores 
+$( ".amount_input" ).keyup(function() {
+  this.value = this.value.replace(/^\./, "");
+  this.value = this.value.replace(',','.');
+  this.value = this.value.replace(/[^0-9\,.]/g,'');
+  quantity = parseFloat($(this).val().replace(",","."));
+  discount = (quantity * 0.01).toFixed(8);
+  currency = $(".hidden_cur_withd").prop("value");
+  total = (quantity - discount).toFixed(8);
+  
+  $(".comission").html(discount + " " + currency)
+  $(".total").html(total + " " + currency)
+});
+
+// Validação de input
+$(".amount_input").change(function() {
+  quantity = parseFloat($(this).val());
+  val = $(this).val();
+  if (quantity == NaN){
+  
+  } else {
+    if (val != '.0')
+      if (countDecimals(quantity) == 0)
+        this.value = this.value + '.0'
+  }
+});
+
+
+// Validação de dados do form
+$( ".withdrawal_form_element" ).submit(function( event ) {
+  input_val = parseFloat($('.amount_input').val());
+  minimal = parseFloat($('.withdrawal_minimal').html());
+  if (input_val < minimal ) {
+    alert("Utilize valores acima do saque mínimo.");
+    return false 
+  }
+  $(".withdrawal_button").prop('disabled', true);
+  return true
+});
+
+// Contagem de casas decimais de um "value"
+countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+}

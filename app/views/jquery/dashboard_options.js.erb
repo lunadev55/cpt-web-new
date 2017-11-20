@@ -22,3 +22,18 @@ $('.deposit_currency').click(function(e) {
 $( ".fa-window-close" ).click(function() {
   $('.centered-flash').html('');
 });
+
+$("tr[data-payment-detail]").click(function() {
+    option = ($(this).data('payment-detail'));
+    $.ajax({
+    url: "/dashboard/info/getpayment/" + option,
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+});

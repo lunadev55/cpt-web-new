@@ -1,37 +1,44 @@
 <%= form_for @user do |f| %>
   <%= render 'shared/errors', object: @user %>
-
+  <div class="form-group">
+    <%= f.label :first_name, "Primeiro nome" %>
+    <%= f.text_field :first_name, value: @user.first_name, class: 'form-control', required: true %>
+  </div>
+  <div class="form-group">
+    <%= f.label :last_name, "Último nome" %>
+    <%= f.text_field :last_name, value: @user.last_name, class: 'form-control', required: true %>
+  </div>
   <div class="form-group">
     <%= f.label :email %>
-    <%= f.email_field :email, value: @user.email, class: 'form-control' %>
+    <%= f.email_field :email, value: @user.email, class: 'form-control', required: true %>
   </div>
   
   <div class="form-group">
     <%= f.label :username %>
-    <%= f.text_field :username,  value: @user.username, class: 'form-control' %>
+    <%= f.text_field :username,  value: @user.username, class: 'form-control', required: true %>
   </div>
   
   
   <div class="form-group">
     <%= f.label :birth %>
-    <%= f.date_field :birth, value: @user.birth, class: 'form-control' %>
+    <%= f.date_field :birth, value: @user.birth, class: 'form-control', required: true %>
   </div>
   
   <div class="form-group">
     <%= f.label :document %>
-    <%= f.text_field :document, value: @user.document, class: 'form-control' %>
+    <%= f.text_field :document, value: @user.document, class: 'form-control', required: true %>
   </div>
   <div class="form-group">
     Insira sua senha para confirmar modificações:
   </div>
   <div class="form-group">
     <%= f.label :password, "Senha" %>
-    <%= f.password_field :password, class: 'form-control' %>
+    <%= f.password_field :password, class: 'form-control', required: true %>
   </div>
 
   <div class="form-group">
     <%= f.label :password_confirmation, "Confirme a senha" %>
-    <%= f.password_field :password_confirmation, class: 'form-control' %>
+    <%= f.password_field :password_confirmation, class: 'form-control', required: true %>
   </div>
 
   <%= f.submit 'Submeter', class: 'btn btn-primary btn-lg' %>

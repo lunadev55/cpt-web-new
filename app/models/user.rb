@@ -1,6 +1,11 @@
 class User < ActiveRecord::Base
   has_many :wallet
   has_many :payment
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :email, presence: true
+  validates :username, presence: true
+  
   
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512

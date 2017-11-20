@@ -11,12 +11,7 @@
     <p>Em caso de dúvidas, contate o suporte.</p>
     </div>
     <div class="col-md-6 well well-lg">
-        <ul class="nav nav-tabs">
-          <li data-currency-options="BTC" class="active pointer histo_currency"><a class="padding-right-left-wallet">Bitcoin <% if !@total["BTC"].nil? %>(<%= @total["BTC"] %>)<% end %></a></li>
-          <li data-currency-options="LTC" class="pointer histo_currency"><a class="padding-right-left-wallet">Litecoin <% if !@total["LTC"].nil? %>(<%= @total["LTC"] %>)<% end %></a></li>
-          <li data-currency-options="ETH" class="pointer histo_currency"><a class="padding-right-left-wallet">Ethereum <% if !@total["ETH"].nil? %>(<%= @total["ETH"] %>)<% end %></a></li>
-          <li data-currency-options="DOGE" class="pointer histo_currency"><a class="padding-right-left-wallet">Dogecoin <% if !@total["DOGE"].nil? %>(<%= @total["DOGE"] %>)<% end %></a></li>
-        </ul>
+        <%= render :partial => 'layouts/currency_navbar', :locals => { :classe => "histo_currency", route: nil,  :btc => @total["BTC"], :ltc => @total["LTC"], :eth => @total["ETH"], :doge => @total["DOGE"] } %>
         <div class="well">
             <%= form_tag nil, remote: true, class: "editForm" %>
             <%= hidden_field_tag :currency, @currency , class: 'hidden' %>

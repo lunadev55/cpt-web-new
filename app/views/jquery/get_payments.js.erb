@@ -1,1 +1,15 @@
 $( ".result_lines" ).html( "<%= escape_javascript( render( :partial => "layouts/getpayments") ) %>" );
+$("tr[data-payment-detail]").click(function() {
+    option = ($(this).data('payment-detail'));
+    $.ajax({
+    url: "/dashboard/info/getpayment/" + option,
+    cache: false,
+    type: "GET",
+    success: function(response) {
+
+    },
+    error: function(xhr) {
+
+    }
+  });
+});

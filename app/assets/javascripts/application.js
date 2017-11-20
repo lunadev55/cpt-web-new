@@ -13,4 +13,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require warn
-//= require dashboard 
+//= require generic

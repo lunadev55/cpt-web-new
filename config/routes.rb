@@ -12,9 +12,17 @@ Rails.application.routes.draw do
   post '/users/new', to: 'users#create'
   post '/dashboard/layouts/:partial', to: 'jquery#dashboard_options'
   get '/dashboard/payments_details', to: 'jquery#payments_details'
+  
   post '/cpay', to: 'jquery#coinpayments_deposit'
+  
   get '/dashboard/info/getwallets', to: 'jquery#get_wallets'
   get '/dashboard/info/getpayments', to: 'jquery#get_payments'
+  get '/dashboard/info/getpayment/:id', to: 'jquery#render_payment'
+  get '/dashboard/info/get_withdrawal_details/:id', to: 'jquery#render_withdrawal_details'
+  
+  post '/dashboard/withdrawal/cancel/:id', to: 'jquery#cancel_withdrawal'
+  
+  get '/withdrawal/form/:currency', to: 'jquery#withdrawal_get'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,3 +1,4 @@
+
 <table width="90%" class="table table-striped">
                     <tr>
                         <th>Status</th>
@@ -14,16 +15,34 @@
             <% else %>
                 
                     <% @pays.each do |k| %>
-                    <tr>
-                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
-                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
-                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
-                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
-                        <td class="<% if k.status = "complete" %>success<% elsif k.status = "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.id %></td>
+                        <tr data-toggle="modal" data-target="#payModal" class="pointer hover-link" data-payment-detail="<%= k.id %>">
+                        <td class="<% if k.status == "complete" %>success<% elsif k.status == "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.status.capitalize %></td>
+                        <td class="<% if k.status == "complete" %>success<% elsif k.status == "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.label.capitalize %></td>
+                        <td class="<% if k.status == "complete" %>success<% elsif k.status == "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.volume %></td>
+                        <td class="<% if k.status == "complete" %>success<% elsif k.status == "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.network %></td>
+                        <td class="<% if k.status == "complete" %>success<% elsif k.status == "incomplete" %>warning<% elsif k.status == "canceled" %>danger<% end %>"><%= k.id %></td>
                     </tr>
                     <% end %>
                 </table>
                 <%= paginate @pays, left: 1, right: 3, remote: true %>
+                <!-- Modal -->
+                <div id="payModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Detalhes da operação: <b class="operation_id"></b></h4>
+                      </div>
+                      <div class="modal-body">
+                        <i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             <% end %>
             
             

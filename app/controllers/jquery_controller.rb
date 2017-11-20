@@ -1,6 +1,6 @@
 class JqueryController < ApplicationController
     require 'rubygems'
-    skip_before_action :verify_authenticity_token, :only => [:coinpayments_deposit]
+    skip_before_action :verify_authenticity_token, :only => [:coinpayments_deposit, :cancel_withdrawal]
     def dashboard_options
         if params[:partial] == "editInfo"
             editInfo
@@ -8,14 +8,79 @@ class JqueryController < ApplicationController
             deposit
         elsif params[:partial] == "depositHistory"
             get_payments
+        elsif params[:partial] == "withdrawal"
+            withdrawal_coin
         end
     end
+    
+    def cancel_withdrawal
+        payment = current_user.payment.find(params[:id])
+        if !payment.nil?
+            if payment.status == "incomplete"
+                payment.status = "canceled"
+                payment.save
+                add_saldo(current_user,payment.network,payment.volume,"withdrawal_cancel")
+                flash[:success] = "Saque cancelado. "
+            else
+                flash[:success] = "Saque já realizado ou cancelado. "
+            end
+        else
+            flash[:success] = "Operação não encontrada. "
+        end
+    end
+    
+    def optax(currency)
+        case currency
+        when "BTC"
+            return 0.0007
+        when "ETH"
+            return 0.0007
+        when "LTC"
+            return 0.001
+        when "DOGE"
+            return 1
+        when "BRL"
+            return 0
+        end
+    end
+    
+    def withdrawal_coin
+        payment = current_user.payment.new
+        payment.network = params[:currency]
+        payment.endereco = params[:destiny]
+        payment.volume = params[:amount]
+        saldo = eval(get_saldo(current_user))
+        if saldo["#{payment.network}"] > BigDecimal(payment.volume,8)
+            payment.label = "Saque"
+            payment.status = "incomplete"
+            payment.op_id = add_saldo(current_user,payment.network,payment.volume,"withdrawal")
+            payment.save
+            comission = (BigDecimal(payment.volume,8) * 0.01).truncate(8)
+            text = "Olá #{current_user.first_name.capitalize} #{current_user.last_name.capitalize}. <br>
+            Você iniciou um processo de <b>saque</b> em sua conta na Cripto Câmbio Exchange.<br>
+            Verifique abaixo os dados do saque e clique no link abaixo para confirmar:<br>
+            Nota: <b>Se você não iniciou este processo você deve fazer uma recuperação de senha imediata, pois quem o iniciou tem sua senha correta.</b><br>
+            Volume total: #{payment.volume} <b>#{payment.network}</b><br>
+            Comissão: #{comission.to_s}<br>
+            Taxa de operação: #{optax(payment.network)}<br>
+            Volume a sacar:
+            "
+            deliver_generic_email(current_user,text,"Confirmação de saque")
+            flash[:success] = "Pedido de saque realizado! Verifique seu email. "
+        else
+            flash[:success] = "Saldo Insuficiente! "
+        end
+        render 'withdrawal_form_result'
+    end
+    
+    
+    
     
     def get_payments
         if params[:end] != nil && params[:end] != ""
             date_final = Date.parse(params[:end])
         else
-            date_final = Date.today.to_s
+            date_final = Time.now.to_s
         end
         if params[:dateInicial] == "week"
             data_inicial = (Date.today-7).to_s
@@ -28,15 +93,15 @@ class JqueryController < ApplicationController
         end
         if params[:currency] == "ALL"
             if params[:dateInicial] == nil && params[:begin] == nil
-                @pays = current_user.payment.all.page params[:page]
+                @pays = current_user.payment.all.order(created_at: :desc).page params[:page]
             else
-                @pays = current_user.payment.all.where('created_at BETWEEN ? AND ?', data_inicial.to_s, date_final.to_s).page params[:page]
+                @pays = current_user.payment.where('created_at BETWEEN ? AND ?', data_inicial.to_s, date_final.to_s).order(created_at: :desc).page params[:page]
             end
         else
             if params[:dateInicial] == nil && params[:begin] == nil
-                @pays = current_user.payment.where(network: params[:currency]).page params[:page]
+                @pays = current_user.payment.where(network: params[:currency]).order(created_at: :desc).page params[:page]
             else
-                @pays = current_user.payment.all.where('network = ? AND created_at BETWEEN ? AND ?', params[:currency], data_inicial.to_s, date_final.to_s).page params[:page]
+                @pays = current_user.payment.where('network = ? AND created_at BETWEEN ? AND ?', params[:currency], data_inicial.to_s, date_final.to_s).order(created_at: :desc).page params[:page]
             end
         end
     end
@@ -132,7 +197,6 @@ class JqueryController < ApplicationController
                         else #pagamento já existe
                             if payment.status == "incomplete" && payment.op_id == nil #realizar update
                                 pay_discount = BigDecimal(payment.volume,8) * BigDecimal(0.01,2)
-                                p pay_discount.to_string
                                 discounted = (BigDecimal(payment.volume,8) - pay_discount).truncate(8)
                                 savePayment(payment,discounted,user)
                             end
@@ -146,17 +210,44 @@ class JqueryController < ApplicationController
     
     def savePayment(pay,discounted,user)
         if pay.save
-            pay.op_id = add_saldo(user,pay.network,discounted,"deposit")
-            if pay.op_id != nil
-                p "saldo adicionado"
+            if pay.op_id == nil
+                pay.op_id = add_saldo(user,pay.network,discounted,"deposit")
+                pay.status = "complete"
+                pay.save
                 deliver_deposit_email(user,pay.network,pay.volume,discounted)
+                
+            else
                 pay.status = "complete"
                 pay.save
             end
         end
     end
-    
+    def render_payment
+        @payment = current_user.payment.find(params[:id])
+        @href = blocker_link(@payment.network)
+    end
+    def render_withdrawal_details
+        @payment = current_user.payment.find(params[:id])
+    end
+    def withdrawal_get
+        @currency = params[:currency]
+        if @currency == "LTC"
+            @minimum = 0.01
+            @tax = 0.001
+        elsif @currency == "BTC"
+            @minimum = 0.001
+            @tax = 0.0007
+        elsif @currency == "DOGE"
+            @minimum = 5
+            @tax = 1
+        elsif @currency == "ETH"
+            @minimum = 0.001
+            @tax = 0.0007
+        elsif @currency == "BRL"
+            @minimum = 30
+        end
+    end
     def payments_details
-        @payments = Payment.where("status = :status_type AND user_id = :user",  {status_type: "open", user: current_user.id })
+        @payments = Payment.where("status = :status_type AND user_id = :user",  {status_type: "incomplete", user: current_user.id }).page params[:page]
     end
 end

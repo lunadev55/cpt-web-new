@@ -1,1 +1,61 @@
 <h2>Realizar transferência</h2>
+<div class="well well-lg small-size">Utilize esta sessão para realizar saques. </div>
+<div class="row">
+    <div class="col-md-10 col-xs-11 well">
+        <div class="row">
+            <div class="col-md-6 col-xs-8 ">
+                <div class="row">
+                    <%= render :partial => 'layouts/currency_navbar', :locals => { :classe => "withdrawal_get", route: "/withdrawal/form", :btc => nil, ltc: nil, doge: nil, eth: nil } %>
+                    <div class="col-md-8">
+                        <div class="withdrawal_form">
+                        <%= render :partial => 'layouts/withdrawal_get' %>
+                        </div>
+                        <%= form_tag nil, remote: true, class: "withdrawal_form_element" %>
+                        <%= hidden_field_tag :currency, "BTC", class: "hidden_cur_withd"%><br>
+                        <div class="form-group">
+                            <h4><%= label_tag :amount, "Quantidade" %></h4>
+                            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input form-control" %>
+                        </div>
+                        <div class="form-group">
+                            <h4><%= label_tag :destiny, "Destino" %></h4>
+                            <%= text_field_tag :destiny, nil, placeholder: "Carteira de destino", required: true, class: "wallet_input form-control" %>
+                        </div>
+                        <div class="form-group">
+                            <h6>Comissão (1%): <b class="comission"></b></h6>
+                        </div>
+                        <div class="form-group">
+                            <h6>Total (Comissão + taxa): <b class="total"></b></h6>
+                        </div>
+                        <div class="form-group">
+                            <%= submit_tag "Enviar", class: "form-control withdrawal_button" %>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-1">
+                
+            </div>
+            <div class="col-md-4 col-xs-4 well">
+                <div class="padding-wthdr">
+                    <h4>Como funciona?</h4>
+                    <h6>
+                    <ul>
+                        <li> Escolha a moeda nas abas ao lado </li>
+                        <li> Digite o montante desejado</li>
+                        <li> Confirme os dados </li>
+                        <li> Clique no link enviado para seu email </li>
+                    </ul>
+                    </h6>
+                </div>
+                <h4>Comissão:</h4>
+                <p>Todos os depósitos e saques na nossa plataforma tem uma comissão de <b>1%</b> do valor total.</p>
+                <h4>Saque mínimo:</h4>
+                <p>Varia de acordo com a moeda. Selecione a moeda ao lado e verifique o valor mínimo de saque.</p>
+                <h4>Taxa de operação:</h4>
+                <p><b>Esta é uma taxa automática</b> a "Cripto Câmbio Exchange" não recebe nenhum montante deste valor.</p> 
+                <p> É uma taxa utilizada para os mineradores que irão validar sua transação no blockchain.</p>
+            </div>
+        </div>
+    </div>
+</div>

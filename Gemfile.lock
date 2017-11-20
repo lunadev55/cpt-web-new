@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/lian/bitcoin-ruby
+  revision: d51c67ff4e65a43cd804ef2e417510b0d220eef4
+  branch: master
+  specs:
+    bitcoin-ruby (0.0.12)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -650,6 +657,7 @@ DEPENDENCIES
   aws-sdk (~> 3)
   better_errors
   binding_of_caller
+  bitcoin-ruby!
   bootstrap-sass
   coffee-rails (~> 4.1.0)
   coinpayments

@@ -1,0 +1,19 @@
+$('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
+$('#payModal').modal('hide');
+$.ajax({
+    url: "payments_details",
+    cache: false,
+    type: "GET",
+    success: function(response) {
+    
+    },
+    error: function(xhr) {
+        
+    }
+});
+
+$( ".fa-window-close" ).click(function() {
+  $('.centered-flash').html('');
+});
+
+$( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );

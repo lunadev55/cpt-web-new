@@ -2,10 +2,14 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link
   require 'sendgrid-ruby'
   include SendGrid 
   private
+
+  def blocker_link(network)
+    ENV["LINK#{network}"]
+  end
 
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
@@ -62,6 +66,19 @@ class ApplicationController < ActionController::Base
     params = {'currency'=> currency, 'type'=> type, 'user_id'=> user_id, 'debit_credit'=> debit_credit, 'amount'=> amount}
     cpt_push(route,params)
   end
+  def deliver_generic_email(user,text,title)
+    string_body = text
+    from = Email.new(email: 'no-reply@cptcambio.com')
+    subject = "#{title} - CPT Cambio"
+    to = Email.new(email: user.email)
+    content = Content.new(type: 'text/html', value: string_body)
+    mail = Mail.new(from, subject, to, content)
+
+    sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+    response = sg.client.mail._("send").post(request_body: mail.to_json)
+    puts response.status_code
+  end
+  
   def deliver_deposit_email(user,currency,amount,discounted)
     string_body = ""
     string_body << "Olá "
