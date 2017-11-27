@@ -1,1 +1,53 @@
 <h2>Negócios</h2>
+<div class="well well-lg small-size">Utilize esta sessão para negociar suas moedas. </div>
+<div class="well">
+    <div class="row" align="center">
+        <div class="col-md-11">
+            <ul class="nav nav-tabs">
+                <% EXCHANGE_PARES.each do |pair| %>
+                <li <% if pair == "BTC / LTC" %>id="inicial"<% end %> data-pair-option="<%= pair %>" class="pointer exchange-option <% if pair == "BTC / LTC" %> active <% end %>"><a class="padding-right-left-wallet"><%= pair %></a></li>
+                <% end %>
+            </ul>
+        </div>
+    </div>
+    <div class="row exchange-tables">
+        
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url: ("/exchange/pair/BTC/LTC"),
+            cache: false,
+            type: "GET",
+            success: function(response) {
+                
+            },
+            error: function(xhr) {
+                
+            }
+            });
+    })
+    $('li[data-pair-option]').click(function() {
+        $('#inicial').attr("id","");
+        $(this).attr("id","inicial");
+        $('.active').removeClass("active");
+        $(this).addClass("active");
+        option = $(this).data('pair-option').replace(/ /g, '');
+        $.ajax({
+            url: ("/exchange/pair/" + option),
+            cache: false,
+            type: "GET",
+            success: function(response) {
+                
+            },
+            error: function(xhr) {
+                
+            }
+            });
+    });
+</script>

@@ -23,6 +23,13 @@ Rails.application.routes.draw do
   post '/dashboard/withdrawal/cancel/:id', to: 'jquery#cancel_withdrawal'
   
   get '/withdrawal/form/:currency', to: 'jquery#withdrawal_get'
+  get '/withdrawal/:code', to: 'pages#withdrawal'
+  
+  get '/api/is_valid_address/:currency/:address', to: 'api#test_address'
+  
+  get '/exchange/pair/:coin1/:coin2', to: 'exchange#render_orders'
+  post '/exchange/pair/:coin1/:coin2', to: 'exchange#create_order'
+  post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

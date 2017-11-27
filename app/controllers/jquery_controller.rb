@@ -18,6 +18,7 @@ class JqueryController < ApplicationController
         if !payment.nil?
             if payment.status == "incomplete"
                 payment.status = "canceled"
+                payment.hex = ""
                 payment.save
                 add_saldo(current_user,payment.network,payment.volume,"withdrawal_cancel")
                 flash[:success] = "Saque cancelado. "
@@ -29,41 +30,32 @@ class JqueryController < ApplicationController
         end
     end
     
-    def optax(currency)
-        case currency
-        when "BTC"
-            return 0.0007
-        when "ETH"
-            return 0.0007
-        when "LTC"
-            return 0.001
-        when "DOGE"
-            return 1
-        when "BRL"
-            return 0
-        end
-    end
+    
     
     def withdrawal_coin
         payment = current_user.payment.new
         payment.network = params[:currency]
         payment.endereco = params[:destiny]
         payment.volume = params[:amount]
+        payment.description = params[:description]
         saldo = eval(get_saldo(current_user))
         if saldo["#{payment.network}"] > BigDecimal(payment.volume,8)
             payment.label = "Saque"
             payment.status = "incomplete"
+            payment.hex = SecureRandom.hex
             payment.op_id = add_saldo(current_user,payment.network,payment.volume,"withdrawal")
             payment.save
             comission = (BigDecimal(payment.volume,8) * 0.01).truncate(8)
+            discounted = BigDecimal(payment.volume,8) - comission - optax(payment.network)
             text = "Olá #{current_user.first_name.capitalize} #{current_user.last_name.capitalize}. <br>
             Você iniciou um processo de <b>saque</b> em sua conta na Cripto Câmbio Exchange.<br>
             Verifique abaixo os dados do saque e clique no link abaixo para confirmar:<br>
             Nota: <b>Se você não iniciou este processo você deve fazer uma recuperação de senha imediata, pois quem o iniciou tem sua senha correta.</b><br>
-            Volume total: #{payment.volume} <b>#{payment.network}</b><br>
-            Comissão: #{comission.to_s}<br>
-            Taxa de operação: #{optax(payment.network)}<br>
-            Volume a sacar:
+            Volume total: <b> #{payment.volume} #{payment.network}</b><br>
+            Comissão: <b>#{comission.to_s}</b><br>
+            Taxa de operação: <b>#{optax(payment.network)}</b><br>
+            Volume a sacar:<b> #{discounted}</b><br>
+            <a href='http://#{ENV['BASE_URL']}/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
             "
             deliver_generic_email(current_user,text,"Confirmação de saque")
             flash[:success] = "Pedido de saque realizado! Verifique seu email. "
@@ -241,8 +233,8 @@ class JqueryController < ApplicationController
             @minimum = 5
             @tax = 1
         elsif @currency == "ETH"
-            @minimum = 0.001
-            @tax = 0.0007
+            @minimum = 0.002
+            @tax = 0.0012
         elsif @currency == "BRL"
             @minimum = 30
         end

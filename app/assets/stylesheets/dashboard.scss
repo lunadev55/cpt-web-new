@@ -7,6 +7,15 @@
 .hover-link:hover {
     color: black !important;
 }
+.table{
+    margin-top: 20px;
+}
+.margin-exchange{
+    margin-top: 20px;
+}
+.text-center{
+    text-align: center;
+}
 .small-size{
     padding: 6px;
     font-size: 80%;
@@ -56,3 +65,14 @@ h4{
     padding-left: 50px;
 }
 
+.non-pade-right{
+    padding-right: 0px;
+}
+
+.non-pade-left{
+    padding-left: 0px;
+}
+
+.btn-danger{
+    padding: 5px !important;
+}

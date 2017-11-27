@@ -1,7 +1,7 @@
 Tipo: <b><%= @payment.label %></b><br>
 Valor total da transação: <b><%= @payment.volume %> <%= @payment.network %></b><br>
 Comissão da transação: <b><%= b = BigDecimal(@payment.volume,8) * 0.01 %> <%= @payment.network %></b><br>
-Valor total a ser debitado em sua conta: <b><%= BigDecimal(@payment.volume,8) - b %> <%= @payment.network %></b><br>
+Valor total a ser descontado em sua conta: <b><%= BigDecimal(@payment.volume,8) - b - optax(@payment.network) %> <%= @payment.network %></b><br>
 <% if @payment.status == "incomplete"  %>
 Link para cancelar saque: <button type="button" data-pay-id="<%= @payment.id %>" class="btn btn-danger cancel-withdrawal">Cancelar</button>
 <% end %>

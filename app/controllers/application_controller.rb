@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax
   require 'sendgrid-ruby'
   include SendGrid 
   private
@@ -10,7 +10,22 @@ class ApplicationController < ActionController::Base
   def blocker_link(network)
     ENV["LINK#{network}"]
   end
-
+  
+  def optax(currency)
+        case currency
+        when "BTC"
+            return 0.0007
+        when "ETH"
+            return 0.0012
+        when "LTC"
+            return 0.001
+        when "DOGE"
+            return 1
+        when "BRL"
+            return 0
+        end
+  end
+  
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
     @current_user_session = UserSession.find
@@ -36,7 +51,6 @@ class ApplicationController < ActionController::Base
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = (url.scheme == "https")
     response = http.request(req)
-    p response.body
     response.body
   end
   #operações de saldo
@@ -58,7 +72,7 @@ class ApplicationController < ActionController::Base
   def get_saldo(usuario)
     route = 'get_saldo'
     params = {'id_original'=> usuario.id}
-    p a = cpt_push(route,params)
+    a = cpt_push(route,params)
     a
   end
   def cpt_transaction_add(currency,type,user_id,debit_credit,amount)
@@ -88,8 +102,6 @@ class ApplicationController < ActionController::Base
     string_body << "\n"
     string_body << "Caso queira verificar detalhes do depósito, acesse nosso sistema.<br>Bons negócios!"
     
-    p string_body
-    
     from = Email.new(email: 'no-reply@cptcambio.com')
     subject = 'Depósito - CPT Cambio'
     to = Email.new(email: user.email)
@@ -100,6 +112,5 @@ class ApplicationController < ActionController::Base
     response = sg.client.mail._("send").post(request_body: mail.to_json)
     puts 'email enviado aqui'
     puts response.status_code
-    puts response.headers
   end
 end

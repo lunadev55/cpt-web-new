@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :wallet
+  has_many :exchangeorder
   has_many :payment
   validates :first_name, presence: true
   validates :last_name, presence: true

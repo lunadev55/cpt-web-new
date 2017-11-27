@@ -6,19 +6,70 @@
             <div class="col-md-6 col-xs-8 ">
                 <div class="row">
                     <%= render :partial => 'layouts/currency_navbar', :locals => { :classe => "withdrawal_get", route: "/withdrawal/form", :btc => nil, ltc: nil, doge: nil, eth: nil } %>
-                    <div class="col-md-8">
+                    <div class="col-md-11">
                         <div class="withdrawal_form">
                         <%= render :partial => 'layouts/withdrawal_get' %>
                         </div>
                         <%= form_tag nil, remote: true, class: "withdrawal_form_element" %>
                         <%= hidden_field_tag :currency, "BTC", class: "hidden_cur_withd"%><br>
                         <div class="form-group">
-                            <h4><%= label_tag :amount, "Quantidade" %></h4>
-                            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input form-control" %>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h4><%= label_tag :amount, "Quantidade" %></h4>
+                                    <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input form-control" %>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <h4><%= label_tag :destiny, "Destino" %></h4>
-                            <%= text_field_tag :destiny, nil, placeholder: "Carteira de destino", required: true, class: "wallet_input form-control" %>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <%= text_field_tag :destiny, nil, placeholder: "Carteira de destino", required: true, class: "wallet_input form-control" %>
+                                </div>
+                                <div class="col-md-1 ok-icon">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            $('.wallet_input').change(function(){
+                            currency = $('.hidden_cur_withd').prop("value")
+                            if (currency != "ETH") {
+                                link = "https://chain.so/api/v2/is_address_valid/"
+                            } else {
+                                link = "/api/is_valid_address/"
+                            }
+                            
+                            $.ajax({
+                                url: (link + currency + "/" + $(this).prop("value")),
+                                cache: false,
+                                type: "GET",
+                                success: function(response) {
+                                    if (currency != "ETH"){
+                                        isTrueSet = response.data.is_valid
+                                    } else {
+                                        isTrueSet = (response == 'true');
+                                    }
+                                    if (isTrueSet){
+                                        $('.ok-icon').html('<span class="glyphicon glyphicon-ok"></span>');
+                                    } else {
+                                        $('.ok-icon').html('<span class="glyphicon glyphicon-remove"></span>');
+                                        alert("Este endereço aparenta não ser válido para essa moeda, certifique-se de que está correto.")
+                                    }
+                                },
+                                error: function(xhr) {
+                                    
+                                }
+                                }); 
+                            });
+                        </script>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h4><%= label_tag :description, "Nota (opcional)" %></h4>
+                                    <%= text_field_tag :description, nil, placeholder: "Depósito para joão", title: 'Descrição do pagamento' , required: true ,class: "form-control" %>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <h6>Comissão (1%): <b class="comission"></b></h6>
@@ -27,7 +78,11 @@
                             <h6>Total (Comissão + taxa): <b class="total"></b></h6>
                         </div>
                         <div class="form-group">
-                            <%= submit_tag "Enviar", class: "form-control withdrawal_button" %>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <%= submit_tag "Enviar", class: "form-control withdrawal_button" %>
+                                </div>
+                            </div>
                         </div>
                         </form>
                     </div>

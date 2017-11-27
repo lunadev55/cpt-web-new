@@ -4,6 +4,21 @@ class PagesController < ApplicationController
   end
   def send_coin_confirmation
   end
+  def withdrawal
+    payment = Payment.find_by_hex(params[:code])
+    if !payment.nil?
+      payment.hex = ""
+      discounted = ((BigDecimal(payment.volume,8)  * 0.99) - optax(payment.network)).truncate(8)
+      response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
+      payment.status = "complete"
+      payment.txid = response.id
+      p response
+      if payment.save
+        flash[:success] = "Transação enviada para o blockchain! "
+      end
+    end
+    redirect_to '/dashboard/index'
+  end
   def partial
     if params[:partial] == "editInfo"
       if current_user.nil?
