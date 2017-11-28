@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   get '/exchange/pair/:coin1/:coin2', to: 'exchange#render_orders'
   post '/exchange/pair/:coin1/:coin2', to: 'exchange#create_order'
   post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'
+  get '/exchange/open_orders', to: 'exchange#open_orders'
+  get '/dashboard/overview/wallets/:currency', to: 'dashboard#wallets_view'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

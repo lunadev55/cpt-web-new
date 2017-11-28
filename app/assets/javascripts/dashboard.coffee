@@ -17,9 +17,14 @@ $ ->
             get_ajax(option,'/dashboard/info/getwallets')
         else
             get_ajax(option,'')
-            
+
+executeQuery = () ->
+    $.get '/exchange/open_orders'
+
+
 $ ->
     $.get('payments_details')
+    setInterval(executeQuery, 9000)
 
 get_ajax = (route,callbackroute) -> 
     if callbackroute is ''

@@ -14,8 +14,8 @@
   border-collapse: collapse;
   padding: 0;
   margin: 0;
-  width: 10px;
-  height: 10px;
+  width: 7px;
+  height: 7px;
 }
 td.black { background-color: #000; }
 td.white { background-color: #fff; }
@@ -39,8 +39,10 @@ td.white { background-color: #fff; }
     </table>
     </div>
     <div class="row">
-        Endereço: <%= wallet.address %><br>
-        Moeda: <%= wallet.currency %><br><br>
+        <div class="col-md-12 col-xs-12">
+        <p>Endereço: <%= wallet.address %></p>
+        
+        </div>
     </div>
 <% end %>
 <% else %>

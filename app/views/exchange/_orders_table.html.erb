@@ -1,0 +1,52 @@
+<% if !session[:currency1].nil? %>
+<div class="col-md-4 col-xs-4 buy-table non-pade-right table-responsive">
+    <table class="table table-hover table-striped">
+        <tr>
+            <th colspan="2" class="text-center">Ordens de compra</th>
+        </tr>
+        <tr class="active">
+            <th>
+                Volume
+            </th>
+            <th>
+                Preço
+            </th>
+        </tr>
+        <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "buy", stt: "open"}).limit(15).order(price: :desc).each do |m| %>
+        <tr>
+            <td>
+                <%= m.amount %> <%= session[:currency1] %>
+            </td>
+            <td>
+                <%= m.price %> <%= session[:currency2] %>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+</div>
+<div class="col-md-4 col-xs-4 sell-table non-pade-right table-responsive">
+    <table class="table table-hover table-striped">
+        <tr>
+            <th colspan="2" class="text-center">Ordens de Venda</th>
+        </tr>
+        <tr class="active">
+            <th>
+                Preço
+            </th>
+            <th>
+                Volume
+            </th>
+        </tr>
+        <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "sell", stt: "open"}).limit(15).order(price: :asc).each do |m| %>
+        <tr>
+            <td>
+                <%= m.price %> <%= session[:currency2] %>
+            </td>
+            <td>
+                <%= m.amount %> <%= session[:currency1] %>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+</div>
+<% end %>

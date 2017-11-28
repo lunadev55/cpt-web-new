@@ -1,0 +1,13 @@
+<ul class="nav nav-tabs">
+    <% MOEDAS_ATIVAS.each do |k| %>
+  <li data-currency-options="<%= k %>" data-route="/dashboard/overview/wallets/<%= k %>" class="<% if k == "BTC" %>active<% end %>  pointer view_wallets"><a class="padding-right-left-wallet"><%= k.upcase %></a></li>
+  <% end %>
+</ul>
+<script>
+    $('.view_wallets').click(function(){
+        $('.active').removeClass('active')
+        $(this).addClass('active')
+        $('.wallets_overview').html('<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>')
+        $.get($(this).data('route'))
+    })
+</script>

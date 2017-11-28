@@ -79,8 +79,8 @@ function calc(element){
       $(".receive").html(receive + " " + currency1);
       $(".total").html(total + " " + currency2);
   }else{
-      discount = (price * 0.005).toFixed(8);
       total = (price * quantity).toFixed(8);
+      discount = (total * 0.005).toFixed(8);
       receive = (total - discount).toFixed(8);
       
       $(".comission").html(discount + " " + currency2);

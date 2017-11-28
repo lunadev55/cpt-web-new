@@ -1,0 +1,33 @@
+<% EXCHANGE_PARES.each do |k| %>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="panel panel-default">
+                          <div class="panel-heading"><b><%= k %>: </b></div>
+                          <div class="panel-body">
+                          <h5>
+                              <div class="row">
+                                  <div class="col-md-12 col-xs-12">
+                                    <p>Compra <i class="fa fa-arrow-up" aria-hidden="true"></i>: <br>
+                                        <%= last_price(k.tr(" ", ""),"buy","executada") %> <%= k.split(" ")[2] %>
+                                    </div>
+                                </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12">
+                                   <p> Venda <i class="fa fa-arrow-up" aria-hidden="true"></i>: <br>
+                                   <%= last_price(k.tr(" ", ""),"sell","executada") %> <%= k.split(" ")[2] %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12">
+                                    <p> Volume 24hrs:<br><b> <%= k.split(" ")[0] %></b></p>
+                                </div>
+                            </div>
+                          </h5>
+                          </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <% end %>

@@ -5,4 +5,7 @@ class DashboardController < ApplicationController
     def index
         
     end
+    def wallets_view
+        @wallet = current_user.wallet.where('currency = :moeda', {moeda: params[:currency]})
+    end
 end

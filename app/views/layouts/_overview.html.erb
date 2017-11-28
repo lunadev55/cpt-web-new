@@ -2,13 +2,30 @@
 <div class="well well-lg small-size">Informações gerais sobre sua conta. </div>
     <div class="row">
         <div class="col-md-3">
-            
+            <h3>Cotações atuais: </h3>
+                <div class="cotacoes_atuais">
+                    <%= render 'dashboard/cotacoes' %>
+                </div>
         </div>
         <div class="col-md-5 ">
-            <h3>Saques / depósitos ativos</h3>
-            <div class="well well-lg">
-                <div class="payments_details">
-                    <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h3>Saques / depósitos ativos</h3>
+                    <div class="well well-lg">
+                        <div class="payments_details">
+                            <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h3>Suas Carteiras</h3>
+                    <%= render 'dashboard/currency_overview' %>
+                    <div align="center" class="well well-lg wallets_overview">
+                         <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -24,5 +41,17 @@
                   <li>IP do último Login: <%= current_user.last_login_ip %></li>
                 </ul>
               </div>
+              <h4>Comissões</h4>
+              <div class="well well-lg font-small">
+                Operações (saque, depósito): 1%<br>
+                Ordens (negociações): 0,5%
+              </div>
         </div>
     </div>
+    
+    
+    <script>
+        $( document ).ready(function() {
+            $.get('/dashboard/overview/wallets/BTC');
+        });
+    </script>

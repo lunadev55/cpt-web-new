@@ -14,14 +14,18 @@ class ExchangeController < ApplicationController
         when "buy"
             @order.status = "cancelled"
             @order.save
-            flash[:success] = "adicionar #{(BigDecimal(@order.amount,8) * BigDecimal(@order.price,8))} #{par[1]}" 
+            flash[:success] = "Ordem cancelada! " 
             add_saldo(current_user,par[1],(BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)),"cancel_buy")
         when "sell"
             @order.status = "cancelled"
             @order.save
-            flash[:success] = "adicionar #{@order.amount} #{par[0]}"
+            flash[:success] = "Ordem cancelada! "
             add_saldo(current_user,par[0],@order.amount,"cancel_sell")
         end
+    end
+    
+    def open_orders
+
     end
     
     def create_order
@@ -85,7 +89,7 @@ class ExchangeController < ApplicationController
                         new.has_execution = true
                         new.save
                         current_amount = 0
-                        order.status = "executada"
+                        order.status = "executora"
                         order.has_execution = true
                         order.save
                         
@@ -93,7 +97,7 @@ class ExchangeController < ApplicationController
                         result_amount = o_amount - b_amount
                         if result_amount < 0
                             order.has_execution = true
-                            order.status = "executada"
+                            order.status = "executora"
                         else
                             order.amount = result_amount
                         end

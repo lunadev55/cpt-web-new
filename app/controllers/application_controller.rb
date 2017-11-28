@@ -2,11 +2,20 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price
   require 'sendgrid-ruby'
   include SendGrid 
   private
-
+  
+  def last_price(pares,tipo,execucao)
+    a = Exchangeorder.where("par = :par and tipo = :role and status = :stt", { stt: execucao, par: pares, role: tipo }).last
+    if !a.nil?
+      a.price
+    else
+      "NaN"
+    end
+  end
+  
   def blocker_link(network)
     ENV["LINK#{network}"]
   end
