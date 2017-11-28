@@ -102,7 +102,6 @@ class JqueryController < ApplicationController
             params[:currency] = "BTC"
         end
         @wallet = current_user.wallet.where(currency: params[:currency]).page params[:page]
-        p @wallet.nil?
     end
     def editInfo
         @user = User.find(params['user_id'])
@@ -142,14 +141,13 @@ class JqueryController < ApplicationController
     end
     
     def deposit
-        transaction = Coinpayments.get_callback_address(params[:currency], options = { ipn_url: "http://www.#{ENV['BASE_URL']}/#{ENV['COINPAYMENTS_ROUTE']}"})
+        transaction = Coinpayments.get_callback_address(params[:currency], options = { ipn_url: "https://#{ENV['BASE_URL']}/#{ENV['COINPAYMENTS_ROUTE']}"})
         @endereco = transaction.address
         wal = current_user.wallet.new
         wal.address = @endereco
         wal.currency = params[:currency]
         wal.save
         flash[:success] = "Endereço #{params[:currendy]} gerado com sucesso!"
-        p @endereco
     end
     
     def coinpayments_deposit
