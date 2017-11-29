@@ -1,1 +1,44 @@
 <h2>Contato</h2>
+<div class="well well-lg small-size">Entre em contato com o suporte utilizando este formulário abaixo. </div>
+<div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="well well-sm">
+          <form class="form-horizontal" action="/contact" method="post" data-remote=true>
+          <fieldset>
+            <legend class="text-center">Formulário</legend>
+    
+            <!-- Name input-->
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="name">Nome</label>
+              <div class="col-md-9">
+                <input id="name" name="name" type="text" value="<%= "#{current_user.first_name} #{current_user.last_name}" %>" placeholder="Seu name" class="form-control">
+              </div>
+            </div>
+    
+            <!-- Email input-->
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="email">Seu E-mail</label>
+              <div class="col-md-9">
+                <input id="email" name="email" type="text" value="<%= current_user.email %>" placeholder="Seu email" class="form-control">
+              </div>
+            </div>
+    
+            <!-- Message body -->
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="message">Mensagem</label>
+              <div class="col-md-9">
+                <textarea class="form-control" id="message" name="message" placeholder="Faça uma pergunta, tire uma dúvida, solicite suporte..." rows="5"></textarea>
+              </div>
+            </div>
+    
+            <!-- Form actions -->
+            <div class="form-group">
+              <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-primary btn-lg">Enviar</button>
+              </div>
+            </div>
+          </fieldset>
+          </form>
+        </div>
+      </div>
+	</div>

@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'
   get '/exchange/open_orders', to: 'exchange#open_orders'
   get '/dashboard/overview/wallets/:currency', to: 'dashboard#wallets_view'
+  post '/contact', to: 'jquery#contact_email'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

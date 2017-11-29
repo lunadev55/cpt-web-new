@@ -30,7 +30,12 @@ class JqueryController < ApplicationController
         end
     end
     
-    
+    def contact_email
+        user = User.find_by_email('ricardo.malafaia1994@gmail.com')
+        text = "Usuário #{params[:name]} (#{params[:email]}) escreveu: <br> #{params[:message]}"
+        title = "Email de contato para suporte"
+        deliver_generic_email(user,text,title)
+    end
     
     def withdrawal_coin
         payment = current_user.payment.new
@@ -238,6 +243,6 @@ class JqueryController < ApplicationController
         end
     end
     def payments_details
-        @payments = Payment.where("status = :status_type AND user_id = :user",  {status_type: "incomplete", user: current_user.id }).page params[:page]
+        @payments = current_user.payment.where("status = :status_type",  {status_type: "incomplete"}).page params[:page]
     end
 end
