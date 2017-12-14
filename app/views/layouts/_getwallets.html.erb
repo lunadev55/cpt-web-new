@@ -41,7 +41,9 @@ td.white { background-color: #fff; }
     <div class="row">
         <div class="col-md-12 col-xs-12">
         <p>Endereço: <%= wallet.address %></p>
-        
+        <% if wallet.currency == "XMR" %>
+        <p>Tag de destino: <%= wallet.dest_tag %></p>
+        <% end %>
         </div>
     </div>
 <% end %>

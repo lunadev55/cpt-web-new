@@ -151,8 +151,11 @@ class JqueryController < ApplicationController
         wal = current_user.wallet.new
         wal.address = @endereco
         wal.currency = params[:currency]
+        if params[:currency] == "XMR"
+            wal.dest_tag = transaction.dest_tag
+        end
         wal.save
-        flash[:success] = "Endereço #{params[:currendy]} gerado com sucesso!"
+        flash[:success] = "Endereço #{params[:currency]} gerado com sucesso!"
     end
     
     def coinpayments_deposit
@@ -240,6 +243,15 @@ class JqueryController < ApplicationController
             @tax = 0.0012
         elsif @currency == "BRL"
             @minimum = 30
+        elsif @currency == "XMR"
+            @minimum = 0.02
+            @tax = 0.01
+        elsif @currency == "DASH"
+            @minimum = 0.002
+            @tax = 0.001
+        elsif @currency == "BCH"
+            @minimum = 0.001
+            @tax = 0.0002
         end
     end
     def payments_details

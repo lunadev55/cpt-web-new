@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171122025907) do
+ActiveRecord::Schema.define(version: 20171214191247) do
 
   create_table "exchangeorders", force: :cascade do |t|
     t.string   "par"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20171122025907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "user_id"
+    t.string   "dest_tag"
   end
 
 end
