@@ -1,4 +1,9 @@
 <style>
+
+.wallet_content {
+    font-size:90%;
+    word-break: break-all;
+}
     .qr-table {
   border-width: 0;
   border-style: none;
@@ -40,9 +45,9 @@ td.white { background-color: #fff; }
     </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
-        <p>Endereço: <%= wallet.address %></p>
+        <p>Endereço:<br> <b class="wallet_content"><%= wallet.address %></b></p>
         <% if wallet.currency == "XMR" %>
-        <p>Tag de destino: <%= wallet.dest_tag %></p>
+        <p>Tag de destino:<br> <b class="wallet_content"><%= wallet.dest_tag %></b></p>
         <% end %>
         </div>
     </div>

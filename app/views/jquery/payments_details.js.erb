@@ -1,7 +1,5 @@
 $('.payments_details').html('<%= escape_javascript(render 'layouts/payments_details') %>');
 
-
-    
 $("tr[data-payment-detail]").click(function() {
     option = ($(this).data('payment-detail'));
     $('.modal-body').html('<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>');

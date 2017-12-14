@@ -34,6 +34,15 @@
                         <script>
                             $('.wallet_input').change(function(){
                             currency = $('.hidden_cur_withd').prop("value")
+                            if (currency == "BCH") {
+                                return
+                            }
+                            if (currency == "DASH") {
+                                return
+                            }
+                            if (currency == "XMR") {
+                                return
+                            }
                             if (currency != "ETH") {
                                 link = "https://chain.so/api/v2/is_address_valid/"
                             } else {

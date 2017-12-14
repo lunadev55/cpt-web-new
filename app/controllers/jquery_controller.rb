@@ -35,6 +35,7 @@ class JqueryController < ApplicationController
         text = "Usuário #{params[:name]} (#{params[:email]}) escreveu: <br> #{params[:message]}"
         title = "Email de contato para suporte"
         deliver_generic_email(user,text,title)
+        flash[:success] = "Mensagem enviada para o suporte!"
     end
     
     def withdrawal_coin
@@ -146,6 +147,11 @@ class JqueryController < ApplicationController
     end
     
     def deposit
+        wallets = current_user.wallet.where("currency = :cur", {cur: params[:currency]})
+        if wallets.size >= 5
+            flash[:success] = "Você já possui 5 endereços de carteira nesta moeda! "
+            return
+        end
         transaction = Coinpayments.get_callback_address(params[:currency], options = { ipn_url: "https://#{ENV['BASE_URL']}/#{ENV['COINPAYMENTS_ROUTE']}"})
         @endereco = transaction.address
         wal = current_user.wallet.new
