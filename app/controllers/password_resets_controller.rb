@@ -1,4 +1,5 @@
 class PasswordResetsController < ApplicationController
+  before_action :require_user, :only => [:change_pass]
   def new
   end
 
@@ -17,20 +18,41 @@ class PasswordResetsController < ApplicationController
   def edit
     @user = User.find_by(perishable_token: params[:id])
   end
-
+  
+  def change_pass
+    @user = current_user
+    @session = UserSession.new(password_reset_params)
+    if password_reset_params['new_password'] != password_reset_params['password_confirmation']
+      flash[:success] = "Senhas não coincidem! "
+      return
+    end
+    if @session.save
+      @user = current_user
+      @user.password = password_reset_params['new_password']
+      @user.password_confirmation = password_reset_params['password_confirmation']
+      if @user.changed? && @user.save
+        UserSession.create(:email => @user.email, :password => password_reset_params['new_password'])
+        flash[:success] = "Senha atualizada com sucesso! "
+      end
+    else
+      flash[:success] = "Senha incorreta, tente novamente. "
+    end
+  end
+  
   def update
     @user = User.find_by(perishable_token: params[:id])
     if @user.update_attributes(password_reset_params)
-      flash[:success] = "Senha atualizada com sucesso!"
+      flash[:success] = "Senha atualizada com sucesso! "
       redirect_to root_path
     else
       render :edit
     end
   end
+  
 
   private
 
   def password_reset_params
-    params.require(:user).permit(:password, :password_confirmation)
+    params.require(:user).permit(:password, :password_confirmation, :new_password, :email)
   end
 end

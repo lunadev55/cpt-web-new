@@ -23,5 +23,17 @@
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'eth.png' %>" width="20px" height="20px" alt="Ethereum"> </div>
 							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["ETH"],2)).truncate(8) %> ETH </div>
 						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'bch.png' %>" width="20px" height="20px" alt="BitcoinCash"> </div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["BCH"],2)).truncate(8) %> BCH </div>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'dash.png' %>" width="20px" height="20px" alt="Dash"> </div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["DASH"],2)).truncate(8) %> DASH </div>
+						</div>
+						<div class="row">
+							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'xmr.png' %>" width="20px" height="20px" alt="Monero"> </div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["XMR"],2)).truncate(8) %> XMR </div>
+						</div>
 					</div>
 				<% end %>

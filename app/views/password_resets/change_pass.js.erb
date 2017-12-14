@@ -1,0 +1,7 @@
+$(".editForm")[0].reset();
+$(".submit").prop("disabled",false);
+
+$('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
+$( ".fa-window-close" ).click(function() {
+  $('.centered-flash').html('');
+});

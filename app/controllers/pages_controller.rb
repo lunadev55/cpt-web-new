@@ -49,6 +49,8 @@ class PagesController < ApplicationController
       @currency = "BTC"
       @minimum = 0.001
       @tax = 0.0007
+    elsif params[:partial] == "editSecurity"
+      @user = current_user
     end
     
     render partial: "layouts/painelMenus"

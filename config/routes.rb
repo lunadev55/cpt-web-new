@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   get '/exchange/open_orders', to: 'exchange#open_orders'
   get '/dashboard/overview/wallets/:currency', to: 'dashboard#wallets_view'
   post '/contact', to: 'jquery#contact_email'
+  patch '/dashboard/changepasswd', to: 'password_resets#change_pass'
 
   root to: 'pages#index'
   # The priority is based upon order of creation: first created -> highest priority.

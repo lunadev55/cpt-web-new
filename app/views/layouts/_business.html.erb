@@ -5,7 +5,7 @@
         <div class="col-md-11">
             <ul class="nav nav-tabs">
                 <% EXCHANGE_PARES.each do |pair| %>
-                <li <% if pair == "BTC / LTC" %>id="inicial"<% end %> data-pair-option="<%= pair %>" class="pointer exchange-option <% if pair == "BTC / LTC" %> active <% end %>"><a class="padding-right-left-wallet"><%= pair %></a></li>
+                <li <% if pair == "LTC / BTC" %>id="inicial"<% end %> data-pair-option="<%= pair %>" class="pointer exchange-option <% if pair == "LTC / BTC" %> active <% end %>"><a class="padding-right-left-wallet"><%= pair %></a></li>
                 <% end %>
             </ul>
         </div>
@@ -21,7 +21,7 @@
 <script>
     $(document).ready(function(){
         $.ajax({
-            url: ("/exchange/pair/BTC/LTC"),
+            url: ("/exchange/pair/LTC/BTC"),
             cache: false,
             type: "GET",
             success: function(response) {
