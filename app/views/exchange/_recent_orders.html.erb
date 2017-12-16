@@ -1,0 +1,25 @@
+<div class="col-md-6 col-xs-8 complete-table table-responsive">
+        <table class="table table-hover table-striped">
+        <tr>
+            <th colspan="2" class="text-center">Ordens executadas <%= "(#{session[:currency1]}/#{session[:currency2]})" %></th>
+        </tr>
+        <tr class="active">
+            <th class="small_lines">
+                Preço
+            </th>
+            <th class="small_lines">
+                Volume
+            </th>
+        </tr>
+        <% Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "executada"}).limit(20).order("created_at DESC").each do |m| %>
+        <tr>
+            <td class="small_lines">
+                <%= m.price %>
+            </td>
+            <td class="small_lines">
+                <%= m.amount %>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+    </div>

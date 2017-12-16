@@ -1,0 +1,76 @@
+<div class="col-md-6 col-xs-6 complete-table table-responsive">
+        <table class="table table-hover table-sm table-striped">
+        <tr>
+            <th colspan="5" class="text-center">Suas ordens Abertas <%= "(#{session[:currency1]}/#{session[:currency2]})" %></th>
+        </tr>
+        <tr class="active">
+            <th class="small_lines">
+                Preço
+            </th>
+            <th class="small_lines">
+                Volume
+            </th>
+            <th class="small_lines">
+                Tipo
+            </th>
+            <th class="small_lines">
+                Execuções
+            </th>
+            <th class="small_lines">
+                Cancelar ordem
+            </th>
+        </tr>
+        <% a = current_user.exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "open"}).order(id: :desc).page params[:page] %>
+        <% a.each do |m| %>
+        <tr>
+            <td class="small_lines">
+                <%= m.price %> <%= session[:currency2] %>
+            </td>
+            <td class="small_lines">
+                <%= m.amount %> <%= session[:currency1] %>
+            </td>
+            <td class="small_lines">
+                <% if m.tipo == "buy" %>
+                Compra
+                <% else %>
+                Venda
+                <% end %>
+            </td>
+            <td class="small_lines">
+                <% if m.has_execution == true %>
+                <i class="fa fa-check" aria-hidden="true"></i>
+                <% else %>
+                <i class="fa fa-times" aria-hidden="true"></i>
+                <% end %>
+            </td>
+            <td class="small_lines">
+                <button type="button" data-order-id="<%= m.id %>" class="btn btn-danger cancel-order"><i class="fa fa-ban" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+    <%= paginate a, left: 1, right: 3, remote: true %>
+    </div>
+    
+    
+    <script>
+    $('.cancel-order').click(function (){
+        r = confirm("Deseja cancelar esta ordem?");
+        if (r==true)
+          {
+          $.ajax({
+            url: ("/exchange/order/cancel/" + $(this).data("order-id")),
+            cache: false,
+            type: "POST",
+            success: function(response) {
+                
+            },
+            error: function(xhr) {
+                
+            }
+            })
+          }
+        
+        
+    })
+</script>

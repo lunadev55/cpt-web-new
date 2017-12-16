@@ -1,0 +1,7 @@
+<h2>Permissões</h2>
+<div class="well well-lg small-size">Utilize esta sessão para alterar permissões dos usuários. </div>
+<% if current_user.role != "admin" %>
+Permissão negada.
+<% else %>
+Usuário: <%= "#{current_user.first_name} #{current_user.last_name}" %>
+<% end %>

@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs">
+    <li data-currency-options="ALL" class="active pointer deposit_currency"><a class="padding-right-left-wallet">Todos </a></li>
+    <% MOEDAS_ATIVAS.each do |moeda| %>
+        <li data-currency-options="<%= moeda %>" class="pointer deposit_currency"><a class="padding-right-left-wallet"><%= MOEDAS_ATIVAS_NAMES[moeda] %></a></li>
+    <% end %>
+</ul>

@@ -5,19 +5,19 @@
             <th colspan="2" class="text-center">Ordens de compra</th>
         </tr>
         <tr class="active">
-            <th>
+            <th class="small_lines">
                 Volume
             </th>
-            <th>
+            <th class="small_lines">
                 Preço
             </th>
         </tr>
         <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "buy", stt: "open"}).limit(15).order(price: :desc).each do |m| %>
         <tr>
-            <td>
+            <td class="small_lines">
                 <%= m.amount %> <%= session[:currency1] %>
             </td>
-            <td>
+            <td class="small_lines">
                 <%= m.price %> <%= session[:currency2] %>
             </td>
         </tr>
@@ -30,19 +30,19 @@
             <th colspan="2" class="text-center">Ordens de Venda</th>
         </tr>
         <tr class="active">
-            <th>
+            <th class="small_lines">
                 Preço
             </th>
-            <th>
+            <th class="small_lines">
                 Volume
             </th>
         </tr>
         <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "sell", stt: "open"}).limit(15).order(price: :asc).each do |m| %>
         <tr>
-            <td>
+            <td class="small_lines">
                 <%= m.price %> <%= session[:currency2] %>
             </td>
-            <td>
+            <td class="small_lines">
                 <%= m.amount %> <%= session[:currency1] %>
             </td>
         </tr>

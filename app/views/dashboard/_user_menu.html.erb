@@ -1,10 +1,17 @@
 <%= stylesheet_link_tag params[:controller] %>
+<div class="menu_background well">
 <div class="color-div"></div>
 <div class="menu saldos"><%= render 'layouts/saldos' %></div>
 <hr>
+<div class="container">
+<% if current_user.role == "admin" %>
+<%= render 'layouts/admin_menu' %>
+<% end %>
+</div>
 <hr>
 <div class="container"><%= render 'layouts/operations' %></div>
 <hr>
 <div class="container"><%= render 'layouts/configs' %></div>
 <hr>
 <div class="container"><%= render 'layouts/help' %></div>
+</div>

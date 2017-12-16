@@ -2,13 +2,7 @@
 <div class="well well-lg small-size">Consulte abaixo o extrato da sua conta. </div>
 <div class="row">
     <div class="col-md-11  well">
-        <ul class="nav nav-tabs">
-          <li data-currency-options="ALL" class="active pointer deposit_currency"><a class="padding-right-left-wallet">Todos </a></li>
-          <li data-currency-options="BTC" class="pointer deposit_currency"><a class="padding-right-left-wallet">Bitcoin </a></li>
-          <li data-currency-options="LTC" class="pointer deposit_currency"><a class="padding-right-left-wallet">Litecoin </a></li>
-          <li data-currency-options="ETH" class="pointer deposit_currency"><a class="padding-right-left-wallet">Ethereum </a></li>
-          <li data-currency-options="DOGE" class="pointer deposit_currency"><a class="padding-right-left-wallet">Dogecoin </a></li>
-        </ul>
+        <%= render 'layouts/all_cur_navbar' %>
         <div class="well row">
             <%= form_tag nil, remote: true %>
             <div class="form-group col-md-8 col-xs-8">

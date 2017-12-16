@@ -5,21 +5,43 @@
 .dashcontainer {
     margin-top: 90px;
 }
+.menu_background{
+    border-radius: 15px 50px 30px 5px;
+    padding: 20px;
+}
 .hover-link:hover {
     color: black !important;
 }
 .table{
     margin-top: 20px;
 }
+.small_lines { 
+        padding: 1px !important;
+        text-align: center;
+        font-size: 90%;
+    }
 .margin-exchange{
     margin-top: 20px;
 }
 .text-center{
     text-align: center;
 }
-.small-size{
+.small-font{
     padding: 6px;
     font-size: 80%;
+}
+.price-box{
+    height: 150px;
+}
+.carousel-control{
+    width: 40px;
+}
+
+.carousel-inner{
+    height: 150px;
+}
+.small-size{
+    @extend .small-font;
     width: 30%;
 }
 body{

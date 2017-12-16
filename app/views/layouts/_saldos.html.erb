@@ -31,9 +31,9 @@
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'dash.png' %>" width="20px" height="20px" alt="Dash"> </div>
 							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["DASH"],2)).truncate(8) %> DASH </div>
 						</div>
-						<div class="row">
+				<!--		<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'xmr.png' %>" width="20px" height="20px" alt="Monero"> </div>
 							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["XMR"],2)).truncate(8) %> XMR </div>
-						</div>
+						</div> -->
 					</div>
 				<% end %>

@@ -1,82 +1,17 @@
-<div class="col-md-4 col-xs-4 sell-table">
-    
-    <%= render 'exchange/order_form' %>
-</div>
-
-<div class="open_orders_table">
-    <%= render 'exchange/orders_table' %>
-
+<div class="row">
+    <div class="col-md-4 col-xs-4 sell-table container">
+        <%= render 'exchange/order_form' %>
+    </div>
+    <div class="open_orders_table">
+        <%= render 'exchange/orders_table' %>
+    </div>
 </div>
 <div class="row">
-    <div class="col-md-12 col-xs-12 complete-table table-responsive">
-        <table class="table table-hover table-striped">
-        <tr>
-            <th colspan="6" class="text-center">Suas ordens Abertas <%= "(#{session[:currency1]}/#{session[:currency2]})" %></th>
-        </tr>
-        <tr class="active">
-            <th>
-                Preço
-            </th>
-            <th>
-                Volume
-            </th>
-            <th>
-                Par
-            </th>
-            <th>
-                Tipo
-            </th>
-            <th>
-                Execuções
-            </th>
-            <th>
-                Cancelar ordem
-            </th>
-        </tr>
-        <% current_user.exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "open"}).order(id: :desc).each do |m| %>
-        <tr>
-            <td>
-                <%= m.price %>
-            </td>
-            <td>
-                <%= m.amount %>
-            </td>
-            <td>
-                <%= m.par %>
-            </td>
-            <td>
-                <%= m.tipo %>
-            </td>
-            <td>
-                <%= m.has_execution %>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger"><i class="fa fa-ban cancel-order" data-order-id="<%= m.id %>" aria-hidden="true"></i></button>
-            </td>
-        </tr>
-        <% end %>
-    </table>
+    <div class="user_orders">
+        <%= render 'exchange/open_orders' %>
+    </div>
+    <div class="recent_orders">
+        <%= render 'exchange/recent_orders' %>
     </div>
 </div>
 
-<script>
-    $('.cancel-order').click(function (){
-        r = confirm("Deseja cancelar esta ordem?");
-        if (r==true)
-          {
-          $.ajax({
-            url: ("/exchange/order/cancel/" + $(this).data("order-id")),
-            cache: false,
-            type: "POST",
-            success: function(response) {
-                
-            },
-            error: function(xhr) {
-                
-            }
-            })
-          }
-        
-        
-    })
-</script>

@@ -5,3 +5,4 @@ $( ".fa-window-close" ).click(function() {
 
 $( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
 $(".exchange_form_element")[0].reset();
+$('.user_orders').html( "<%= escape_javascript( render( :partial => "exchange/open_orders" )) %>" );
