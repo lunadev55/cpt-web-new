@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :wallet
   has_many :exchangeorder
   has_many :payment

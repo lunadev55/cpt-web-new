@@ -1,44 +1,46 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Overview</h2>
+        <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <font color="red"><br>Atenção! Nossa plataforma ainda está em desenvolvimento. Aguardem maiores informações!</font></div></p>
     </div>
-    <div class="col-md-8">
-        <h2>Cotações atuais:</h2><br>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="well well-lg small-font">Informações gerais sobre sua conta. <font color="red"><br>Atenção! Nossa plataforma ainda está em desenvolvimento. Aguardem maiores informações!</font></div>
-    </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
+        <fieldset>
+	      <legend>Ultimas operações:</legend>
         <%= render 'dashboard/cotacoes_slide'%>
+        </fieldset>
     </div>
 </div>
+<br>
     <div class="row">
         <div class="col-md-3">
-            <h3>Compra instantânea: </h3>
-                <div class="cotacoes_atuais">
-                </div>
+            <fieldset>
+	         <legend>Operação instantânea:</legend>
+                <%= render 'exchange/instant_buy' %>
+            </fieldset>
         </div>
         <div class="col-md-5 ">
             <div class="row">
                 <div class="col-md-12 col-xs-12">
-                    <h3>Saques / depósitos ativos</h3>
+                    <fieldset>
+	                 <legend>Saques / depósitos ativos:</legend>
                     <div class="well well-lg">
                         <div class="payments_details">
                             <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
                         </div>
                     </div>
+                    </fieldset>
                 </div>
             </div>
             
             <div class="row">
                 <div class="col-md-12 col-xs-12">
-                    <h3>Suas Carteiras</h3>
+                    <fieldset>
+	                 <legend>Suas Carteiras:</legend>
                     <%= render 'dashboard/currency_overview' %>
                     <div align="center" class="well well-lg wallets_overview">
                          <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>
                     </div>
+                    </fieldset>
                 </div>
             </div>
         </div>

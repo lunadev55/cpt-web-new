@@ -30,11 +30,20 @@
     padding: 6px;
     font-size: 80%;
 }
+.paragraph{
+    word-break: break-all;
+}
 .price-box{
     height: 150px;
 }
 .carousel-control{
     width: 40px;
+}
+
+.buttonSmall {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
 }
 
 .carousel-inner{

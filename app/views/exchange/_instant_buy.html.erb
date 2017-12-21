@@ -1,0 +1,115 @@
+<div class="well">
+<%= label_tag :operation, "Desejo:" %>
+<div class="btn-group" data-toggle="buttons">
+  <label data-type="buy" class="btn btn-primary active buttonType buttonSmall">
+    <input type="radio" name="options" id="option1" autocomplete="off" checked> Comprar
+  </label>
+  <label data-type="sell" class="btn btn-primary buttonType buttonSmall">
+    <input type="radio"  name="options" id="option2" autocomplete="off"> Vender
+  </label>
+</div>
+
+<%= form_tag '/exchange/instant', remote: true, class: "exchange_form_element" %>
+<%= hidden_field_tag :type, "buy", class: "hidden_type_order" %>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-10">
+            <%= label_tag :currency_base, "Com o par:" %>
+            <%= select_tag :currency_base, options_for_select(EXCHANGE_PARES), :prompt => "Selecione o par" ,class: "pair-control form-control" %>
+        </div>
+    </div>
+</div>
+<div class="form-group margin-exchange">
+    <div class="row">
+        <div class="col-md-10">
+            <h4><%= label_tag :amount, "Quantidade" %></h4>
+            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input form-control" %>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <h6><k class="valor_total">* Preço atual: </h6>
+    <div class="row">
+        <div class="col-md-10">
+            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Este é o preço atual do par selecionado. O preço é definido automaticamente pelos usuários, a CPTCAMBIO não tem nenhum controle sobre o valor mostrado.' , required: true ,class: "actual_price_form form-control", disabled: true %><b class="total"></b></k>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <h6><k class="receber">Receber:</k> <b class="receive"></b></h6>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-8">
+            <%= submit_tag "Comprar", class: "form-control withdrawal_button instant_submit" %>
+        </div>
+    </div>
+</div>
+<h6>* Devido a volatilidade do mercado, o preço pode variar muito em pequenos intervalos de tempo.</h6>
+</form>
+
+</div>
+
+<script>
+$(".buttonType").click(function(){
+    $('#type').prop("value",$(this).data("type"))
+    if ($(this).data("type") == "buy"){
+        type = "Comprar"
+    }else{
+        type = "Vender"
+    }
+    $('.instant_submit').prop("value",type)
+    element = $(".price_input")
+    calc(element)
+})
+$( ".amount_input" ).keyup(function() {
+    element = $(".amount_input")
+    calc(element) 
+});
+
+function calc(element){
+    
+  element.val((element.val()).replace(/^\./, ""));
+  element.val((element.val()).replace(',','.'));
+  element.val((element.val()).replace(/[^0-9\,.]/g,''));
+  quantity = parseFloat($( ".amount_input" ).val().replace(",","."));
+  price = parseFloat($(".amount_input").val().replace(",","."));
+  pair = $("#inicial").data("pair-option").replace(/ /g, '').split("/");
+  currency1 = pair[0];
+  currency2 = pair[1];
+  
+  if ($('#type').prop("value") == "buy"){
+      discount = (quantity * 0.005).toFixed(8);
+      receive = (quantity - discount).toFixed(8);
+      total = (price * quantity).toFixed(8);
+      
+      $(".comission").html(discount + " " + currency1);
+      $(".receive").html(receive + " " + currency1);
+      $(".total").html(total + " " + currency2);
+  }else{
+      total = (price * quantity).toFixed(8);
+      discount = (total * 0.005).toFixed(8);
+      receive = (total - discount).toFixed(8);
+      
+      $(".comission").html(discount + " " + currency2);
+      $(".receive").html(receive + " " + currency2);
+      $(".total").html(total + " " + currency2);
+  }
+  
+
+}
+
+$( ".price_input" ).keyup(function() {
+    element = $(".price_input")
+    calc(element)
+});
+$( ".amount_input" ).change(function() {
+    console.log("changed")
+    element = $(".amount_input")
+    element.val((element.val()).replace(/\.$/, ""));
+});
+$( ".pair-control" ).change(function() {
+    element = $( ".pair-control" )
+    console.log(element)
+});
+</script>

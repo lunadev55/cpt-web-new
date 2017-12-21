@@ -25,7 +25,9 @@ class ExchangeController < ApplicationController
     end
     
     def open_orders
-
+        if session[:current_place] == "overview"
+            render :json => json_last_price
+        end
     end
     
     def create_order
@@ -59,6 +61,17 @@ class ExchangeController < ApplicationController
     end
     
     private
+    
+    def json_last_price
+        result = Hash.new
+        EXCHANGE_PARES.each do |k|
+            par = k.tr(" ", "")
+            result["#{par}_buy"] = last_price(par,"buy","executada")
+            result["#{par}_sell"] = last_price(par,"sell","executada")
+        end
+        result
+    end
+    
     def check_active_orders(order,consulta_ordem_oposta,buysell)
         inicial_amount = BigDecimal(order.amount,8)
         current_amount = inicial_amount

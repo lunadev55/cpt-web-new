@@ -1,6 +1,4 @@
 <% if session[:current_place] == "business"%>
 $('.open_orders_table').html( "<%= escape_javascript( render( :partial => "exchange/orders_table" )) %>" );
 $('.recent_orders').html( "<%= escape_javascript( render( :partial => "exchange/recent_orders" )) %>" );
-<% elsif session[:current_place] == "overview"%>
-$('.cotacoes_atuais').html("<%= escape_javascript( render( :partial => "dashboard/cotacoes") ) %>");
 <% end %>

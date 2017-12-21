@@ -1,5 +1,6 @@
 $( ".painel_content" ).html( "<%= escape_javascript( render( :partial => "layouts/#{params[:partial]}") ) %>" );
 $( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
+$(".current_place").prop('place',"<%= @part %>");
 $('.submit').click(function() {
     $('.result_lines').html('<i class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>');
     $('.editForm').submit();

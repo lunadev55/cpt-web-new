@@ -1,3 +1,3 @@
-class Wallet < ActiveRecord::Base
+class Wallet < ApplicationRecord
     belongs_to :user
 end

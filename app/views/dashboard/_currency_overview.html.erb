@@ -5,7 +5,12 @@
 </ul>
 <script>
     $('.view_wallets').click(function(){
-        $('.active').removeClass('active')
+        array = $('.active')
+        for(len = array.length, i=0; i<len; ++i){
+            if ($(array[i]).data("route") != undefined){
+                $(array[i]).removeClass('active')
+            }
+        }
         $(this).addClass('active')
         $('.wallets_overview').html('<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>')
         $.get($(this).data('route'))

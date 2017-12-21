@@ -20,7 +20,8 @@ class PagesController < ApplicationController
     redirect_to '/dashboard/index'
   end
   def partial
-    session[:current_place] = params[:partial]
+    @part = params[:partial]
+    session[:current_place] = @part
     if params[:partial] == "editInfo"
       if current_user.nil?
         @user = User.new
@@ -29,9 +30,6 @@ class PagesController < ApplicationController
       end
     elsif params[:partial] == "overview"
       route = "/dashboard/overview/wallet/"
-      
-    
-    
     elsif params[:partial] == "deposit"
       @total = Hash.new
       @currency = "BTC"

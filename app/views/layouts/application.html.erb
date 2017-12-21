@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
+	
 <head>
   <meta charset="utf-8">
+  <j class="current_place">
   <title>Cripto Câmbio &mdash; Exchange</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -11,6 +13,13 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 </head>
+<script>
+		$(document).ready(function(){
+		   $(".current_place").prop("place","overview");
+		   $('body').append("<prices class='current_prices'>");
+		});
+		
+</script>
 <body>
   
 <nav class="gtco-nav" role="navigation">
