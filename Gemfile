@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.7.1'
+gem 'rails', '~> 5'
 
 group :development do
   gem 'sqlite3'
@@ -20,7 +20,7 @@ gem 'font-awesome-sass'
 gem 'mongo', '~> 2.4'
 gem 'bootstrap-sass'
 gem 'sendgrid-ruby'
-gem 'authlogic', '3.4.6'
+gem 'authlogic'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
