@@ -26,7 +26,7 @@ executeQuery = () ->
                 type: 'GET',
                 dataType: "json"
                 error: (jqXHR, textStatus, errorThrown) ->
-                    $('body').append "AJAX Error: #{textStatus}"
+                    console.log("AJAX Error: #{textStatus}")
                 success: (data, textStatus, jqXHR) ->
                     <% EXCHANGE_PARES.each do |par| %>
                     <% atual = par.tr(" ", "") %>
@@ -38,7 +38,7 @@ executeQuery = () ->
 
 $ ->
     $.get('payments_details')
-    setInterval(executeQuery, 9000)
+#    setInterval(executeQuery, 9000)
 
 get_ajax = (route,callbackroute) -> 
     if callbackroute is ''

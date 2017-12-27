@@ -14,3 +14,4 @@
 //= require jquery_ujs
 //= require warn
 //= require generic
+//= require_tree ./channels

@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   post '/exchange/pair/:coin1/:coin2', to: 'exchange#create_order'
   post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'
   get '/exchange/open_orders', to: 'exchange#open_orders'
+  
+  mount ActionCable.server => '/cable'
+  
   get '/dashboard/overview/wallets/:currency', to: 'dashboard#wallets_view'
   post '/contact', to: 'jquery#contact_email'
   patch '/dashboard/changepasswd', to: 'password_resets#change_pass'

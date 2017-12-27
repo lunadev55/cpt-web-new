@@ -111,6 +111,10 @@ class JqueryController < ApplicationController
     end
     def editInfo
         @user = User.find(params['user_id'])
+        login_hash = Hash.new
+        login_hash['email'] = @user.email 
+        login_hash['password'] = params["password"]
+        
         if @user == current_user
             if params['first_name'] != current_user.first_name
                 @user.first_name = params['first_name']
@@ -131,7 +135,7 @@ class JqueryController < ApplicationController
                 @user.document = params['document']
             end
             if params['password'] == params['password_confirmation']
-                @user_session = UserSession.new(params)
+                @user_session = UserSession.new(login_hash)
                 if @user_session.save
                     @user.save
                     cpt_update_user(@user)

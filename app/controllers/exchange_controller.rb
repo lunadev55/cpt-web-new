@@ -7,20 +7,20 @@ class ExchangeController < ApplicationController
     def cancel_order
         @order = current_user.exchangeorder.find(params[:id])
         par = @order.par.split('/')
-        if @order.status != "open"
+        if (@order.status != "open") and (@order.status != "executada")
             return
         end
+        @order.status = "cancelled"
+        flash[:success] = "Ordem cancelada! "
+        
         case @order.tipo
         when "buy"
-            @order.status = "cancelled"
-            @order.save
-            flash[:success] = "Ordem cancelada! " 
             add_saldo(current_user,par[1],(BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)),"cancel_buy")
         when "sell"
-            @order.status = "cancelled"
-            @order.save
-            flash[:success] = "Ordem cancelada! "
             add_saldo(current_user,par[0],@order.amount,"cancel_sell")
+        end
+        if @order.save
+            broadcast_order(@order)
         end
     end
     
@@ -71,12 +71,17 @@ class ExchangeController < ApplicationController
         end
         result
     end
-    
+    def broadcast_order(order)
+        ActionCable.server.broadcast 'last_orders',
+            status: order.status
+    end
     def check_active_orders(order,consulta_ordem_oposta,buysell)
         inicial_amount = BigDecimal(order.amount,8)
         current_amount = inicial_amount
         if consulta_ordem_oposta.empty?
-            order.save
+            if order.save
+                broadcast_order(order)
+            end
             return 
         end
         consulta_ordem_oposta.each do |b|
@@ -88,7 +93,7 @@ class ExchangeController < ApplicationController
                     case 
                     when b_amount > o_amount
                         result_amount = b_amount - o_amount
-                        b.amount = result_amount.to_s #resultante do montante das duas transações é o que sobra na transação do livro convertido em string
+                        b.amount = result_amount.to_s #resultante do montante das duas ordens é o que sobra na transação do livro convertido em string
                         b.has_execution = true
                         b.save
                         
@@ -100,12 +105,17 @@ class ExchangeController < ApplicationController
                         new.amount = order.amount
                         new.tipo = order_type(order.tipo)
                         new.has_execution = true
-                        new.save
+                        if new.save
+                            broadcast_order(new)
+                        end
+                        
+                        
                         current_amount = 0
                         order.status = "executora"
                         order.has_execution = true
-                        order.save
-                        
+                        if order.save
+                           # broadcast_order(order)
+                        end
                     when b_amount <= o_amount
                         result_amount = o_amount - b_amount
                         if result_amount < 0
@@ -117,9 +127,9 @@ class ExchangeController < ApplicationController
                         b.status = "executada"
                         b.save
                         
-                        order.save
-                        
-                        
+                        if order.save
+                            broadcast_order(order)
+                        end
                     end    
                 end
                 case order.tipo
@@ -138,6 +148,7 @@ class ExchangeController < ApplicationController
                 end
             end
         end
+        head :ok
     end
     def order_type(arg)
         if arg == "buy"

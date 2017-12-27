@@ -8,6 +8,7 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag "bootstrap.js" %>
+  <%= action_cable_meta_tag %>
   <%= csrf_meta_tags %>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +19,6 @@
 		   $(".current_place").prop("place","overview");
 		   $('body').append("<prices class='current_prices'>");
 		});
-		
 </script>
 <body>
   
