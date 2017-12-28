@@ -12183,7 +12183,7 @@ return jQuery;
 (function() {
   this.App || (this.App = {});
 
-  App.cable = ActionCable.createConsumer();
+  App.cable = ActionCable.createConsumer('wss://cptcambio.herokuapp.com/cable');
 
 }).call(this);
 
