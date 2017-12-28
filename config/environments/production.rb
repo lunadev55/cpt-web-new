@@ -56,6 +56,8 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "logical_#{Rails.env}"
   config.action_mailer.perform_caching = false
+  config.web_socket_server_url = "wss://cptcambio.herokuapp.com/cable"
+  config.action_cable.allowed_request_origins = ['https://cptcambio.herokuapp.com', 'http://cptcambio.herokuapp.com', 'www.cptcambio.com', 'http://www.cptcambio.com', 'https://www.cptcambio.com']
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
