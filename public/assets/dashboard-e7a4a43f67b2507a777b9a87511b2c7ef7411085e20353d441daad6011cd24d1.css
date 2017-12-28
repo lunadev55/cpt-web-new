@@ -1,0 +1,154 @@
+/* line 5, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.dashcontainer {
+  margin-top: 90px;
+}
+
+/* line 8, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.menu_background {
+  border-radius: 15px 50px 30px 5px;
+  padding: 20px;
+}
+
+/* line 12, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.hover-link:hover {
+  color: black !important;
+}
+
+/* line 15, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.table {
+  margin-top: 20px;
+}
+
+/* line 18, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.small_lines {
+  padding: 1px !important;
+  text-align: center;
+  font-size: 90%;
+}
+
+/* line 23, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.margin-exchange {
+  margin-top: 20px;
+}
+
+/* line 26, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.text-center {
+  text-align: center;
+}
+
+/* line 29, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.small-font, .small-size {
+  padding: 6px;
+  font-size: 80%;
+}
+
+/* line 33, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.paragraph {
+  word-break: break-all;
+}
+
+/* line 36, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.price-box {
+  height: 150px;
+}
+
+/* line 39, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.carousel-control {
+  width: 40px;
+}
+
+/* line 43, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.buttonSmall {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+}
+
+/* line 49, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.carousel-inner {
+  height: 150px;
+}
+
+/* line 52, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.small-size {
+  width: 30%;
+}
+
+/* line 56, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+body {
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 61, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.menu {
+  padding: 15px;
+}
+
+/* line 66, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.heading-colored, h4 {
+  margin-bottom: 5px !important;
+}
+
+/* line 69, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.font-small {
+  font-size: 75%;
+}
+
+/* line 72, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+ul {
+  padding-left: 0px !important;
+}
+
+/* line 75, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.painel_content {
+  margin-top: 2vh;
+}
+
+/* line 82, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.gtco-nav {
+  background-color: gray !important;
+}
+
+/* line 85, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.table_head {
+  border-radius: 1px;
+  border-color: black;
+}
+
+/* line 89, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.padding-right-left-wallet {
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+}
+
+/* line 93, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.table {
+  overflow-x: auto;
+}
+
+/* line 96, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.padding-dep {
+  padding-left: 50px;
+}
+
+/* line 100, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.non-pade-right {
+  padding-right: 0px;
+}
+
+/* line 104, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.non-pade-left {
+  padding-left: 0px;
+}
+
+/* line 108, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.btn-danger {
+  padding: 5px !important;
+}
+
+/* line 112, /home/ubuntu/workspace/app/assets/stylesheets/dashboard.scss */
+.panel-body {
+  padding-bottom: 0px !important;
+}
