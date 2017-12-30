@@ -1,7 +1,12 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
+body{
+    font-size: 1vw;
+}
+h4{
+    @extend body;
+}
 .dashcontainer {
     margin-top: 90px;
 }
@@ -61,7 +66,8 @@ body{
 .menu{
     //border-radius: 10px;
    // background: white;
-    padding: 15px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 .heading-colored{
     margin-bottom: 5px !important;

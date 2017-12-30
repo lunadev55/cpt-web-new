@@ -1,17 +1,35 @@
 <%= stylesheet_link_tag params[:controller] %>
 <div class="menu_background well paragraph">
 <div class="color-div"></div>
-<div class="menu saldos"><%= render 'layouts/saldos' %></div>
-<hr>
-<div class="container">
-<% if current_user.role == "admin" %>
-<%= render 'layouts/admin_menu' %>
-<% end %>
+<div class="row menu saldos">
+    <div class="col-md-12 col-xs-12">
+        <%= render 'layouts/saldos' %>
+    </div>
 </div>
 <hr>
-<div class="container"><%= render 'layouts/operations' %></div>
+<% if current_user.role == "admin" %>
+<div class="row">
+    <div class="col-md-12 col-xs-12 menu">
+        <%= render 'layouts/admin_menu' %>
+    </div>
+</div>
 <hr>
-<div class="container"><%= render 'layouts/configs' %></div>
+<% end %>
+<div class="row">
+    <div class="col-md-12 col-xs-12 menu">
+        <%= render 'layouts/operations' %>
+    </div>
+</div>
 <hr>
-<div class="container"><%= render 'layouts/help' %></div>
+<div class="row menu">
+    <div class="col-md-12 col-xs-12 menu">
+        <%= render 'layouts/configs' %>
+    </div>
+</div>
+<hr>
+<div class="row menu">
+    <div class="col-md-12 col-xs-12 menu">
+        <%= render 'layouts/help' %>
+    </div>
+</div>
 </div>
