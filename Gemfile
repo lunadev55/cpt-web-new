@@ -15,7 +15,8 @@ group :production do
 end
 
 gem 'bitcoin-ruby', git: 'https://github.com/lian/bitcoin-ruby', branch: 'master', require: 'bitcoin'
-
+gem 'puma'
+gem 'redis', '~> 3.0'
 gem 'faye-websocket'
 gem 'thin'
 gem 'font-awesome-sass'

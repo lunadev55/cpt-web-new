@@ -4,10 +4,10 @@
 //= require action_cable
 //= require_self
 //= require_tree ./channels
-
-(function() {
-  this.App || (this.App = {});
-  App.cable = ActionCable.createConsumer('wss://cpt-cambio-new-rbm4.c9users.io/cable');
+//
+//(function() {
+  //this.App || (this.App = {});
+  //App.cable = ActionCable.createConsumer('wss://cpt-cambio-new-rbm4.c9users.io/cable');
 //  App.cable = ActionCable.createConsumer('wss://cptcambio.herokuapp.com/cable');
 
-}).call(this);
+//}).call(this);
