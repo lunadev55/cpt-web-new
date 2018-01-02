@@ -6,6 +6,14 @@ class ApplicationController < ActionController::Base
   require 'sendgrid-ruby'
   include SendGrid 
   private
+  def require_admin
+    require_user
+    p current_user.role.to_s
+    unless current_user.role.to_s == "admin" 
+      flash[:success] = "Esta página requer permissões administrativas!"
+      redirect_to '/'
+    end
+  end
   def check_cur_nil
     if session[:currency1].nil?
       base_par = EXCHANGE_PARES.first.tr(" ","").split("/")

@@ -45,8 +45,9 @@
             </div>
         </div>
         <div class="col-md-4">
-            <h4>Informações de login</h4>
-              <div class="well well-lg font-small">
+            <fieldset>
+                <legend>Informações de login</legend>
+              <div class="well well-lg">
                 <ul>
                   <li>Qtd. de logins: <%= current_user.login_count %></li>
                   <li>Última requisição: <%= current_user.last_request_at %></li>
@@ -56,11 +57,14 @@
                   <li>IP do último Login: <%= current_user.last_login_ip %></li>
                 </ul>
               </div>
-              <h4>Comissões</h4>
-              <div class="well well-lg font-small">
+              </fieldset>
+              <fieldset>
+                <legend>Comissões</legend>
+              <div class="well well-lg">
                 Operações (saque, depósito): 1%<br>
                 Ordens (negociações): 0,5%
               </div>
+              </fieldset>
         </div>
     </div>
     

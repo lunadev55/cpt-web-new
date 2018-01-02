@@ -9,31 +9,31 @@
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'btc.png' %>" width="20px" height="20px" alt="Bitcoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["BTC"],8).truncate(8) %> BTC</div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["BTC"].to_s.split(".")[0] %>.<%= @saldos["BTC"].to_s.split(".")[1].first(8) %> BTC</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'litecoin.png' %>" width="20px" height="20px" alt="Litecoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["LTC"],8).truncate(8) %> LTC</div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["LTC"].to_s.split(".")[0] %>.<%= @saldos["LTC"].to_s.split(".")[1].first(8) %> LTC</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'doge.png' %>" width="20px" height="20px" alt="Dogecoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= BigDecimal(@saldos["DOGE"],5).truncate(5) %> DOGE</div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["DOGE"].to_s.split(".")[0] %>.<%= @saldos["DOGE"].to_s.split(".")[1].first(5) %> DOGE</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'eth.png' %>" width="20px" height="20px" alt="Ethereum"> </div>
-							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["ETH"],2)).truncate(8) %> ETH </div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["ETH"].to_s.split(".")[0] %>.<%= @saldos["ETH"].to_s.split(".")[1].first(8) %> ETH </div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'bch.png' %>" width="20px" height="20px" alt="BitcoinCash"> </div>
-							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["BCH"],2)).truncate(8) %> BCH </div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["BCH"].to_s.split(".")[0] %>.<%= @saldos["BCH"].to_s.split(".")[1].first(8) %> BCH </div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'dash.png' %>" width="20px" height="20px" alt="Dash"> </div>
-							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["DASH"],2)).truncate(8) %> DASH </div>
+							<div class="col-md-10 col-xs-10"><%= @saldos["DASH"].to_s.split(".")[0] %>.<%= @saldos["DASH"].to_s.split(".")[1].first(8) %> DASH </div>
 						</div>
 				<!--		<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'xmr.png' %>" width="20px" height="20px" alt="Monero"> </div>
-							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["XMR"],2)).truncate(8) %> XMR </div>
+							<div class="col-md-10 col-xs-10"><%= (BigDecimal(@saldos["XMR"],2)).to_s %> XMR </div>
 						</div> -->
 					</div>
 				<% end %>

@@ -4,4 +4,53 @@
 Permissão negada.
 <% else %>
 Usuário: <%= "#{current_user.first_name} #{current_user.last_name}" %>
+<div class="row">
+    <div class="col-md-4">
+        <fieldset>
+            <legend>Confirmar depósito</legend>
+            <div class="well">
+                <%= form_tag 'confirmar_deposito', :remote => true, class: 'admin_form' %>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <%= label_tag :currency_base, "Moeda:" %>
+                            <%= select_tag :currency_base, options_for_select(MOEDAS_ATIVAS), :prompt => "Selecione a moeda" , class: "form-control" %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <%= label_tag :amount, "Qtd:" %>
+                            <%= text_field_tag :amount, nil, class: "form-control" %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <%= label_tag :user_email, "Email:" %>
+                            <%= email_field_tag :user_email, nil, class: "form-control" %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <%= label_tag :tipo, "Tipo:" %>
+                            <%= text_field_tag :tipo, nil, class: "form-control" %>
+                        </div>
+                    </div>
+                </div>
+                <%= submit_tag 'Enviar', :class => 'form-control' %>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-md-4">
+        <fieldset>
+            <legend>Depósitos a confirmar (BRL)</legend>
+            <div class="well"></div>
+        </fieldset>
+    </div>
+</div>
 <% end %>

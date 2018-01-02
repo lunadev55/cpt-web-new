@@ -15,9 +15,9 @@ class ExchangeController < ApplicationController
         
         case @order.tipo
         when "buy"
-            add_saldo(current_user,par[1],(BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)),"cancel_buy")
+            p add_saldo(current_user,par[1],(BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)).to_s,"cancel_buy")
         when "sell"
-            add_saldo(current_user,par[0],@order.amount,"cancel_sell")
+            p add_saldo(current_user,par[0],@order.amount,"cancel_sell")
         end
         if @order.save
             broadcast_order(@order)
@@ -49,7 +49,7 @@ class ExchangeController < ApplicationController
             operation = "exchange_sell"
             consulta_ordem_oposta = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt AND price >= :preco", {str_par: order.par, tupe: "buy", stt: "open", preco: order.price}).order(price: :desc)
         end
-        if saldo > BigDecimal(compare_value,8)
+        if saldo >= BigDecimal(compare_value,8)
             
             add_saldo(current_user,discount_currency,compare_value.to_s,operation)
             check_active_orders(order,consulta_ordem_oposta,params[:type])
@@ -93,6 +93,8 @@ class ExchangeController < ApplicationController
                     case 
                     when b_amount > o_amount
                         result_amount = b_amount - o_amount
+                        saldo_sell = o_amount #saldo a adicionar pro comprador caso ordem parcelada
+                        saldo_buy = o_amount
                         b.amount = result_amount.to_s #resultante do montante das duas ordens é o que sobra na transação do livro convertido em string
                         b.has_execution = true
                         b.save
@@ -113,42 +115,51 @@ class ExchangeController < ApplicationController
                         current_amount = 0
                         order.status = "executora"
                         order.has_execution = true
-                        if order.save
-                           # broadcast_order(order)
-                        end
-                    when b_amount <= o_amount
+                        order.save
+                    when o_amount >= b_amount
                         result_amount = o_amount - b_amount
-                        if result_amount < 0
-                            order.has_execution = true
-                            order.status = "executora"
-                        else
-                            order.amount = result_amount
-                        end
-                        b.status = "executada"
-                        b.save
+                        saldo_sell = b_amount #saldo a adicionar pro comprador caso ordem parcelada de venda
+                        saldo_buy = b_amount
                         
-                        if order.save
-                            broadcast_order(order)
+                        if result_amount > 0
+                            order.has_execution = true
+                            order.amount = result_amount
+                        else
+                            order.status = "executora"  
                         end
+                        
+                        b.status = "executada"
+                        if b.save
+                            broadcast_order(b)
+                        end
+                        current_amount = result_amount
+                        order.save
                     end    
                 end
                 case order.tipo
                 when "buy"
                     #adicionar saldo order.amount ao dono da order (compra)
-                    #adicionar saldo de order.amount pro dono de order (compra)
-                    add_saldo(User.find(order.user_id),params[:coin1],(BigDecimal((order.amount * 0.995),8).to_s),"exchange_credit")
+                    p saldo1 = (BigDecimal(saldo_buy,8)*0.995).to_s
+                    p "adicionar saldo de #{saldo1} #{params[:coin1]} para #{User.find(order.user_id).first_name}"
+                    p add_saldo(User.find(order.user_id),params[:coin1],saldo1,"exchange_credit")
                     #adicionar saldo b.amount * b.price ao dono da b (compra)
-                    #adicionar saldo de order.amount * price para dono da ordem b (compra)
-                    add_saldo(User.find(b.user_id),params[:coin2],BigDecimal((BigDecimal(order.amount,8) * BigDecimal(b.price,8))*0.995),8)
+                    p saldo2 = (BigDecimal(((saldo_buy * BigDecimal(b.price,8))*0.995),8)).to_s
+                    p "adicionar saldo de #{saldo2} #{params[:coin2]} para #{User.find(b.user_id).first_name}"
+                    p add_saldo(User.find(b.user_id),params[:coin2],saldo2,"exchange_credit")
                 when "sell"
-                    #adicionar saldo de order.amount * price para dono da order (venda)
-                    add_saldo(User.find(order.user_id),params[:coin2],BigDecimal((BigDecimal(order.amount,8) * BigDecimal(b.price,8))*0.995),8)
-                    #adicionar asldo de order.amount pro dono de b (venda)
-                    add_saldo(User.find(b.user_id),params[:coin1],(BigDecimal((order.amount * 0.995),8).to_s))
+                    
+                    p coin2_sell_price = ((BigDecimal(saldo_sell,8) * BigDecimal(b.price,8)) * 0.995).to_s
+                    p "adicionar saldo de #{BigDecimal(coin2_sell_price,8)} #{params[:coin2]} para #{User.find(order.user_id).first_name}"
+                    p add_saldo(User.find(order.user_id),params[:coin2],BigDecimal(coin2_sell_price,8),"exchange_credit")
+                    
+                    
+                    p coin1_sell_price = BigDecimal((saldo_sell * 0.995),8).to_s
+                    p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
+                    p add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
                 end
             end
         end
-        head :ok
+        #head :ok
     end
     def order_type(arg)
         if arg == "buy"

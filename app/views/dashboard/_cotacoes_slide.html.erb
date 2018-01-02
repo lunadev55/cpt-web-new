@@ -12,15 +12,15 @@
                   <div class="row">
                       <div class="col-md-4 col-xs-4">
                         <p>Compra <i class="fa fa-arrow-up" aria-hidden="true"></i>: <br>
-                          <font class="small-font"><j class="<%= k.tr(" ", "").tr("/","_") %>_buy"><%= last_price(k.tr(" ", ""),"buy","executada") %></j><b> <%= k.split(" ")[2] %></b></font>
+                          <font class="small-font"><j class="<%= k.tr(" ", "").tr("/","_") %>_buy recent_values"><%= last_price(k.tr(" ", ""),"buy","executada") %></j><b> <%= k.split(" ")[2] %></b></font>
                         </div>
                     <div class="col-md-4 col-xs-4">
                        <p> Venda <i class="fa fa-arrow-up" aria-hidden="true"></i>: <br>
-                          <font class="small-font"><j class="<%= k.tr(" ", "") %>_sell"><%= last_price(k.tr(" ", ""),"sell","executada") %></j> <b> <%= k.split(" ")[2] %></b></font>
+                          <font class="small-font"><j class="<%= k.tr(" ", "") %>_sell recent_values"><%= last_price(k.tr(" ", ""),"sell","executada") %></j> <b> <%= k.split(" ")[2] %></b></font>
                         </p>
                     </div>
                     <div class="col-md-4 col-xs-4">
-                        <p> Volume 24hrs:<br><b> <font class="small-font"><j class="<%= k.tr(" ", "") %>_volume"></j> <%= k.split(" ")[0] %></b></font>
+                        <p> Volume 24hrs:<br><b> <font class="small-font"><j class="<%= k.tr(" ", "") %>_volume recent_values"></j> <%= k.split(" ")[0] %></b></font>
                     </div>
                 </div>
               </h5>
