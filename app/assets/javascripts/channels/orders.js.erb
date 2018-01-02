@@ -14,34 +14,30 @@ App.cable = ActionCable.createConsumer();
 App.orders = App.cable.subscriptions.create("OrdersChannel", {
   connected: function() {
     console.log("conected into websocket")
+    $('.online-offline').html(" Online")
+    $('.online-offline').css('color','green')
   },
 
   disconnected: function() {
+    $('.online-offline').html(" Offline")
+    $('.online-offline').css('color','red')
     // Called when the subscription has been terminated by the server
   },
 
   received: function(data) {
-    if ($(".current_place").prop("place") != "overview"){
-        $.get('/exchange/open_orders')
-    }else{
-      $.ajax({
-      url: ("/exchange/open_orders"),
-      cache: false,
-      dataType: "json",
-      type: "GET",
-      success: function(response) {
-         <% EXCHANGE_PARES.each do |par| %>
-                    <% atual = par.tr(" ", "") %>
-                    <% obj = atual.tr("/","_") %>
-                        $('.<%= obj %>_buy').html(data["<%= atual %>_buy"])
-                        $('.<%= obj %>_sell').html(data["<%= atual %>_sell"])
-                    <% end %> 
-      },
-      error: function(xhr) {
-          
-      }
-      });
-    }             
+        // caso alguma ordem seja executada, atualizar tabelas
+        if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "business")){
+          $.get('/exchange/open_orders');
+        }; 
+        if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
+          console.log(data);
+          <% EXCHANGE_PARES.each do |par| %>
+                        <% atual = par.tr(" ", "") %>
+                        <% obj = atual.tr("/","_") %>
+                            $('.<%= obj %>_buy').html(data.last_price["<%= atual %>_buy"])
+                            $('.<%= obj %>_sell').html(data.last_price["<%= atual %>_sell"])
+          <% end %> 
+        };
     // Called when there's incoming data on the websocket for this channel
   }
 });

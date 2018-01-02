@@ -72,8 +72,14 @@ class ExchangeController < ApplicationController
         result
     end
     def broadcast_order(order)
-        ActionCable.server.broadcast 'last_orders',
-            status: order.status
+        if order.status == "executada"
+            ActionCable.server.broadcast 'last_orders',
+                status: order.status,
+                last_price: json_last_price 
+        else
+            ActionCable.server.broadcast 'last_orders',
+                status: order.status
+        end
     end
     def check_active_orders(order,consulta_ordem_oposta,buysell)
         inicial_amount = BigDecimal(order.amount,8)

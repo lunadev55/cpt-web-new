@@ -12202,59 +12202,55 @@ App.cable = ActionCable.createConsumer();
 App.orders = App.cable.subscriptions.create("OrdersChannel", {
   connected: function() {
     console.log("conected into websocket")
+    $('.online-offline').html(" Online")
+    $('.online-offline').css('color','green')
   },
 
   disconnected: function() {
+    $('.online-offline').html(" Offline")
+    $('.online-offline').css('color','red')
     // Called when the subscription has been terminated by the server
   },
 
   received: function(data) {
-    if ($(".current_place").prop("place") != "overview"){
-        $.get('/exchange/open_orders')
-    }else{
-      $.ajax({
-      url: ("/exchange/open_orders"),
-      cache: false,
-      dataType: "json",
-      type: "GET",
-      success: function(response) {
-         
-                    
-                    
-                        $('.LTC_BTC_buy').html(data["LTC/BTC_buy"])
-                        $('.LTC_BTC_sell').html(data["LTC/BTC_sell"])
-                    
-                    
-                    
-                        $('.ETH_BTC_buy').html(data["ETH/BTC_buy"])
-                        $('.ETH_BTC_sell').html(data["ETH/BTC_sell"])
-                    
-                    
-                    
-                        $('.DOGE_BTC_buy').html(data["DOGE/BTC_buy"])
-                        $('.DOGE_BTC_sell').html(data["DOGE/BTC_sell"])
-                    
-                    
-                    
-                        $('.ETH_LTC_buy').html(data["ETH/LTC_buy"])
-                        $('.ETH_LTC_sell').html(data["ETH/LTC_sell"])
-                    
-                    
-                    
-                        $('.BCH_BTC_buy').html(data["BCH/BTC_buy"])
-                        $('.BCH_BTC_sell').html(data["BCH/BTC_sell"])
-                    
-                    
-                    
-                        $('.DASH_BTC_buy').html(data["DASH/BTC_buy"])
-                        $('.DASH_BTC_sell').html(data["DASH/BTC_sell"])
-                     
-      },
-      error: function(xhr) {
+        // caso alguma ordem seja executada, atualizar tabelas
+        if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "business")){
+          $.get('/exchange/open_orders');
+        }; 
+        if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
+          console.log(data);
           
-      }
-      });
-    }             
+                        
+                        
+                            $('.LTC_BTC_buy').html(data.last_price["LTC/BTC_buy"])
+                            $('.LTC_BTC_sell').html(data.last_price["LTC/BTC_sell"])
+          
+                        
+                        
+                            $('.ETH_BTC_buy').html(data.last_price["ETH/BTC_buy"])
+                            $('.ETH_BTC_sell').html(data.last_price["ETH/BTC_sell"])
+          
+                        
+                        
+                            $('.DOGE_BTC_buy').html(data.last_price["DOGE/BTC_buy"])
+                            $('.DOGE_BTC_sell').html(data.last_price["DOGE/BTC_sell"])
+          
+                        
+                        
+                            $('.ETH_LTC_buy').html(data.last_price["ETH/LTC_buy"])
+                            $('.ETH_LTC_sell').html(data.last_price["ETH/LTC_sell"])
+          
+                        
+                        
+                            $('.BCH_BTC_buy').html(data.last_price["BCH/BTC_buy"])
+                            $('.BCH_BTC_sell').html(data.last_price["BCH/BTC_sell"])
+          
+                        
+                        
+                            $('.DASH_BTC_buy').html(data.last_price["DASH/BTC_buy"])
+                            $('.DASH_BTC_sell').html(data.last_price["DASH/BTC_sell"])
+           
+        };
     // Called when there's incoming data on the websocket for this channel
   }
 });
