@@ -2,8 +2,12 @@
 
 <%= render 'layouts/render_withdrawal_details' %>
 
-<% else %>
+<% elsif @payment.label.split("_")[0] == "Exchange" %>
+Tipo: <b><%= @payment.label %></b><br>
+Quantidade: <b><%= @payment.volume %> <%= @payment.network %></b><br>
+Par de troca: <b><%= @payment.endereco %></b>
 
+<% else %>
 
 Tipo: <b><%= @payment.label %></b><br>
 Endereço depositado: <b><%= @payment.endereco %></b><br>

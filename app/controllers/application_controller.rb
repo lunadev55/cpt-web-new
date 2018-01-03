@@ -82,9 +82,9 @@ class ApplicationController < ActionController::Base
     
     cipher = OpenSSL::Cipher.new('AES-128-CBC')
     cipher.encrypt
-    key = ENV["CIPHER_RANDOM"]
-    iv = ENV["CIPHER_IV"]
-    message = cipher.update(params) + cipher.final
+    cipher.key = ENV["CIPHER_RANDOM"]
+    cipher.iv = ENV["CIPHER_IV"]
+    message = cipher.update(params.to_s) + cipher.final
     
     params = Hash.new
     params[:message] = message
