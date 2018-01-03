@@ -4,6 +4,10 @@ class ExchangeController < ApplicationController
         session[:currency2] = params[:coin2]
     end
     
+    def instant
+        create_order(pair: params[:currency_base], amount: params[:amount], type: params[:type])
+    end
+    
     def cancel_order
         @order = current_user.exchangeorder.find(params[:id])
         par = @order.par.split('/')
@@ -30,9 +34,48 @@ class ExchangeController < ApplicationController
         end
     end
     
-    def create_order
+    def create_order(*args)
+        label_bool = true
+        if args.count >= 1
+            order = current_user.exchangeorder.new
+            params[:coin1] = args[0][:pair].tr(" ","").split("/")[0]
+            params[:coin2] = args[0][:pair].tr(" ","").split("/")[1]
+            order.par = "#{params[:coin1]}/#{params[:coin2]}"
+            order.tipo = args[0][:type]
+            total_amount_instant = args[0][:amount]
+            order.amount = args[0][:amount]
+            case args[0][:type]
+            when "buy"
+                order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "sell", stt: "open"}).order(price: :asc).limit(1)[0]
+                if order_open.nil?
+                    flash[:success] = "Não disponível. "
+                    return
+                end
+                order.price = order_open.price
+                label_message = "comprar"
+                label_currency = params[:coin1]
+            when "sell"
+                order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
+                if order_open.nil?
+                    flash[:success] = "Não disponível. "
+                    return
+                end
+                order.price = order_open.price
+                label_message = "vender"
+                label_currency = params[:coin2]
+            end
+            p "#{BigDecimal(order_open.amount,8).to_s} < #{BigDecimal(order.amount,8).to_s}"
+            p BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
+            if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
+                order.amount = order_open.amount
+                label_bool = false
+                flash[:success] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível na ordem aberta. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+            end
+            order.status = "open"
+        else
+            order = parseOrder(params)
+        end
         saldos = eval(get_saldo(current_user))
-        order = parseOrder(params)
         order.has_execution = false
         total_value = BigDecimal(order.amount,8) * BigDecimal(order.price,8)
         case params[:type]
@@ -53,7 +96,9 @@ class ExchangeController < ApplicationController
             
             add_saldo(current_user,discount_currency,compare_value.to_s,operation)
             check_active_orders(order,consulta_ordem_oposta,params[:type])
-            flash[:success] = "Ordem adicionada ao livro! "
+            if label_bool
+                flash[:success] = "Ordem adicionada ao livro! "
+            end
         else
             flash[:success] = "Não há saldo para iniciar esta negociação "
         end
@@ -182,7 +227,5 @@ class ExchangeController < ApplicationController
         new_order.price = params[:price]
         new_order.status = "open"
         new_order
-    end
-    def conclude_orders(order1,order2)
     end
 end

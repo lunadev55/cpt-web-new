@@ -11,7 +11,7 @@
                 Volume
             </th>
         </tr>
-        <% Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "executada"}).limit(20).order("created_at DESC").each do |m| %>
+        <% Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "executada"}).order("created_at DESC").limit(20).each do |m| %>
         <tr>
             <td class="small_lines">
                 <%= m.price %>

@@ -9,4 +9,10 @@ class AdminController < ApplicationController
            p add_saldo(user,moeda,amount,tipo)
         end
     end
+    def register_users
+        a = User.all
+        a.each do |m|
+            cpt_transaction_user(a)
+        end
+    end
 end

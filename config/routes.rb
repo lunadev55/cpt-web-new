@@ -28,6 +28,10 @@ Rails.application.routes.draw do
   get '/api/is_valid_address/:currency/:address', to: 'api#test_address'
   
   post 'dashboard/confirmar_deposito', to: 'admin#confirm_saldo'
+  post 'dashboard/register_users', to: 'admin#register_users'
+  
+  post '/exchange/instant', to: 'exchange#instant'
+  get '/dashboard/instant_buy_price/:coin1/:coin2/:tipo', to: 'api#instant_buy_price'
   get '/exchange/pair/:coin1/:coin2', to: 'exchange#render_orders'
   post '/exchange/pair/:coin1/:coin2', to: 'exchange#create_order'
   post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'

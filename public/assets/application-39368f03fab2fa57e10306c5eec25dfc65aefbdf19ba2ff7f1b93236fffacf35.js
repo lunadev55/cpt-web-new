@@ -12216,9 +12216,36 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
         // caso alguma ordem seja executada, atualizar tabelas
         if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "business")){
           $.get('/exchange/open_orders');
-        }; 
+        };
+        if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "overview")){
+          console.log("cálculo instant")
+          elemento = $(  ".pair-control" )
+          if (elemento.find(":selected").text() == "Selecione o par"){
+              return
+          } else {
+              a = elemento.find(":selected").text().replace(/ /,'')
+              b = a.replace(/ /,'')
+              $('.actual_price_form').data("pair",b)
+              if ($('#type').prop("value") == "buy"){
+                tipo = "buy"
+              } else {
+                tipo = "sell"
+              };
+              
+              $.ajax({
+              url: "instant_buy_price/" + b + '/' + tipo,
+              cache: false,
+              type: "GET",
+              success: function(response) {
+                  $(".actual_price_form").val(response);
+                  calc(response)
+              },
+              error: function(xhr) {
+                  
+              }});
+            }}
+            
         if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
-          console.log(data);
           
                         
                         
@@ -12249,11 +12276,53 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
                         
                             $('.DASH_BTC_buy').html(data.last_price["DASH/BTC_buy"])
                             $('.DASH_BTC_sell').html(data.last_price["DASH/BTC_sell"])
-           
+          
+          pair = $( ".pair-control" )
+          pair_string = pair.find(":selected").text().replace(' ','');
+          pair_string.replace('/','_');
         };
     // Called when there's incoming data on the websocket for this channel
   }
 });
+
+
+
+function calc(price){
+            a = elemento.find(":selected").text().replace(/ /,'')
+            b = a.replace(/ /,'')
+            if (price == "Não disponível."){
+              $('.instant_submit').prop("disabled",true)
+            }else {
+              $('.instant_submit').prop("disabled",false)
+            }
+            element = $(".amount_input")
+            element.val((element.val()).replace(/^\./, ""));
+            element.val((element.val()).replace(',','.'));
+            element.val((element.val()).replace(/[^0-9\,.]/g,''));
+            quantity = parseFloat($( ".amount_input" ).val().replace(",","."));
+            price = parseFloat($(".actual_price_form").val().replace(",",".").split(" ")[0]);
+            pair = b.split("/");
+            currency1 = pair[0];
+            currency2 = pair[1];
+            
+            if ($('#type').prop("value") == "buy"){
+              discount = (quantity * 0.005).toFixed(8);
+              receive = (quantity - discount).toFixed(8);
+              total = (price * quantity).toFixed(8);
+              
+              $(".receive").html(receive + " " + currency1);
+              $(".total").html(total + " " + currency2);
+            }else{
+              total = (price * quantity).toFixed(8);
+              discount = (total * 0.005).toFixed(8);
+              receive = (total - discount).toFixed(8);
+              
+              $(".receive").html(receive + " " + currency2);
+              $(".total").html(total + " " + currency2);
+            }
+
+}
+;
 // This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
 //

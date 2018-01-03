@@ -18,7 +18,9 @@
 		$(document).ready(function(){
 		   $(".current_place").prop("place","overview");
 		   $('body').append("<prices class='current_prices'>");
+		   $('[data-toggle="tooltip"]').tooltip();
 		});
+	
 </script>
 <body>
   
@@ -45,7 +47,7 @@
 						<% else %>
 						<li class="btn-cta"><a href="/sign_out" class="external" data-nav-section="contact"><span>Logout</span></a></li>
 						<% end %>
-						<li><i class="fa fa-circle online-offline" style="color: red;" aria-hidden="true"> Offline </i></li>
+						<li><i class="fa fa-circle online-offline" data-toggle="tooltip" title="<%= HELPER_TEXT["online-offline"] %>" data-placement="bottom" style="color: red;" aria-hidden="true"> Offline </i></li>
 						<!-- For external page link -->
 						<!--<li><a href="http://freehtml5.co/" class="external">External</a></li>-->
 					</ul>

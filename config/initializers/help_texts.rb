@@ -1,0 +1,2 @@
+HELPER_TEXT = Hash.new
+HELPER_TEXT["online-offline"] = "Este campo indica se você está conectado ao servidor recebendo dados em tempo real das transações. Caso persista em 'offline' atualize a página."
