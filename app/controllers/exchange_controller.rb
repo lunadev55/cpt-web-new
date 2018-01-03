@@ -69,7 +69,7 @@ class ExchangeController < ApplicationController
             if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
                 order.amount = order_open.amount
                 label_bool = false
-                flash[:success] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível na ordem aberta. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+                flash[:success] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
             end
             order.status = "open"
         else

@@ -79,6 +79,15 @@ class ApplicationController < ActionController::Base
     url = URI.parse("https://cpttransactions.herokuapp.com/#{route}")
     req = Net::HTTP::Post.new(url.request_uri)
     params['key'] = ENV['TRANSACTION_KEY']
+    
+    cipher = OpenSSL::Cipher.new('AES-128-CBC')
+    cipher.encrypt
+    key = ENV["CIPHER_RANDOM"]
+    iv = ENV["CIPHER_IV"]
+    message = cipher.update(params) + cipher.final
+    
+    params = Hash.new
+    params[:message] = message
     req.set_form_data(params)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = (url.scheme == "https")
