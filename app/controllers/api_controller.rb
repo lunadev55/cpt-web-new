@@ -20,7 +20,8 @@ class ApiController < ApplicationController
         elsif params[:tipo] == "sell"
             a = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{params[:coin1]}/#{params[:coin2]}", tupe: "buy", stt: "open"}).order(price: :desc).limit(1)
         end
-         
+        session[:currency1] = params[:coin1]
+        session[:currency2] = params[:coin2]
         if a.empty?
             render plain: "Não disponível."
         else

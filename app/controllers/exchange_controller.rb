@@ -208,7 +208,7 @@ class ExchangeController < ApplicationController
                     coin2_sell_id = add_saldo(User.find(order.user_id),params[:coin2],BigDecimal(coin2_sell_price,8),"exchange_credit")
                     Payment.exchange_payment(User.find(order.user_id),coin2_sell_id,params[:coin2],BigDecimal(coin2_sell_price,8).to_s,"#{order.tipo}_order_execution",order.par)
                     
-                    coin1_sell_price = BigDecimal((saldo_sell * 0.995),8).to_s
+                    coin1_sell_price = (BigDecimal((saldo_sell * 0.995),8)).to_s
                     #p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
                     coin1_sell_id = add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)

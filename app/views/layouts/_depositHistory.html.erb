@@ -34,6 +34,7 @@
             </form>
         </div>
         <div class="table-responsive result_lines">
+        <%= paginate @pays, left: 1, right: 3, remote: true %>
         <table width="90%" class="table table-striped">
             <tr>
                 <th>Status</th>
@@ -52,7 +53,7 @@
             </tr>
             <% end %>
         </table>
-        <%= paginate @pays, left: 1, right: 3, remote: true %>
+        
         <!-- Modal -->
             <div id="payModal" class="modal fade" role="dialog">
               <div class="modal-dialog">

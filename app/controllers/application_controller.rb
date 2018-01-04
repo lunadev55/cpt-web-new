@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
   
   def require_admin
     require_user
-    p current_user.role.to_s
+    current_user.role.to_s
     unless current_user.role.to_s == "admin" 
       flash[:success] = "Esta página requer permissões administrativas!"
       redirect_to '/'
@@ -111,7 +111,7 @@ class ApplicationController < ActionController::Base
   end
 
   def cpt_push(route,params)
-    url = URI.parse("https://cpttransactions.herokuapp.com/#{route}")
+    url = URI.parse("#{ENV["TRANSACTION_URL"]}#{route}")
     req = Net::HTTP::Post.new(url.request_uri)
     params['key'] = ENV['TRANSACTION_KEY']
     
@@ -142,7 +142,7 @@ class ApplicationController < ActionController::Base
   end
   def add_saldo(usuario,moeda,qtd,tipo) #função para adicionar saldo em depóstios
     route = 'add_saldo'
-    params = {'username'=> usuario.username, 'id_original'=> usuario.id, 'currency'=>moeda, 'amount'=>qtd, 'type'=>tipo}
+    params = {'username' => usuario.username, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => qtd, 'type' => tipo}
     cpt_push(route,params)
   end
   def get_saldo(usuario)
