@@ -2,10 +2,45 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label
   require 'sendgrid-ruby'
   include SendGrid 
   private
+  def exchange_label(text)
+    case text.downcase
+    when 'deposit'
+      return "Depósito"
+    when 'open_order_sell'
+      return "Abertura de ordem"
+    when 'open_order_buy'
+      return "Abertura de ordem"
+    when 'buy_order_execution'
+      return "Execução de ordem"
+    when 'sell_order_execution'
+      return "Execução de ordem"
+    when 'open_order'
+      return "Ordem aberta"
+    when 'cancel_buy'
+      return "Cancelamento de ordem"
+    when 'exchange_open_order_buy'
+      return "Ordem de compra"
+    when 'exchange_open_order_sell'
+      return "Ordem de venda"
+    when 'exchange_cancel_buy'
+      return "Ordem de compra"
+    when 'exchange_cancel_sell'
+      return "Cancelamento de ordem"
+    when 'cancel_sell'
+      return "Cancelamento de ordem"
+    when 'exchange_buy_order_execution'
+      return "Ordem de compra"
+    when 'exchange_sell_order_execution'
+      return "Ordem de Venda"
+    else
+      return text
+    end
+      
+  end
   def recent_orders(pair)
     sell_orders = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: pair, tupe: "sell", stt: "open"}).limit(15).order(price: :asc)
     buy_orders = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: pair, tupe: "buy", stt: "open"}).limit(15).order(price: :desc)

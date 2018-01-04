@@ -95,7 +95,7 @@ class ExchangeController < ApplicationController
         if saldo >= BigDecimal(compare_value,8)
             
             id = add_saldo(current_user,discount_currency,compare_value.to_s,operation)
-            Payment.exchange_payment(current_user,id,discount_currency,compare_value.to_s,"open_order",order.par)
+            Payment.exchange_payment(current_user,id,discount_currency,compare_value.to_s,"open_order_#{order.tipo}",order.par)
             
             check_active_orders(order,consulta_ordem_oposta,params[:type])
             if label_bool

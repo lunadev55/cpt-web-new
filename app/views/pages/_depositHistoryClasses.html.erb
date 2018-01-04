@@ -1,0 +1,8 @@
+<% case status.downcase %>
+<% when "complete","cancelamento de ordem","execução de ordem" %>
+success
+<% when "incomplete","abertura de ordem" %>
+warning
+<% when "canceled" %>
+danger
+<% end %>
