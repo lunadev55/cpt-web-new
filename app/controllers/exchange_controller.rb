@@ -92,7 +92,7 @@ class ExchangeController < ApplicationController
             operation = "exchange_sell"
             consulta_ordem_oposta = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt AND price >= :preco", {str_par: order.par, tupe: "buy", stt: "open", preco: order.price}).order(price: :desc)
         end
-        if saldo >= BigDecimal(compare_value,8)
+        if BigDecimal(saldo,8) >= BigDecimal(compare_value,8)
             
             id = add_saldo(current_user,discount_currency,compare_value.to_s,operation)
             Payment.exchange_payment(current_user,id,discount_currency,compare_value.to_s,"open_order_#{order.tipo}",order.par)
