@@ -1,5 +1,5 @@
 <% if current_user != nil  %>
-					<% @saldos = eval(get_saldo(current_user)) %>
+					<% @saldos = search_saldo %>
 					<div col="row">
 						<div class="col-md-12 menu"><h5><i class="fa fa-user" aria-hidden="true"></i> - <%= current_user.first_name %> <%= current_user.last_name %> </h5></div>
 					</div>

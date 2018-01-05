@@ -36,10 +36,10 @@
     </div>
 </div>
 <div class="form-group">
-    <h6><k class="receber">Receber:</k> <b class="receive"></b></h6>
+    <h6><k class="receber">Receber:</k> <b class="receber_instant"></b></h6>
 </div>
 <div class="form-group">
-    <h6><k class="valor_total">Valor total:</k> <b class="total"></b></h6>
+    <h6><k class="valor_total">Valor total:</k> <b class="total_instant"></b></h6>
 </div>
 <div class="form-group">
     <div class="row">
@@ -108,15 +108,15 @@ function calc(){
               receive = (quantity - discount).toFixed(8);
               total = (price * quantity).toFixed(8);
               
-              $(".receive").html(receive + " " + currency1);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency1);
+              $(".total_instant").html(total + " " + currency2);
             }else{
               total = (price * quantity).toFixed(8);
               discount = (total * 0.005).toFixed(8);
               receive = (total - discount).toFixed(8);
               
-              $(".receive").html(receive + " " + currency2);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency2);
+              $(".total_instant").html(total + " " + currency2);
             }
         },
         error: function(xhr) {

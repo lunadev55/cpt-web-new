@@ -3,9 +3,15 @@
 <%= render 'layouts/render_withdrawal_details' %>
 
 <% elsif @payment.label.split("_")[0] == "Exchange" %>
+<% if exchange_label(@payment.status).downcase != "abertura de ordem" %>
+<% debit_credit = "Debitada"%>
+<% else %>
+<% debit_credit = "Creditada"%>
+<% end %>
 Tipo: <b><%= exchange_label(@payment.label) %></b><br>
-Quantidade: <b><%= BigDecimal(@payment.volume,8).to_s %> <%= @payment.network %></b><br>
-Par de troca: <b><%= @payment.endereco %></b>
+Quantidade <%= debit_credit %>: <b><%= (BigDecimal(@payment.volume,8)).to_s.split('.')[0] %>.<%= (BigDecimal(@payment.volume,8)).to_s.split('.')[1].first(8) %> <%= @payment.network %></b><br>
+Par de troca: <b><%= @payment.endereco %></b><br>
+Status da operação: <b><%= exchange_label(@payment.status) %></b>
 
 <% else %>
 
@@ -14,7 +20,7 @@ Endereço depositado: <b><%= @payment.endereco %></b><br>
 Valor total da transação: <b><%= @payment.volume %> <%= @payment.network %></b><br>
 Comissão da transação: <b><%= b = BigDecimal(@payment.volume,8) * 0.01 %> <%= @payment.network %></b><br>
 Valor total creditado em sua conta: <b><%= BigDecimal(@payment.volume,8) - b %> <%= @payment.network %></b><br>
-Txid Hash da transação: <b><%= @payment.txid %></b>
+Txid Hash da transação: <b><%= @payment.txid %></b><br>
 Link da transação no blockchain: <a target="_blank" href="<%= @href %><%= @payment.txid%>">Link</a>
 
 

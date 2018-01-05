@@ -2,10 +2,13 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo
   require 'sendgrid-ruby'
   include SendGrid 
   private
+  def search_saldo
+    eval(get_saldo(current_user))
+  end
   def exchange_label(text)
     case text.downcase
     when 'deposit'
@@ -143,7 +146,12 @@ class ApplicationController < ActionController::Base
   def add_saldo(usuario,moeda,qtd,tipo) #função para adicionar saldo em depóstios
     route = 'add_saldo'
     params = {'username' => usuario.username, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => qtd, 'type' => tipo}
-    cpt_push(route,params)
+    hash = eval(cpt_push(route,params))
+    if hash[:status] != 'ok'
+      add_saldo(usuario,moeda,qtd,tipo)
+    else
+      hash[:id]
+    end
   end
   def get_saldo(usuario)
     route = 'get_saldo'

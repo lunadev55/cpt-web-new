@@ -47,7 +47,7 @@
             
                 <td class="<%= render partial: "depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.status.capitalize) %></td>
                 <td class="<%= render partial: "depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.label.capitalize) %></td>
-                <td class="<%= render partial: "depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.volume %> <%= k.network %></td>
+                <td class="<%= render partial: "depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= (BigDecimal(k.volume,8)).to_s.split('.')[0] %>.<%= (BigDecimal(k.volume,8)).to_s.split('.')[1].first(8) %> <%= k.network %></td>
                 <td class="<%= render partial: "depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.id %></td>
             
             </tr>
