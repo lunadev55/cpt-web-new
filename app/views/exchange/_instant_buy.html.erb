@@ -23,15 +23,15 @@
     <div class="row">
         <div class="col-md-10">
             <h4><%= label_tag :amount, "Quantidade" %></h4>
-            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input form-control" %>
+            <%= text_field_tag :amount, nil, placeholder: "0.00000000", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input_instant form-control" %>
         </div>
     </div>
 </div>
 <div class="form-group">
     <h6><k class="valor_total">* Preço atual: </h6>
     <div class="row">
-        <div class="col-md-10">
-            <%= text_field_tag :instant_price, nil, placeholder: "0.00000000", title: 'Este é o preço atual do par selecionado. O preço é definido automaticamente pelos usuários, a CPTCAMBIO não tem nenhum controle sobre o valor mostrado.' , required: true ,class: "actual_price_form form-control", disabled: true %></k>
+        <div class="col-md-10" data-toggle="tooltip" data-placement="right" title="<%= HELPER_TEXT["price-instant"] %>">
+            <%= text_field_tag :instant_price, nil, placeholder: "0.00000000", required: false ,class: "actual_price_form form-control", disabled: true %></k>
         </div>
     </div>
 </div>
@@ -58,15 +58,56 @@ $(".buttonType").click(function(){
     $('#type').prop("value",$(this).data("type"))
     calc()
 })
-$( ".amount_input" ).change(function() {
+$( ".amount_input_instant" ).change(function() {
+    $(this).val(($(this).val()).replace(/[.]+$/, ""));
+    quantity = parseFloat($(this).val());
+    val = $(this).val();
+    if (quantity == NaN){
+          
+    } else {
+        if (val != '.0')
+          if (countDecimals(quantity) == 0)
+            this.value = this.value + '.0'
+    }
     calc() 
 });
+// Contagem de casas decimais de um "value"
+countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+}
 
+$(document).ready(function(){
+		   $('[data-toggle="tooltip"]').tooltip();
+});
+function estimate(){
+    quantity = parseFloat($( ".amount_input_instant" ).val().replace(",","."));
+    price = parseFloat($(".actual_price_form").val().replace(",",".").split(" ")[0]);
+    pair = b.split("/");
+    currency1 = pair[0];
+    currency2 = pair[1];
+    
+    if ($('#type').prop("value") == "buy"){
+      discount = (quantity * 0.005).toFixed(8);
+      receive = (quantity - discount).toFixed(8);
+      total = (price * quantity).toFixed(8);
+      
+      $(".receber_instant").html(receive + " " + currency1);
+      $(".total_instant").html(total + " " + currency2);
+    }else{
+      total = (price * quantity).toFixed(8);
+      discount = (total * 0.005).toFixed(8);
+      receive = (total - discount).toFixed(8);
+      
+      $(".receber_instant").html(receive + " " + currency2);
+      $(".total_instant").html(total + " " + currency2);
+    }
+}
 function calc(){
-    console.log("cálculo instant")
     elemento = $( ".pair-control" )
     if (elemento.find(":selected").text() == "Selecione o par"){
-        alert("Escolha um par para negociar!")
+        $(".actual_price_form").val("Escolha um par!");
         return
     } else {
         a = elemento.find(":selected").text().replace(/ /,'')
@@ -87,37 +128,13 @@ function calc(){
             price = response
             a = elemento.find(":selected").text().replace(/ /,'')
             b = a.replace(/ /,'')
-            console.log(price)
             if (price == "Não disponível."){
               $('.instant_submit').prop("disabled",true)
             }else {
               $('.instant_submit').prop("disabled",false)
             }
-            element = $(".amount_input")
-            element.val((element.val()).replace(/^\./, ""));
-            element.val((element.val()).replace(',','.'));
-            element.val((element.val()).replace(/[^0-9\,.]/g,''));
-            quantity = parseFloat($( ".amount_input" ).val().replace(",","."));
-            price = parseFloat($(".actual_price_form").val().replace(",",".").split(" ")[0]);
-            pair = b.split("/");
-            currency1 = pair[0];
-            currency2 = pair[1];
             
-            if ($('#type').prop("value") == "buy"){
-              discount = (quantity * 0.005).toFixed(8);
-              receive = (quantity - discount).toFixed(8);
-              total = (price * quantity).toFixed(8);
-              
-              $(".receber_instant").html(receive + " " + currency1);
-              $(".total_instant").html(total + " " + currency2);
-            }else{
-              total = (price * quantity).toFixed(8);
-              discount = (total * 0.005).toFixed(8);
-              receive = (total - discount).toFixed(8);
-              
-              $(".receber_instant").html(receive + " " + currency2);
-              $(".total_instant").html(total + " " + currency2);
-            }
+            estimate();
         },
         error: function(xhr) {
             
@@ -127,5 +144,12 @@ function calc(){
 
 $( ".pair-control" ).change(function() {
     calc()
+});
+$( ".amount_input_instant" ).keyup(function() {
+    element = $(".amount_input_instant")
+    element.val((element.val()).replace(/[,]+/,'.'));
+    element.val((element.val()).replace(/[.]+/,"."));
+    element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    estimate();
 });
 </script>

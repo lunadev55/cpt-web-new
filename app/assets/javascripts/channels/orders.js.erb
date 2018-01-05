@@ -30,7 +30,6 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
           $.get('/exchange/open_orders');
         };
         if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "overview")){
-          console.log("cálculo instant")
           elemento = $(  ".pair-control" )
           if (elemento.find(":selected").text() == "Selecione o par"){
               return
@@ -97,15 +96,15 @@ function calc(price){
               receive = (quantity - discount).toFixed(8);
               total = (price * quantity).toFixed(8);
               
-              $(".receive").html(receive + " " + currency1);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency1);
+              $(".total_instant").html(total + " " + currency2);
             }else{
               total = (price * quantity).toFixed(8);
               discount = (total * 0.005).toFixed(8);
               receive = (total - discount).toFixed(8);
               
-              $(".receive").html(receive + " " + currency2);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency2);
+              $(".total_instant").html(total + " " + currency2);
             }
 
 }
