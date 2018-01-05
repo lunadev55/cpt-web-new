@@ -60,15 +60,38 @@ $( ".amount_input" ).keyup(function() {
 });
 
 function calc(element){
+    element.val((element.val()).replace(/[,]+/,'.'));
+    element.val((element.val()).replace(/[.]+/,"."));
+    element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    pair = $("#inicial").data("pair-option").replace(/ /g, '').split("/");
+    currency1 = pair[0];
+    currency2 = pair[1];
+    string = element.val();
+    points = 0
+    formated = ""
     
-  element.val((element.val()).replace(/^\./, ""));
-  element.val((element.val()).replace(',','.'));
-  element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    for (var i = 0, len = string.length; i < len; i++) {
+      if (string.charAt(i) == "."){
+          points = points + 1
+      }
+      if (points <= 1){
+        if ((string.charAt(i) != ".") && (points == 1)){
+            if (formated.split(".")[1].length >= 8){
+                element.val(formated)   
+            }else{
+                formated += string.charAt(i)
+            }
+        } else {
+         formated += string.charAt(i)   
+        }
+      } else{
+        element.val(formated)
+      }
+      
+    }
   quantity = parseFloat($( ".amount_input" ).val().replace(",","."));
   price = parseFloat($(".price_input").val().replace(",","."));
-  pair = $("#inicial").data("pair-option").replace(/ /g, '').split("/");
-  currency1 = pair[0];
-  currency2 = pair[1];
+  
   
   if ($('#type').prop("value") == "buy"){
       discount = (quantity * 0.005).toFixed(8);

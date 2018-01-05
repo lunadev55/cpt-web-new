@@ -137,20 +137,6 @@ $( ".amount_input" ).keyup(function() {
   $(".total").html(total + " " + currency)
 });
 
-// Validação de input
-$(".amount_input").change(function() {
-  quantity = parseFloat($(this).val());
-  val = $(this).val();
-  if (quantity == NaN){
-  
-  } else {
-    if (val != '.0')
-      if (countDecimals(quantity) == 0)
-        this.value = this.value + '.0'
-  }
-});
-
-
 // Validação de dados do form
 $( ".withdrawal_form_element" ).submit(function( event ) {
   input_val = parseFloat($('.amount_input').val());

@@ -58,16 +58,33 @@ $(".buttonType").click(function(){
     $('#type').prop("value",$(this).data("type"))
     calc()
 })
-$( ".amount_input_instant" ).change(function() {
-    $(this).val(($(this).val()).replace(/[.]+$/, ""));
-    quantity = parseFloat($(this).val());
-    val = $(this).val();
-    if (quantity == NaN){
-          
-    } else {
-        if (val != '.0')
-          if (countDecimals(quantity) == 0)
-            this.value = this.value + '.0'
+$( ".amount_input_instant" ).keyup(function() {
+    element = $(".amount_input_instant")
+    element.val((element.val()).replace(/[,]+/,'.'));
+    element.val((element.val()).replace(/[.]+/,"."));
+    element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    estimate();
+    string = $(this).val();
+    points = 0
+    formated = ""
+    for (var i = 0, len = string.length; i < len; i++) {
+      if (string.charAt(i) == "."){
+          points = points + 1
+      }
+      if (points <= 1){
+        if ((string.charAt(i) != ".") && (points == 1)){
+            if (formated.split(".")[1].length >= 8){
+                $(this).val(formated)   
+            }else{
+                formated += string.charAt(i)
+            }
+        } else {
+         formated += string.charAt(i)   
+        }
+      } else{
+        $(this).val(formated)
+      }
+      
     }
     calc() 
 });
@@ -82,11 +99,20 @@ $(document).ready(function(){
 		   $('[data-toggle="tooltip"]').tooltip();
 });
 function estimate(){
+    elemento = $( ".pair-control" )
+    a = elemento.find(":selected").text().replace(/ /,'')
+    b = a.replace(/ /,'')
     quantity = parseFloat($( ".amount_input_instant" ).val().replace(",","."));
     price = parseFloat($(".actual_price_form").val().replace(",",".").split(" ")[0]);
-    pair = b.split("/");
-    currency1 = pair[0];
-    currency2 = pair[1];
+    if (b == "Selecioneopar"){
+        currency1 = ""
+        currency2 = ""
+    } else {
+        pair = b.split("/");
+        currency1 = pair[0];
+        currency2 = pair[1];
+    }
+    
     
     if ($('#type').prop("value") == "buy"){
       discount = (quantity * 0.005).toFixed(8);
@@ -146,10 +172,6 @@ $( ".pair-control" ).change(function() {
     calc()
 });
 $( ".amount_input_instant" ).keyup(function() {
-    element = $(".amount_input_instant")
-    element.val((element.val()).replace(/[,]+/,'.'));
-    element.val((element.val()).replace(/[.]+/,"."));
-    element.val((element.val()).replace(/[^0-9\,.]/g,''));
-    estimate();
+    
 });
 </script>
