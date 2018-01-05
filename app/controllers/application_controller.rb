@@ -148,7 +148,7 @@ class ApplicationController < ActionController::Base
     params = {'username' => usuario.username, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => qtd, 'type' => tipo}
     hash = eval(cpt_push(route,params))
     if hash[:status] != 'ok'
-      add_saldo(usuario,moeda,qtd,tipo)
+      p hash
     else
       hash[:id]
     end
