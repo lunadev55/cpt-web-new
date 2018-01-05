@@ -145,14 +145,19 @@ class ApplicationController < ActionController::Base
   end
   def add_saldo(usuario,moeda,qtd,tipo) #função para adicionar saldo em depóstios
     route = 'add_saldo'
-    params = {'username' => usuario.username, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => qtd, 'type' => tipo}
+    params = {'username' => usuario.username, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => (BigDecimal(qtd,8)).to_s, 'type' => tipo}
+    tries = 0
     hash = eval(cpt_push(route,params))
-    if hash[:status] != 'ok'
-      p hash
-    else
-      hash[:id]
-    end
-  end
+    while tries < 10
+      if hash["status"] != "ok"
+        sleep 3
+        hash = eval(cpt_push(route,params))
+        tries += 1
+      else
+        return hash["id"]
+      end #if
+    end #while
+  end #def
   def get_saldo(usuario)
     route = 'get_saldo'
     params = {'id_original'=> usuario.id}
