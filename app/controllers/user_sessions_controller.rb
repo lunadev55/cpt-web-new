@@ -18,7 +18,8 @@ class UserSessionsController < ApplicationController
     flash[:success] = "Até logo! "
     redirect_to root_path
   end
-
+  
+  
   private
 
   def user_session_params

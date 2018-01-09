@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_many :wallet
   has_many :exchangeorder
   has_many :payment
+  has_many :active_request
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email, presence: true

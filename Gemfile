@@ -35,9 +35,10 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'rqrcode-with-patches'
 gem 'rqrcode'
 gem 'kaminari'
-gem 'aws-sdk', '~> 3'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'coinpayments'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'paperclip'
+gem 'aws-sdk', '~> 2.3'

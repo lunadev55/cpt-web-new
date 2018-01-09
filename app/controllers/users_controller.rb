@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_before_action :verify_authenticity_token, :only => [:active_request_new]
   def new
     if current_user.nil?
       @user = User.new
@@ -14,6 +15,7 @@ class UsersController < ApplicationController
       @user.id = users_params['id']
       isNew = false
     end
+    @user.role = "inactive"
     if @user.save
       if isNew != false
         flash[:success] = "Cadastrado com Sucesso!"
@@ -31,6 +33,15 @@ class UsersController < ApplicationController
     @user = current_user
   end
   
+  def active_request_new
+    request = current_user.active_request.new
+    request.document_photo = params[:photo]
+    request.document_selfie = params[:selfie]
+    request.status = 'pendente'
+    request.save
+    flash[:success] = 'Seu pedido de ativação foi enviado! Você receberá uma mensagem em seu email com a qualquer atualização em breve.'
+    redirect_to '/dashboard/index'
+  end
 
   private
 

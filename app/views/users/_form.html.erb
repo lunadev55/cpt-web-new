@@ -20,12 +20,12 @@
   
   
   <div class="form-group">
-    <%= f.label :birth %>
+    <%= f.label :birth, "Data de nascimento" %>
     <%= f.date_field :birth, value: @user.birth, class: 'form-control', required: true %>
   </div>
   
   <div class="form-group">
-    <%= f.label :document %>
+    <%= f.label :document, "CPF" %>
     <%= f.text_field :document, value: @user.document, class: 'form-control', required: true %>
   </div>
   <div class="form-group">

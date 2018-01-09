@@ -15,9 +15,7 @@
       var option;
       view.preventDefault();
       option = $(this).data("painel-menu");
-      if (option === "overview") {
-        return get_ajax(option, 'payments_details');
-      } else if (option === "deposit") {
+      if (option === "deposit") {
         return get_ajax(option, '/dashboard/info/getwallets');
       } else {
         return get_ajax(option, '');
@@ -38,6 +36,12 @@
         success: function(data, textStatus, jqXHR) {
           $('.LTC_BTC_buy').html(data["LTC/BTC_buy"]);
           $('.LTC_BTC_sell').html(data["LTC/BTC_sell"]);
+          $('.BTC_BRL_buy').html(data["BTC/BRL_buy"]);
+          $('.BTC_BRL_sell').html(data["BTC/BRL_sell"]);
+          $('.LTC_BRL_buy').html(data["LTC/BRL_buy"]);
+          $('.LTC_BRL_sell').html(data["LTC/BRL_sell"]);
+          $('.ETH_BRL_buy').html(data["ETH/BRL_buy"]);
+          $('.ETH_BRL_sell').html(data["ETH/BRL_sell"]);
           $('.ETH_BTC_buy').html(data["ETH/BTC_buy"]);
           $('.ETH_BTC_sell').html(data["ETH/BTC_sell"]);
           $('.DOGE_BTC_buy').html(data["DOGE/BTC_buy"]);
@@ -52,10 +56,6 @@
       });
     }
   };
-
-  $(function() {
-    return $.get('payments_details');
-  });
 
   get_ajax = function(route, callbackroute) {
     if (callbackroute === '') {

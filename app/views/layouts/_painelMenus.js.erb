@@ -7,6 +7,16 @@ $('.submit').click(function() {
     $('.submit').prop('disabled', true);
 });
 
+$('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
+function clear_window(){
+  $('.centered-flash').html('');
+};
+
+$(document).ready(function(){
+setTimeout( 'clear_window()', 5000 )
+
+});
+
 $("tr[data-payment-detail]").click(function() {
     option = ($(this).data('payment-detail'));
     $('.modal-body').html('<i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i>');
@@ -155,3 +165,12 @@ countDecimals = function(value) {
         return value.toString().split(".")[1].length || 0;
     return 0;
 }
+
+$(document).ready(function(){
+setTimeout( 'clear_window()', 14000 )
+
+});
+
+function clear_window(){
+  $('.centered-flash').html('');
+};

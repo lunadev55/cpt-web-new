@@ -4,4 +4,51 @@
 Permissão negada.
 <% else %>
 Usuário: <%= "#{current_user.first_name} #{current_user.last_name}" %>
+<div class="row">
+    <div class="col-md-4 well">
+        <fieldset>
+            <legend>Solicitações pendentes: </legend>
+            <table width="90%" class="table table-striped table-hover">
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">ID de usuário</th>
+                <th scope="col">Username</th>
+            </tr>
+            <% ActiveRequest.where("status = :stt", {stt: "pendente"}).order("created_at desc").each do |m| %>
+            <tr class="pointer" data-request-detail="<%= m.id %>">
+            
+                <td scope="row"><%= m.status.capitalize %></td>
+                <td><%= m.user_id %></td>
+                <td><%= User.find(m.user_id).username %></td>
+            
+            </tr>
+            <% end %>
+        </table>
+            
+        </fieldset>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 well">
+        <fieldset>
+            <legend>Dados do usuário: </legend>
+        </fieldset>
+        <div class="user_details">Selecione alguma solicitação de ativação ao lado.</div>
+    </div>
+</div>
 <% end %>
+<script>
+    $("tr[data-request-detail]").click(function(){
+        $(".user_details").html("<i class='fa fa-spinner fa-spin fa-3x' aria-hidden='true'></i>");
+       $.ajax({
+        url: `/request_detail/${$(this).data("request-detail")}`,
+        cache: false,
+        type: "GET",
+        success: function(response) {
+        
+        },
+        error: function(xhr) {
+            
+        }
+    }); 
+    });
+</script>

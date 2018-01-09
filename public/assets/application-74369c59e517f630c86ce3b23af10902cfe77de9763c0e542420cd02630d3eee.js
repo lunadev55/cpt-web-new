@@ -12218,7 +12218,6 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
           $.get('/exchange/open_orders');
         };
         if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "overview")){
-          console.log("cálculo instant")
           elemento = $(  ".pair-control" )
           if (elemento.find(":selected").text() == "Selecione o par"){
               return
@@ -12251,6 +12250,21 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
                         
                             $('.LTC_BTC_buy').html(data.last_price["LTC/BTC_buy"])
                             $('.LTC_BTC_sell').html(data.last_price["LTC/BTC_sell"])
+          
+                        
+                        
+                            $('.BTC_BRL_buy').html(data.last_price["BTC/BRL_buy"])
+                            $('.BTC_BRL_sell').html(data.last_price["BTC/BRL_sell"])
+          
+                        
+                        
+                            $('.LTC_BRL_buy').html(data.last_price["LTC/BRL_buy"])
+                            $('.LTC_BRL_sell').html(data.last_price["LTC/BRL_sell"])
+          
+                        
+                        
+                            $('.ETH_BRL_buy').html(data.last_price["ETH/BRL_buy"])
+                            $('.ETH_BRL_sell').html(data.last_price["ETH/BRL_sell"])
           
                         
                         
@@ -12310,15 +12324,15 @@ function calc(price){
               receive = (quantity - discount).toFixed(8);
               total = (price * quantity).toFixed(8);
               
-              $(".receive").html(receive + " " + currency1);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency1);
+              $(".total_instant").html(total + " " + currency2);
             }else{
               total = (price * quantity).toFixed(8);
               discount = (total * 0.005).toFixed(8);
               receive = (total - discount).toFixed(8);
               
-              $(".receive").html(receive + " " + currency2);
-              $(".total").html(total + " " + currency2);
+              $(".receber_instant").html(receive + " " + currency2);
+              $(".total_instant").html(total + " " + currency2);
             }
 
 }
@@ -12340,4 +12354,6 @@ function calc(price){
 
 
 
+// require jquery.ui.widget
+// require z.jquery.fileupload
 ;

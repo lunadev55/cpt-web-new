@@ -1,0 +1,23 @@
+<div align="center" class="ticker_index row">
+    <div class=" col-md-12 col-xs-12 ticker_margin">
+        <div class="row">
+            <% MOEDAS_ATIVAS.each do |m| %>
+            <div class="col-md-3 col-xs-3 col-lg-2 ticker_block">
+                    <div class="row" class="ticker-list ticker-list-DATUSD" data-pair="DATUSD">
+                        <div class="col-md-12 col-xs-12"><h4 class="white no-margin"><%= MOEDAS_ATIVAS_NAMES[m] %> (<%= m %>)</h4></div>
+                    </div>
+                    <% EXCHANGE_PARES.each do |pair| %>
+                        <% compare = pair.tr(" ","") %>
+                        <% if compare.split("/")[0] == m %>
+                            <div class="row" data-pair="<%= compare.tr("/","_") %>">
+                                <div class="col-md-5 col-xs-5 white"><span title="Cotação atual"><b class="ticker_index_price_<%= compare.tr("/","_") %>"><%= last_price(compare,nil,nil)%></b></span></div>
+                                <div class="col-md-3 col-xs-3"><span title="DATA:USD Last Trade"><b><%= compare.split("/")[1] %></b></span></div>
+                                <div class="col-md-4 col-xs-4"><span title="DATA:USD Last Trade" class="green">22.1%</span></div>
+                            </div>
+                        <% end %>
+                    <% end %>
+            </div>
+        <% end %>
+        </div>
+    </div>
+</div>

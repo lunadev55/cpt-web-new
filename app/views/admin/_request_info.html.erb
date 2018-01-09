@@ -1,0 +1,5 @@
+<% if @request.nil? %>
+<h4><b>Selecione alguma solicitação de ativação ao lado.</b></h4>
+<% else %>
+<%= render 'admin/active_form' %>
+<% end %>

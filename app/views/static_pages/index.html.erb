@@ -9,12 +9,12 @@
 		<div class="overlay"></div>
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12 col-md-offset-0 text-center">
+				<div align="center" class="col-md-12 col-md-offset-0 display-tc">
 					<div class="display-t">
 						<div class="display-tc">
-							<h1 class=" " data-animate-effect="fadeIn">Cripto Câmbio Exchange</h1>
+							<h1 data-animate-effect="fadeIn">Cripto Câmbio Exchange</h1>
 							<div class="container">
-							  <h2>Câmbio de forma moderna.</h2>
+							  <h2>Câmbio de forma completa.</h2>
 							</div>
 						</div>
 					</div>
@@ -22,9 +22,9 @@
 			</div>
 		</div>
 	</section>
-	
-	<section id="gtco-about" data-section="exchange">
-		<div class="container">
+	<section>
+		<%= render 'exchange/index_ticker' %>
+		<div id="gtco-about"  data-section="exchange" class="container">
 			<div class="row row-pb-md">
 				<div class="col-md-8 col-md-offset-2 heading">
 					<h1>Diversos pares</h1>
@@ -163,9 +163,9 @@
 					</form>
 				</div>
 				<div class="col-md-4 col-md-pull-6  ">
-					<div class="gtco-contact-info">
+					<div class="gtco-contact-info-new">
 						<ul>
-							<li class="address">50860-260 Rua ernerto nazareth 578, Areias, Recife, PE, Brasil</li>
+							<li class="address"> 50860-260 Rua Ernesto Nazareth 578, Areias, Recife, PE, Brasil</li>
 <!--							<li class="phone"><a href="tel://1235235598">+ 1235 2355 98</a></li> -->
 							<li class="email"><a href="mailto:admin@cptcambio.com">admin@cptcambio.com</a></li>
 							<li class="url"><a href="#">http://www.cptcambio.com</a></li>
@@ -198,21 +198,7 @@
 	</div>
 
 	<div class="gototop js-top">
-		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+		<a href="#" class="js-gotop"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
 	</div>
 	
-	<!-- jQuery -->
-	<script src="js/jquery.min.js"></script>
-	<!-- jQuery Easing -->
-	<script src="js/jquery.easing.1.3.js"></script>
-	<!-- Bootstrap -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- Waypoints -->
-	<script src="js/jquery.waypoints.min.js"></script>
-	<!-- Stellar -->
-	<script src="js/jquery.stellar.min.js"></script>
-	<!-- Magnific Popup -->
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/magnific-popup-options.js"></script>
-	<!-- Main -->
-	<script src="js/main.js"></script>
+	

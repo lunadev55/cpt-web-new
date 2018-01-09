@@ -2,10 +2,21 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo, :check_user_documents
   require 'sendgrid-ruby'
   include SendGrid 
   private
+  def check_user_documents
+    p current_user.role
+    case current_user.role
+    when "inactive"
+      return true
+    when "active"
+    else
+      return false
+    end
+  end
+  
   def search_saldo
     eval(get_saldo(current_user))
   end
@@ -69,7 +80,11 @@ class ApplicationController < ActionController::Base
             status: order.status
   end
   def last_price(pares,tipo,execucao)
-    a = Exchangeorder.where("par = :par and tipo = :role and status = :stt", { stt: execucao, par: pares, role: tipo }).last
+    if tipo.nil? && execucao.nil?
+      a = Exchangeorder.where("par = :par and status = :stt", { stt: "executada", par: pares}).last
+    else
+      a = Exchangeorder.where("par = :par and tipo = :role and status = :stt", { stt: execucao, par: pares, role: tipo }).last
+    end
     if !a.nil?
       a.price
     else

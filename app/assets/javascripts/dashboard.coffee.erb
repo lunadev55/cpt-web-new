@@ -11,9 +11,7 @@ $ ->
     $("a[data-painel-menu]").click (view) ->
         view.preventDefault()
         option = $(this).data("painel-menu")
-        if option is "overview"
-            get_ajax(option,'payments_details')
-        else if option is "deposit"
+        if option is "deposit"
             get_ajax(option,'/dashboard/info/getwallets')
         else
             get_ajax(option,'')
@@ -36,8 +34,7 @@ executeQuery = () ->
                     <% end %>
                     
 
-$ ->
-    $.get('payments_details')
+
 #    setInterval(executeQuery, 9000)
 
 get_ajax = (route,callbackroute) -> 

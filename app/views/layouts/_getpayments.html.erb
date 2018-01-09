@@ -15,10 +15,10 @@
                 
                     <% @pays.each do |k| %>
                         <tr data-toggle="modal" data-target="#payModal" class="pointer hover-link" data-payment-detail="<%= k.id %>">
-                        <td class="<%= render partial: "/pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.status.capitalize) %></td>
-                        <td class="<%= render partial: "/pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.label.capitalize) %></td>
-                        <td class="<%= render partial: "/pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.volume %> <%= k.network %></td>
-                        <td class="<%= render partial: "/pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.id %></td>
+                        <td class="<%= render partial: "/static_pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.status.capitalize) %></td>
+                        <td class="<%= render partial: "/static_pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= exchange_label(k.label.capitalize) %></td>
+                        <td class="<%= render partial: "/static_pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.volume %> <%= k.network %></td>
+                        <td class="<%= render partial: "/static_pages/depositHistoryClasses", locals: {status: exchange_label(k.status)} %>"><%= k.id %></td>
                     </tr>
                     <% end %>
                 </table>

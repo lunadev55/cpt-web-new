@@ -1,14 +1,19 @@
 <div class="col-md-6 well">
-<h2>Editar informações cadastrais</h2>
+<fieldset>
+      <legend>Editar informações cadastrais:</legend>
+<% disable = false %>
+<% if @user.role == "active"%>
+<% disable = true %>
+<% end %>
 <%= form_tag nil, class:"editForm", remote: true %>
   <div class="form-group">
     <%= label_tag :first_name, "Primeiro nome" %>
-    <%= text_field_tag :first_name, @user.first_name, class: 'form-control' %>
+    <%= text_field_tag :first_name, @user.first_name, class: 'form-control', disabled: disable  %>
   </div>
   
   <div class="form-group">
     <%= label_tag :last_name, "Último nome" %>
-    <%= text_field_tag :last_name, @user.last_name, class: 'form-control' %>
+    <%= text_field_tag :last_name, @user.last_name, class: 'form-control', disabled: disable %>
   </div>
   
   <div class="form-group">
@@ -26,13 +31,13 @@
   </div>
   
   <div class="form-group">
-    <%= label_tag :birth %>
-    <%= date_field_tag :birth, @user.birth, class: 'form-control' %>
+    <%= label_tag :birth, "Data de nascimento" %>
+    <%= date_field_tag :birth, @user.birth, class: 'form-control', disabled: disable %>
   </div>
   
   <div class="form-group">
-    <%= label_tag :document %>
-    <%= text_field_tag :document, @user.document, class: 'form-control' %>
+    <%= label_tag :document, "CPF" %>
+    <%= text_field_tag :document, @user.document, class: 'form-control', disabled: disable %>
   </div>
   <div class="form-group">
     Insira sua senha para confirmar modificações:
@@ -56,4 +61,41 @@
   </div>
 
   <%= submit_tag 'Submeter', class: 'submit btn btn-primary btn-lg' %>
+  </fieldset>
   </div>
+  
+  <div class="col-md-1"></div>
+  <div class="col-md-5 well">
+    <fieldset>
+      <legend>Status da conta:</legend>
+    <% if current_user.role == "inactive" %>
+    <br>
+    <p><b>Stauts: </b><i class="red fa fa-times fa-2x" aria-hidden="true"></i> - Não verificada</p>
+      <% if !(current_user.active_request.first.nil?) %>
+      Você já realizou uma solicitação de verificação. <br>
+      <b>Status de sua solicitação:</b> <i class="yellow fa fa-clock-o fa-2x" aria-hidden="true"></i> - <%= current_user.active_request.first.status.capitalize %>
+      <% else %>
+      Inicie o processo de verificação agora:<br>
+      <a class="pointer" data-active-menu="active"><i class="fa fa-user" aria-hidden="true"></i> Ativar conta</a>
+      <% end %>
+    <% else %>
+    <p><b>Stauts: </b><i class="green fa fa-check-circle-o fa-2x" aria-hidden="true"></i> - Conta verificada.</p>
+    <% end %>
+    </fieldset>
+  </div>
+  
+  <script>
+    $("a[data-active-menu]").click(function(){
+      $.ajax({
+          url: `layouts/${$(this).data("active-menu")}`,
+          cache: false,
+          type: "GET",
+          success: function(response) {
+          
+          },
+          error: function(xhr) {
+              
+          }
+      });
+    });
+  </script>

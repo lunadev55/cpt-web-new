@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215002150) do
+ActiveRecord::Schema.define(version: 20180109000244) do
+
+  create_table "active_requests", force: :cascade do |t|
+    t.string   "user_id"
+    t.string   "document_photo"
+    t.string   "document_selfie"
+    t.string   "status"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "exchangeorders", force: :cascade do |t|
     t.string   "par"
@@ -25,8 +33,21 @@ ActiveRecord::Schema.define(version: 20171215002150) do
     t.datetime "updated_at",    null: false
   end
 
-# Could not dump table "payments" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "payments", force: :cascade do |t|
+    t.string   "user_id"
+    t.string   "status"
+    t.string   "label"
+    t.string   "endereco"
+    t.string   "volume"
+    t.string   "network"
+    t.string   "txid"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "op_id"
+    t.         "string"
+    t.string   "hex"
+    t.string   "description"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
@@ -50,9 +71,8 @@ ActiveRecord::Schema.define(version: 20171215002150) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "role"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
 
   create_table "wallets", force: :cascade do |t|
     t.string   "address"

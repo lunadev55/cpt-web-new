@@ -3,15 +3,17 @@ function clear_window(){
   $('.centered-flash').html('');
 };
 
+$(document).ready(function(){
+setTimeout( 'clear_window()', 14000 )
+
+});
+
 $( ".fa-window-close" ).click(function() {
   $('.centered-flash').html('');
 });
 
 $( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
 
-$(document).ready(function(){
-setTimeout( 'clear_window()', 14000 )
 
-});
 
 $('.amount_input').val('');
