@@ -30,13 +30,14 @@ class AdminController < ApplicationController
             @user.username = params[:username]
             @user.birth = params[:birth]
             @user.document = params[:document]
+            @user.save
             message = "Olá #{params[:first_name]} #{params[:last_name]}. <br> Estamos felizes em dizer que sua solicitação de ativação de cadastro foi verificada! Você agora está apto a realizar negócios com a Cripto câmbio Exchange.<br> Acesse nosso site e faça um Tour pela nossa interface: <a href='http://www.cptcambio.com/sign_in'>Cptcambio</a>"
         when "desativar"
             @user.role = "inactive"
             message = "Olá #{params[:first_name]} #{params[:last_name]}. <br> Infelizmente sua solicitação não foi verificada pelo motivo de: #{params[:justify]}.<br> Para ativar sua conta, pedimos que refaça o envio dos documentos atendendo aos requisitos necessários."
         end
         if @request.delete
-            deliver_generic_email(@user,message,"Solicitação #{@request.id} - Cripto Câmbio")
+            deliver_generic_email(@user,message,"Solicitação #{@request.id}")
         end
     end
 end

@@ -39,7 +39,13 @@ class UsersController < ApplicationController
     request.document_selfie = params[:selfie]
     request.status = 'pendente'
     request.save
+    admin = User.find_by_email('admin@cptcambio.com')
     flash[:success] = 'Seu pedido de ativação foi enviado! Você receberá uma mensagem em seu email com a qualquer atualização em breve.'
+    text = "Um novo pedido de validação de cadastro foi efetuado."
+    deliver_generic_email(admin,text,"Novo pedido de validação de cadatro.")
+    deliver_generic_email(current_user,"Seu pedido de validação foi recebido! <br> Aguarde informações futuras em seu email para verificar a resposta de nossa equipe de suporte.","Solicitação #{request.id}")
+    session[:redirect] = "editInfo"
+    @user = current_user
     redirect_to '/dashboard/index'
   end
 

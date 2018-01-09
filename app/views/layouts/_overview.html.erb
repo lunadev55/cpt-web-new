@@ -69,12 +69,23 @@
     </div>
     
     
+    <% if !session[:redirect].nil? %>
+    
+    <script>
+    $( document ).ready(function() {
+        setTimeout(function(){
+            $.get('layouts/<%= session[:redirect] %>')
+        }, 500);
+    });
+    </script>
+    <% session[:redirect] = nil %>
+    <% else %>
     <script>
         $( document ).ready(function() {
             $.get('/dashboard/overview/wallets/BTC');
             setTimeout(function(){
                 $.get('payments_details');
             }, 1000);
-            
         });
     </script>
+    <% end %>

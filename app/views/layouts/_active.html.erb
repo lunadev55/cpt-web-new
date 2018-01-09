@@ -2,7 +2,7 @@
 <div class="page-header"><h1>Ativação de conta</h1></div>
 
 
-<%= form_tag new_active_request_path, disabled: true, remote: true, class: "directUpload", data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host } %>
+<%= form_tag(new_active_request_path, disabled: true, remote: true, class: "directUpload",format: :js ,method: :post, data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host }) %>
 Parte das funcionalidades associadas à exchange de moedas virtuais necessita que os usuários ativem suas contas com o intuito da verificação das informações. <br>
 Para prosseguir, utilize o formulário abaixo para realizar upload de documentos.<br>
 <font class="red">Esteja atento! </font>Caso alguma informação dos documentos prestados não seja compatível com as informações cadastrais (nome / CPF), a verificação por parte da Cripto Câmbio substituirá os dados fornecidos inicialmente de forma permanente.<br>
@@ -39,7 +39,7 @@ Os arquivos com seus dados pessoais são apagados de nosso sistema assim que uma
     </div>
   </div>
 
-    <%= submit_tag "Submeter", class: 'btn btn-primary btn-lg' %>
+    <%= submit_tag "Submeter", class: 'submit_button_active btn btn-primary btn-lg' %>
   <br/><br/>
   <%= link_to 'Por que vejo isto?', new_password_reset_path, class: 'btn btn-sm btn-default' %>
 </form>
@@ -53,7 +53,7 @@ $(function aws() {
   $('*').find("input:file").each(function(i, elem) {
     var fileInput    = $(elem);
     var form         = $(fileInput.parents('form:first'));
-    var submitButton = form.find('input[type="submit"]');
+    var submitButton = $('.submit_button_active');
     var progressBar  = $(`<div class='bar ${fileInput.prop("name")}'></div>`);
     var barContainer = $(`<div class='progress ${fileInput.prop("name")}'></div>`).append(progressBar);
     fileInput.after(barContainer);
