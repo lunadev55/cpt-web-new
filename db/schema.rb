@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20180109000244) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_requests", force: :cascade do |t|
     t.string   "user_id"
     t.string   "document_photo"
@@ -44,7 +47,6 @@ ActiveRecord::Schema.define(version: 20180109000244) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "op_id"
-    t.         "string"
     t.string   "hex"
     t.string   "description"
   end
@@ -71,7 +73,7 @@ ActiveRecord::Schema.define(version: 20180109000244) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "role"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
   create_table "wallets", force: :cascade do |t|
