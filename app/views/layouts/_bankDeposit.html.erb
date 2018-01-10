@@ -1,0 +1,92 @@
+<h2>Depósito bancário.</h2>
+<div class="well well-lg small-size">Utilize esta sessão para solicitar depósitos.<br> <font class="red"><b>ATENÇÃO:</b> Transferências devem ser originadas de contas com a <b>sua titularidade</b>.</font> </div>
+<div class="row">
+    <div class="col-md-4 well">
+        <fieldset>
+            <legend>Nova solicitação de Depósito</legend>
+            <%= form_tag '/deposit', remote: true %>
+            <div class="form-group">
+                <%= label_tag :amount, "Quantidade (R$)" %>
+                <%= text_field_tag :amount, nil, placeholder: "00,00 BRL", class: 'amount-input form-control', required: true %>
+            </div>
+            <div class="form-group">
+                <%= label_tag :method, "Método de depósito" %>
+                <%= select_tag :method, options_for_select(DEPOSIT_BRL_METHODS), placeholder: "00,00 BRL", :prompt => "Selecione um método", class: 'form-control', required: true %>
+            </div>
+            <div class="form-group">
+                <%= label_tag :comission, "Comissão (1%)" %>
+                <%= text_field_tag :amount, nil, class: 'comission-input form-control', disabled: true %>
+            </div>
+            
+            <div class="form-group">
+                <%= label_tag :receive, "Valor a receber:" %>
+                <%= text_field_tag :receive, nil, class: 'receive-input form-control', disabled: true %>
+            </div>
+            
+            
+            <%= submit_tag "Solicitar", class: 'btn btn-primary btn-lg' %>
+        </fieldset>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-6 well">
+        <fieldset>
+            <legend>Depósitos ativos</legend>
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Valor solicitado</th>
+                    <th>Status</th>
+                    <th>Verificar</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+<script>
+    $( ".amount-input" ).keyup(function() {
+    element = $(".amount-input")
+    element.val((element.val()).replace(/[,]+/,'.'));
+    element.val((element.val()).replace(/[.]+/,"."));
+    element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    string = $(this).val();
+    points = 0
+    formated = ""
+    for (var i = 0, len = string.length; i < len; i++) {
+      if (string.charAt(i) == "."){
+          points = points + 1
+      }
+      if (points <= 1){
+        if ((string.charAt(i) != ".") && (points == 1)){
+            if (formated.split(".")[1].length >= 8){
+                $(this).val(formated)   
+            }else{
+                formated += string.charAt(i)
+            }
+        } else {
+         formated += string.charAt(i)   
+        }
+      } else{
+        $(this).val(formated)
+      }
+      
+    }
+    brl() 
+});
+
+function brl(){
+    float = parseFloat($('.amount-input').val())
+    tax = (float * 0.01).toFixed(2)
+    total = (float - tax).toFixed(2)
+    
+    $(".comission-input").val(`${tax} R$`)
+    $(".receive-input").val(`${total} R$`)
+    
+}
+</script>

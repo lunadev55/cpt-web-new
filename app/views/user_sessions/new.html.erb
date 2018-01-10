@@ -1,7 +1,12 @@
 <%= stylesheet_link_tag params[:controller] %>
 
-<div class="container register">
-<div class="page-header"><h1>Login</h1></div>
+<div class="container small register">
+<div align="center">
+  <fieldset>
+    <legend>Cripto Câmbio Exchange - Login</legend>
+    <img class="logo_login" src="assets/images/logo.png">
+  </fieldset>
+</div>
 
 <%= form_for @user_session do |f| %>
   <%= render 'shared/errors', object: @user_session %>

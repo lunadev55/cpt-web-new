@@ -1,0 +1,1 @@
+DEPOSIT_BRL_METHODS = "Dinheiro no caixa eletrônico", "Transferência entre contas do mesmo banco", "TED", "DOC", "Dinheiro na agência"

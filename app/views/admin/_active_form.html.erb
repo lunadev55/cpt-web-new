@@ -42,8 +42,21 @@
   
   <div class="form-group">
     <%=  label_tag :justify, "Justificativa" %>
-    <%=  text_field_tag :justify, nil, class: 'form-control' %>
+    <div class="alias-tooltip" title="Escreva uma justificativa aqui para justificar a rejeição da requisição do usuário, mínimo de 30 caracteres." data-toggle="tooltip" data-placement="top"><%=  text_field_tag :justify, nil, class: 'justify-input form-control' %></div>
   </div>
   
-  <%=  submit_tag 'Desativar', class: 'btn btn-primary btn-lg' %>
+  <%=  submit_tag 'Desativar', disabled: true, class: 'btn btn-primary btn-lg submit_deactivate' %>
 </form>
+<script>
+  $(document).ready(function(){
+    $('.alias-tooltip').tooltip();
+  });
+  
+  $('.justify-input').keyup(function(){
+    if ($('.justify-input').val().length >= 30){
+      $('.submit_deactivate').prop("disabled",false)
+    } else{
+      $('.submit_deactivate').prop("disabled",true)
+    }
+  })
+</script>

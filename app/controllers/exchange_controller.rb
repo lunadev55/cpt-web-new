@@ -1,4 +1,5 @@
 class ExchangeController < ApplicationController
+    skip_before_action :verify_authenticity_token, only: [:cancel_order]
     def render_orders
         session[:currency1] = params[:coin1]
         session[:currency2] = params[:coin2]
