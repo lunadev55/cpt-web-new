@@ -1,0 +1,22 @@
+/* line 1, /home/ubuntu/workspace/app/assets/stylesheets/user_sessions.scss */
+.register {
+  margin-top: 10% !important;
+  padding: 50px;
+  border-radius: 25px;
+}
+
+/* line 6, /home/ubuntu/workspace/app/assets/stylesheets/user_sessions.scss */
+body {
+  background-image: url(http://planet-design.com.ua/wp-content/uploads/2013/01/2172301.jpg) !important;
+}
+
+/* line 9, /home/ubuntu/workspace/app/assets/stylesheets/user_sessions.scss */
+.small {
+  max-width: 50%;
+}
+
+/* line 13, /home/ubuntu/workspace/app/assets/stylesheets/user_sessions.scss */
+.logo_login {
+  max-width: 100px;
+  height: auto;
+}

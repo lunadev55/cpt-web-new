@@ -12,7 +12,7 @@
                             <div class="row" data-pair="<%= compare.tr("/","_") %>">
                                 <div class="col-md-5 col-xs-5 white"><span title="Cotação atual"><b class="ticker_index_price_<%= compare.tr("/","_") %>"><%= last_price(compare,nil,nil)%></b></span></div>
                                 <div class="col-md-3 col-xs-3"><span title="DATA:USD Last Trade"><b><%= compare.split("/")[1] %></b></span></div>
-                                <div class="col-md-4 col-xs-4"><span title="DATA:USD Last Trade" class="green">22.1%</span></div>
+                                <div class="col-md-4 col-xs-4"><span title="DATA:USD Last Trade" class="green"><%= price_percentage(compare)%>%</span></div>
                             </div>
                         <% end %>
                     <% end %>

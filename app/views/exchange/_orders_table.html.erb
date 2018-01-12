@@ -1,6 +1,6 @@
 <% if !session[:currency1].nil? %>
 <div class="col-md-4 col-xs-4 buy-table non-pade-right table-responsive">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped buy_table_<%= "#{session[:currency1]}_#{session[:currency2]}" %>">
         <tr>
             <th colspan="2" class="text-center">Ordens de compra</th>
         </tr>
@@ -25,7 +25,7 @@
     </table>
 </div>
 <div class="col-md-4 col-xs-4 sell-table non-pade-right table-responsive">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped sell_table_<%= "#{session[:currency1]}_#{session[:currency2]}" %>">
         <tr>
             <th colspan="2" class="text-center">Ordens de Venda</th>
         </tr>
@@ -38,15 +38,15 @@
             </th>
         </tr>
         <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "sell", stt: "open"}).limit(15).order(price: :asc).each do |m| %>
-        <tr>
-            <td class="small_lines">
-                <%= m.price %> <%= session[:currency2] %>
-            </td>
-            <td class="small_lines">
-                <%= m.amount %> <%= session[:currency1] %>
-            </td>
-        </tr>
-        <% end %>
+            <tr>
+                <td class="small_lines">
+                    <%= m.price %> <%= session[:currency2] %>
+                </td>
+                <td class="small_lines">
+                    <%= m.amount %> <%= session[:currency1] %>
+                </td>
+            </tr>
+            <% end %>
     </table>
 </div>
 <% end %>

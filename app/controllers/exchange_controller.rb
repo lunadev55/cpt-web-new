@@ -10,13 +10,14 @@ class ExchangeController < ApplicationController
     end
     def cancel_order
         @order = current_user.exchangeorder.find(params[:id])
+        inicial_order = @order
         par = @order.par.split('/')
         if (@order.status != "open") and (@order.status != "executada")
             return
         end
         @order.status = "cancelled"
         flash[:success] = "Ordem cancelada! "
-        
+        recent_orders = table_orders(@order.par,@order.tipo)
         case @order.tipo
         when "buy"
             amount = (BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)).to_s
@@ -26,11 +27,31 @@ class ExchangeController < ApplicationController
             id = add_saldo(current_user,par[0],@order.amount,"cancel_sell")
             Payment.exchange_payment(current_user,id,par[0],@order.amount,"cancel_sell",@order.par)
         end
-        if @order.save
-            broadcast_order(@order)
+        array_compare = recent_orders[:table]
+        if array_compare.include?(inicial_order)
+            count = 0
+            array = array_compare.to_a
+            result = Array.new
+            array.each do |k|
+                count += 1
+                if k != inicial_order
+                    result << k
+                end
+            end
+            broadcast_order(@order,{order_list: result})
         end
+        @order.save
     end
-    
+    def table_orders(pair,type)
+        resp = Hash.new
+        case type
+        when "buy"
+            resp[:table] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "buy", stt: "open"}).order(price: :desc).limit(15)
+        when "sell"
+            resp[:table] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "sell", stt: "open"}).order(price: :asc).limit(15)
+        end
+        resp
+    end
     def open_orders
         if session[:current_place] == "overview"
             render :json => json_last_price
@@ -119,11 +140,21 @@ class ExchangeController < ApplicationController
         end
         result
     end
-    def broadcast_order(order)
-        if order.status == "executada"
+    def broadcast_order(order, *args)
+        case order.status
+        when "executada"
             ActionCable.server.broadcast 'last_orders',
                 status: order.status,
-                last_price: json_last_price 
+                last_price: order.price,
+                pair: order.par.tr("/","_"),
+                orders: args[0][:order_list],
+                tipo: order.tipo
+        when "cancelled", "open"
+            ActionCable.server.broadcast 'last_orders',
+                status: order.status,
+                tipo: order.tipo,
+                pair: order.par.tr("/","_"),
+                orders: args[0][:order_list]
         else
             ActionCable.server.broadcast 'last_orders',
                 status: order.status
@@ -134,7 +165,10 @@ class ExchangeController < ApplicationController
         current_amount = inicial_amount
         if consulta_ordem_oposta.empty?
             if order.save
-                broadcast_order(order)
+                list = table_orders(order.par,order.tipo)[:table]
+                if list.include?(order)
+                    broadcast_order(order,{order_list: list})
+                end
             end
             return 
         end
@@ -162,7 +196,7 @@ class ExchangeController < ApplicationController
                         new.tipo = order_type(order.tipo)
                         new.has_execution = true
                         if new.save
-                            broadcast_order(new)
+                            order_to_broadcast = new
                         end
                         
                         
@@ -184,7 +218,7 @@ class ExchangeController < ApplicationController
                         
                         b.status = "executada"
                         if b.save
-                            broadcast_order(b)
+                            order_to_broadcast = b
                         end
                         current_amount = result_amount
                         order.save
@@ -202,6 +236,7 @@ class ExchangeController < ApplicationController
                     #p "adicionar saldo de #{saldo2} #{params[:coin2]} para #{User.find(b.user_id).first_name}"
                     saldo2_id = add_saldo(User.find(b.user_id),params[:coin2],saldo2,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),saldo2_id,params[:coin2],saldo2,"#{b.tipo}_order_execution",b.par)
+                    string_type = "sell"
                 when "sell"
                     
                     coin2_sell_price = ((BigDecimal(saldo_sell,8) * BigDecimal(b.price,8)) * 0.995).to_s
@@ -213,7 +248,10 @@ class ExchangeController < ApplicationController
                     #p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
                     coin1_sell_id = add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)
+                    string_type = "buy"
                 end
+                list = table_orders(order.par,string_type)[:table]
+                broadcast_order(order_to_broadcast,{order_list: list})
             end
         end
         #head :ok
@@ -225,6 +263,7 @@ class ExchangeController < ApplicationController
             'buy'
         end
     end
+    
     def parseOrder(params)
         new_order = current_user.exchangeorder.new
         new_order.par = "#{params[:coin1]}/#{params[:coin2]}"

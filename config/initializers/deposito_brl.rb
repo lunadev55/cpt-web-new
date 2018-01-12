@@ -1,1 +1,1 @@
-DEPOSIT_BRL_METHODS = "Dinheiro no caixa eletrônico", "Transferência entre contas do mesmo banco", "TED", "DOC", "Dinheiro na agência"
+DEPOSIT_BRL_METHODS = "Dinheiro no caixa eletrônico (caixa)", "Transferência entre contas (caixa)", "TED", "DOC", "Dinheiro na lotérica (caixa)"

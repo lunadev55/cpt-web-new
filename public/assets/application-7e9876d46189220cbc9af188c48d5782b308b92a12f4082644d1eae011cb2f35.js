@@ -12213,93 +12213,87 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
   },
 
   received: function(data) {
-        // caso alguma ordem seja executada, atualizar tabelas
-        if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "business")){
-          $.get('/exchange/open_orders');
-        };
-        if (((data.status == "executada") || (data.status == "open")) && ($(".current_place").prop("place") == "overview")){
+        // caso esteja vendo tabelas, atualizá-las
+        if ($(".current_place").prop("place") == "business"){
+          table = $(`.${data.tipo}_table_${data.pair}`);
+          if (table != undefined){
+            updateTable(table,data)
+          }
+        }
+        // atualizar preço atual no slide de últimas operações
+        if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
+          $(`.${data.pair}_${data.tipo}`).html(data.last_price);
+        }
+        
+        
+        // atualizar preço de última ordem no formulário de compra instantânea (caso o par executado seja o mesmo do par selecionado pelos usuários)
+        if (($(".current_place").prop("place") == "overview")){
           elemento = $(  ".pair-control" )
           if (elemento.find(":selected").text() == "Selecione o par"){
-              return
+              return;
           } else {
-              a = elemento.find(":selected").text().replace(/ /,'')
-              b = a.replace(/ /,'')
-              $('.actual_price_form').data("pair",b)
-              if ($('#type').prop("value") == "buy"){
-                tipo = "buy"
-              } else {
-                tipo = "sell"
-              };
-              
-              $.ajax({
-              url: "instant_buy_price/" + b + '/' + tipo,
-              cache: false,
-              type: "GET",
-              success: function(response) {
-                  $(".actual_price_form").val(response);
-                  calc(response)
-              },
-              error: function(xhr) {
-                  
-              }});
-            }}
-            
-        if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
-          
-                        
-                        
-                            $('.LTC_BTC_buy').html(data.last_price["LTC/BTC_buy"])
-                            $('.LTC_BTC_sell').html(data.last_price["LTC/BTC_sell"])
-          
-                        
-                        
-                            $('.BTC_BRL_buy').html(data.last_price["BTC/BRL_buy"])
-                            $('.BTC_BRL_sell').html(data.last_price["BTC/BRL_sell"])
-          
-                        
-                        
-                            $('.LTC_BRL_buy').html(data.last_price["LTC/BRL_buy"])
-                            $('.LTC_BRL_sell').html(data.last_price["LTC/BRL_sell"])
-          
-                        
-                        
-                            $('.ETH_BRL_buy').html(data.last_price["ETH/BRL_buy"])
-                            $('.ETH_BRL_sell').html(data.last_price["ETH/BRL_sell"])
-          
-                        
-                        
-                            $('.ETH_BTC_buy').html(data.last_price["ETH/BTC_buy"])
-                            $('.ETH_BTC_sell').html(data.last_price["ETH/BTC_sell"])
-          
-                        
-                        
-                            $('.DOGE_BTC_buy').html(data.last_price["DOGE/BTC_buy"])
-                            $('.DOGE_BTC_sell').html(data.last_price["DOGE/BTC_sell"])
-          
-                        
-                        
-                            $('.ETH_LTC_buy').html(data.last_price["ETH/LTC_buy"])
-                            $('.ETH_LTC_sell').html(data.last_price["ETH/LTC_sell"])
-          
-                        
-                        
-                            $('.BCH_BTC_buy').html(data.last_price["BCH/BTC_buy"])
-                            $('.BCH_BTC_sell').html(data.last_price["BCH/BTC_sell"])
-          
-                        
-                        
-                            $('.DASH_BTC_buy').html(data.last_price["DASH/BTC_buy"])
-                            $('.DASH_BTC_sell').html(data.last_price["DASH/BTC_sell"])
-          
-          pair = $( ".pair-control" )
-          pair_string = pair.find(":selected").text().replace(' ','');
-          pair_string.replace('/','_');
-        };
+              update_instant_price(data.pair);
+        }}
+        
+        
     // Called when there's incoming data on the websocket for this channel
   }
 });
 
+function update_instant_price(pair){
+  
+  a = elemento.find(":selected").text().replace(/ /,'')
+  b = a.replace(/ /,'')
+  if (b.replace("/","_") == pair){
+  $('.actual_price_form').data("pair",b)
+  if ($('#type').prop("value") == "buy"){
+    tipo = "buy"
+  } else {
+    tipo = "sell"
+  }
+  
+  $.ajax({
+  url: "instant_buy_price/" + b + '/' + tipo,
+  cache: false,
+  type: "GET",
+  success: function(response) {
+      $(".actual_price_form").val(response);
+      calc(response);
+  },
+  error: function(xhr) {
+      
+  }});}
+  return
+};
 
+
+function updateTable(table,data){
+    arrayLength = data.orders.length;
+    if (data.tipo == "buy"){
+      string = "compra"
+      currency1 = data.pair.split("_")[0]
+      currency2 = data.pair.split("_")[1]
+    }else{
+      string = "venda"
+      currency1 = data.pair.split("_")[1]
+      currency2 = data.pair.split("_")[0]
+    }
+    content = ''
+    content += `<tr>`
+    content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+    if (data.tipo == "buy"){
+      content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
+    } else {
+      content += '<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>'
+    }
+    for (var i = 0; i < arrayLength; i++) {
+      content += '<tr>';
+      content += `<td class="small_lines">${data.orders[i].amount} ${currency1}</td>`;
+      content += `<td class="small_lines">${data.orders[i].price} ${currency2}</td>`;
+      content += '</tr>';
+    }
+    table.html(content);
+}
 
 function calc(price){
             a = elemento.find(":selected").text().replace(/ /,'')
