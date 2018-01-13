@@ -5322,11 +5322,11 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
-
+/*
 .modal-open {
   overflow: hidden;
 }
-
+*/
 .modal {
   display: none;
   overflow: hidden;
@@ -5355,12 +5355,12 @@ button.close {
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
 }
-
+/*
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
 }
-
+*/
 .modal-dialog {
   position: relative;
   width: auto;

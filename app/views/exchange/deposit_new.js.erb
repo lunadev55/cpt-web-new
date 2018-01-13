@@ -1,0 +1,11 @@
+$( ".painel_content" ).html( "<%= escape_javascript( render( :partial => "layouts/bankDeposit") ) %>" );
+
+$('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
+function clear_window(){
+  $('.centered-flash').html('');
+};
+
+$(document).ready(function(){
+setTimeout( 'clear_window()', 5000 )
+
+});

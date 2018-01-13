@@ -29,6 +29,7 @@ h4{
 .table{
     margin-top: 20px;
 }
+
 .small_lines { 
         padding: 1px !important;
         text-align: center;
@@ -53,6 +54,13 @@ h4{
     width: 40px;
 }
 
+
+body, .navbar-fixed-top, .navbar-fixed-bottom {
+  padding-right: 0 !important;
+  /* Solução para issue de uso de Modal
+  * https://github.com/twbs/bootstrap/issues/9855
+  */
+}
 .buttonSmall {
     padding-left: 10px;
     padding-right: 10px;

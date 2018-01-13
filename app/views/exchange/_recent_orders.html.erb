@@ -1,5 +1,5 @@
 <div class="col-md-6 col-xs-12 complete-table table-responsive">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped <%= "#{session[:currency1]}_#{session[:currency2]}" %>_executed">
         <tr>
             <th colspan="2" class="text-center">Ordens executadas <%= "(#{session[:currency1]}/#{session[:currency2]})" %></th>
         </tr>

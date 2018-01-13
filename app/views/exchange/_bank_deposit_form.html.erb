@@ -1,0 +1,85 @@
+<%= form_tag(deposit_verify_new_path, disabled: true, remote: true, class: "directUpload",format: :js ,method: :post, data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host }) %>
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+  <div class="form-group">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <fieldset>
+            <legend><h7>Detalhes do depósito</h7></legend>
+            Valor total: <b><%= @deposit.volume %> <%= @deposit.network %></b><br>
+            Tipo: <b><%= @deposit.description %></b><br>
+            Comissão: <b><%= b = BigDecimal(@deposit.volume,8) * 0.01 %> <%= @deposit.network %></b>
+          </fieldset>
+        <fieldset>
+            <legend><%= label_tag :deposit_photo, "Comprovante" %></legend>
+            <p>Caso seu comprovante seja digital, imprima-o e assine, colocando também seu <b>CPF</b> de forma legível.<br>
+            Após o envio, espere a resposta de nossa equipe, ao verificarmos seu depósito, será enviado um email para você.<br>
+            Seu depósito pode ser uma simples foto do comprovante de depósito / transferência bancária devidamente assinado.
+            <%= file_field_tag :deposit_photo, required: true %></p>
+        </fieldset>
+        </div>
+    </div>
+    <%= hidden_field_tag :id, @deposit.id %>
+    
+  </div>
+
+    <%= submit_tag "Submeter", class: 'submit_button_active btn btn-primary btn-lg' %>
+  <br/><br/>
+  
+  <script>
+$(function aws() {
+  $('*').find("input:file").each(function(i, elem) {
+    var fileInput    = $(elem);
+    var form         = $(fileInput.parents('form:first'));
+    var submitButton = $('.submit_button_active');
+    var progressBar  = $(`<div class='bar ${fileInput.prop("name")}'></div>`);
+    var barContainer = $(`<div class='progress ${fileInput.prop("name")}'></div>`).append(progressBar);
+    fileInput.after(barContainer);
+    console.log("começando")
+    fileInput.fileupload({
+      fileInput:       fileInput,
+      url:             "https://cptcambio.s3.us-east-2.amazonaws.com/",
+      //url:             form.data('url'),
+      type:            'POST',
+      autoUpload:       true,
+      formData:         form.data('form-data'),
+      paramName:        'file', // S3 does not like nested name fields i.e. name="user[avatar_url]"
+      dataType:         'XML',  // S3 returns XML if success_action_status is set to 201
+      replaceFileInput: false,
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        progressBar.css('width', progress + '%')
+      },
+      start: function (e) {
+        submitButton.prop('disabled', true);
+
+        progressBar.
+          css('background', 'green').
+          css('display', 'block').
+          css('width', '0%').
+          text("Carregando...");
+      },
+      done: function(e, data) {
+        submitButton.prop('disabled', false);
+        progressBar.text("Upload completo");
+
+        // extract key and generate URL from response
+        var key   = $(data.jqXHR.responseXML).find("Key").text();
+        var url   = '//' + form.data('host') + '/' + key;
+        //var url = 'cptcambio.s3.us-east-2.amazonaws.com/' + key
+
+        // create hidden field
+        var input = $("<input />", { type:'hidden', name: fileInput.attr('name'), value: url })
+        form.append(input);
+      },
+      fail: function(e, data) {
+        submitButton.prop('disabled', false);
+
+        progressBar.
+          css("background", "red").
+          text("Failed");
+      }
+    });
+  });
+});
+</script>

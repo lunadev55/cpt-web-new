@@ -25,6 +25,10 @@ Rails.application.routes.draw do
   post '/exchange/order/cancel/:id', to: 'exchange#cancel_order'
   get '/exchange/open_orders', to: 'exchange#open_orders'
   post '/exchange/instant', to: 'exchange#instant'
+  post '/deposit/new', to: 'exchange#deposit_new'
+  get '/deposit/verify/:id', to: 'static_pages#deposit_form'
+  post '/deposit/verify/new', to: 'dashboard#deposit_verify'
+  
 
   post '/active_requests/new', to: 'users#active_request_new'
 #aliases

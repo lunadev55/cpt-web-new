@@ -12781,12 +12781,22 @@ button.close {
   display: none;
 }
 
-/* line 18, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 1, /home/ubuntu/workspace/app/assets/stylesheets/buttons.scss */
+.button_small {
+  padding: 3px !important;
+}
+
+/* line 1, /home/ubuntu/workspace/app/assets/stylesheets/tables.scss */
+.active_deposits {
+  background-color: #bee5eb;
+}
+
+/* line 20, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .warning {
   color: red;
 }
 
-/* line 22, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 24, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .navbar li > span {
   padding-bottom: 15px;
   padding-top: 15px;
@@ -12795,13 +12805,13 @@ button.close {
   display: block;
 }
 
-/* line 30, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 32, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .pointer {
   cursor: pointer;
   z-index: 5 !important;
 }
 
-/* line 35, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 37, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 #footer {
   margin-top: 50px;
 }
@@ -21482,11 +21492,11 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
-
+/*
 .modal-open {
   overflow: hidden;
 }
-
+*/
 .modal {
   display: none;
   overflow: hidden;
@@ -21515,12 +21525,12 @@ button.close {
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
 }
-
+/*
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
 }
-
+*/
 .modal-dialog {
   position: relative;
   width: auto;

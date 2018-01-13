@@ -4,9 +4,9 @@
     <div class="col-md-4 well">
         <fieldset>
             <legend>Nova solicitação de Depósito</legend>
-            <%= form_tag '/deposit', remote: true %>
+            <%= form_tag '/deposit/new', remote: true %>
             <div class="form-group">
-                <%= label_tag :amount, "Quantidade (R$)" %>
+                <%= label_tag :amount, "Quantidade (R$) *" %>
                 <%= text_field_tag :amount, nil, placeholder: "00,00 BRL", class: 'amount-input form-control', required: true %>
             </div>
             <div class="form-group">
@@ -25,6 +25,10 @@
             
             
             <%= submit_tag "Solicitar", class: 'btn btn-primary btn-lg' %>
+            <div class="row">
+                <div class="col-md-1 col-xs-1">*</div><div class="col-md-11 col-xs-8"><p><h7> Solicitar valores quebrados (R$ 100,13), por exemplo, agiliza o processo de verificação.</h7></p></div>
+            </div>
+            
         </fieldset>
     </div>
     <div class="col-md-1"></div>
@@ -33,23 +37,72 @@
             <legend>Depósitos ativos</legend>
             <table class="table table-striped">
                 <tr>
-                    <th>Id</th>
-                    <th>Valor solicitado</th>
-                    <th>Status</th>
-                    <th>Verificar</th>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Valor solicitado</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Verificar</th>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <% current_user.payment.where("status = :stt AND network = :net AND label = :lab",{stt: "incomplete", net: "BRL", lab: "deposit_operation"}).each do |k|%>
+                <tr class="warning">
+                    <td class="text-center"><%= k.id %></td>
+                    <td class="text-center"><%= k.volume %> <%= k.network %></td>
+                    <td class="text-center"><%= exchange_label(k.label) %></td>
+                    <td class="text-center"><%= button_tag("Verificar", type: "button", class: "btn btn-primary button_small", data: {toggle: "modal", target:"#deposit_details_modal", id: k.id}) %></td>
                 </tr>
+                <% end %>
             </table>
         </fieldset>
     </div>
 </div>
 
+<!-- Modal -->
+<div id="deposit_details_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h2 class="modal-title">Verificar depósito.</h2>
+      </div>
+      <div class="modal-body">
+        <p>Para que seu depósito seja efetivado, você precisa fazer o upload da foto / impressão digital do seu comprovante do depósito, assim, nós podemos verificar e validar o seu saldo.<br>
+        Utilize o formulário abaixo para prosseguir com a validação.<br>
+        <font class="red"><b>ATENÇÃO:</b> Seu comprovante deve conter sua assinatura e o número do seu CPF.</font></p>
+        <font class="form-content"></font>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
 <script>
+    
+    $(".button_small").click(function(){
+        $(".form-content").html('<i class="fa fa-spinner fa-spin fa-3x" aria-hidden="true"></i>');
+        id = $(this).data("id");
+        $.ajax({
+        url: ("/deposit/verify/" + id),
+        cache: false,
+        type: "GET",
+        success: function(response) {
+            
+        },
+        error: function(xhr) {
+            
+        }
+        })
+    })
+
+
     $( ".amount-input" ).keyup(function() {
     element = $(".amount-input")
     element.val((element.val()).replace(/[,]+/,'.'));

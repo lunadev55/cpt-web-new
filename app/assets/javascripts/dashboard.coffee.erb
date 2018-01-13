@@ -6,7 +6,7 @@ $ ->
         view.preventDefault()
         option = $(this).data("payment-detail")
         get_ajax(option, '/dashboard/info/getpayment/')
-
+    
 $ ->
     $("a[data-painel-menu]").click (view) ->
         view.preventDefault()

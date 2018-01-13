@@ -1,10 +1,16 @@
 class StaticPagesController < ApplicationController
-    before_action :set_s3_direct_post, only: [:partial]
+    before_action :set_s3_direct_post, only: [:partial,:deposit_form]
   def index
 
   end
+  
+  def deposit_form
+    @deposit = current_user.payment.find(params[:id])
+  end
+  
   def send_coin_confirmation
   end
+  
   def withdrawal
     payment = Payment.find_by_hex(params[:code])
     if !payment.nil?

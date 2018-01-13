@@ -8,6 +8,25 @@ class ExchangeController < ApplicationController
     def instant
         create_order(pair: params[:currency_base], amount: params[:amount], type: params[:type])
     end
+    
+    def deposit_new
+        new_deposit = current_user.payment.new
+        new_deposit.status = "incomplete"
+        new_deposit.label = "deposit_operation"
+        new_deposit.endereco = nil
+        new_deposit.volume = params[:amount]
+        new_deposit.network = "BRL"
+        new_deposit.txid = nil
+        new_deposit.op_id = nil
+        new_deposit.hex = nil
+        new_deposit.description = params[:method]
+        if new_deposit.save
+            flash[:success] = "Operação de depósito solicitada. Verifique detalhes na tabela a direita. "
+        else 
+            flash[:success] = "Algo deu errado. Por favor, tente novamente!. "
+        end
+    end
+    
     def cancel_order
         @order = current_user.exchangeorder.find(params[:id])
         inicial_order = @order
@@ -42,6 +61,7 @@ class ExchangeController < ApplicationController
         end
         @order.save
     end
+    
     def table_orders(pair,type)
         resp = Hash.new
         case type
@@ -52,6 +72,8 @@ class ExchangeController < ApplicationController
         end
         resp
     end
+    
+
     def open_orders
         if session[:current_place] == "overview"
             render :json => json_last_price
@@ -140,15 +162,18 @@ class ExchangeController < ApplicationController
         end
         result
     end
+    
     def broadcast_order(order, *args)
         case order.status
         when "executada"
+            executed = Exchangeorder.where("par = :str_par AND status = :stt", {str_par: order.par, stt: "executada"}).order("updated_at DESC").limit(20)
             ActionCable.server.broadcast 'last_orders',
                 status: order.status,
                 last_price: order.price,
                 pair: order.par.tr("/","_"),
                 orders: args[0][:order_list],
-                tipo: order.tipo
+                tipo: order.tipo,
+                executed_list: executed
         when "cancelled", "open"
             ActionCable.server.broadcast 'last_orders',
                 status: order.status,
@@ -160,6 +185,7 @@ class ExchangeController < ApplicationController
                 status: order.status
         end
     end
+    
     def check_active_orders(order,consulta_ordem_oposta,buysell)
         inicial_amount = BigDecimal(order.amount,8)
         current_amount = inicial_amount
@@ -204,6 +230,7 @@ class ExchangeController < ApplicationController
                         order.status = "executora"
                         order.has_execution = true
                         order.save
+                        broadcast_user_order = false
                     when o_amount >= b_amount
                         result_amount = o_amount - b_amount
                         saldo_sell = b_amount #saldo a adicionar pro comprador caso ordem parcelada de venda
@@ -222,6 +249,7 @@ class ExchangeController < ApplicationController
                         end
                         current_amount = result_amount
                         order.save
+                        broadcast_user_order = true
                     end    
                 end
                 case order.tipo
@@ -252,10 +280,15 @@ class ExchangeController < ApplicationController
                 end
                 list = table_orders(order.par,string_type)[:table]
                 broadcast_order(order_to_broadcast,{order_list: list})
+                list_opposite = table_orders(order.par,order_type(string_type))[:table]
+                if broadcast_user_order
+                    broadcast_order(order,{order_list: list_opposite})
+                end
             end
         end
         #head :ok
     end
+    
     def order_type(arg)
         if arg == "buy"
             'sell'

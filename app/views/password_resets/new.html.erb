@@ -1,4 +1,12 @@
-<div class="page-header"><h1>Forgot your password?</h1></div>
+<%= stylesheet_link_tag "user_sessions" %>
+
+<div class="container small register">
+<div align="center">
+  <fieldset>
+    <legend>Cripto Câmbio Exchange - Recuperação de senha</legend>
+    <img class="logo_login" src="/assets/images/logo.png">
+  </fieldset>
+</div>
 
 <%= form_tag password_resets_path, method: :create do %>
   <div class="form-group">
@@ -6,5 +14,9 @@
     <%= email_field_tag 'email', nil, class: 'form-control' %>
   </div>
 
-  <%= submit_tag 'Send reset instructions', class: 'btn btn-primary' %>
+  <%= submit_tag 'Submeter', class: 'btn btn-primary' %><br/><br/>
+  <%= link_to 'Voltar', sign_in_path, class: 'btn btn-sm btn-default' %>
+  
 <% end %>
+
+</div>

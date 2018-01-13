@@ -39,6 +39,12 @@ class ApplicationController < ActionController::Base
   end
   def exchange_label(text)
     case text.downcase
+    when "deposit_operation"
+      return "Aguardando documento"
+    when "deposit_operation_pendent"
+      return "Depósito em análise"
+    when "deposit_operation_complete"
+      return "Depósito completo"
     when 'deposit'
       return "Depósito"
     when 'open_order_sell'
@@ -67,6 +73,8 @@ class ApplicationController < ActionController::Base
       return "Ordem de compra"
     when 'exchange_sell_order_execution'
       return "Ordem de Venda"
+    when 'incomplete'
+      return "Incompleto"
     else
       return text
     end
