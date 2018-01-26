@@ -4,7 +4,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">Valor</th>
             </tr>
-            <% Payment.where("label = :stt AND status == :complete", {stt: "deposit_operation_pendent", complete: "incomplete"}).order("created_at desc").each do |m| %>
+            <% Payment.where("label = :stt AND status = :complete", {stt: "deposit_operation_pendent", complete: "incomplete"}).order("created_at desc").each do |m| %>
             <tr class="pointer" data-request-detail="<%= m.id %>">
             
                 <td><%= m.id %></td>
