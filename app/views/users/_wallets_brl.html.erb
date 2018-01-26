@@ -1,0 +1,23 @@
+<% wallets = current_user.wallet.where('currency = :curr',{curr: "BRL"})%>
+  <% if !wallets.empty? %>
+  <% wallets.each do |m| %>
+  <% hash = eval(decrypt_data(m.address)) %>
+  <div class="well row">
+    <div class="col-md-9 col-xs-9">
+      Banco: <b><%= m.dest_tag %><br></b>
+      Titular: <b><%= hash[:account_holder] %></b><br>
+      Agencia: <b><%= hash[:agencia] %></b><br>
+      Conta: <b><%= hash[:conta] %></b>
+    </div>
+    <div class="col-md-3 col-xs-3">
+      <button type="button" data-toggle="modal" data-target="#edit_bank_account" data-operation="edit" data-bank-account="<%= m.id %>" class="btn btn-warning manage_bank_buttons"><i class="fa fa-pencil" aria-hidden="true"></i></button><br>
+      <button type="button" data-toggle="modal" data-target="#edit_bank_account" data-operation="info" data-bank-account="<%= m.id %>" class="btn btn-info manage_bank_buttons"><i class="fa fa-info-circle" aria-hidden="true"></i></button><br>
+      <button type="button" data-operation="delete" data-bank-account="<%= m.id %>" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    </div>
+  </div>
+  <% end %>
+  <% else %>
+  <font class="red">Você ainda não possui nenhuma conta bancária.</font><br>
+  Utilize o botão acima para adicionar uma.
+  <% end %>
+  

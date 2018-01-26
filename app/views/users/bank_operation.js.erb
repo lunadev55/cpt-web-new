@@ -1,0 +1,9 @@
+<% case params[:op] %>
+<% when "edit" %>
+$('.edit_bank_account_modal_content').html("<%= escape_javascript( render( :partial => "/users/new_bank_account_form") ) %>");
+<% when "delete" %>
+$.get('/dashboard/layouts/editInfo');
+<% when "info" %>
+<% hash = eval(decrypt_data(@account.address)) %>
+$('.edit_bank_account_modal_content').html("Banco: <b><%= @account.dest_tag %><br></b>Titular: <b><%= hash[:account_holder] %></b><br>Agencia: <b><%= hash[:agencia] %></b><br>Conta: <b><%= hash[:conta] %></b><br>Vínculo: <b><%= hash[:joint_account] %></b><br>Tipo: <b><% case hash[:tipo_conta] %><% when "cc" %>Conta Corrente<% else %>Conta Poupança<% end %></b><br>");
+<% end %>

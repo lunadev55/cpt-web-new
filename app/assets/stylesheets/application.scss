@@ -15,11 +15,14 @@
 @import "screen";
 @import "buttons";
 @import "tables";
+@import "animations";
 
 .warning{
   color: red;
 }
-
+.modal-open {
+    overflow-y: scroll !important;
+}
 .navbar li > span {
   padding-bottom: 15px;
   padding-top: 15px;

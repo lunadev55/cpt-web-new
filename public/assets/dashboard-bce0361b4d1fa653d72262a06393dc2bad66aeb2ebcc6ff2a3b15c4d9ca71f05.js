@@ -14,6 +14,8 @@
     return $("a[data-painel-menu]").click(function(view) {
       var option;
       view.preventDefault();
+      $(".loading_menu").remove();
+      $(this).append('<i class="fa fa-spinner fa-pulse fa-fw loading_menu"></i>');
       option = $(this).data("painel-menu");
       if (option === "deposit") {
         return get_ajax(option, '/dashboard/info/getwallets');

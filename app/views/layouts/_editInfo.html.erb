@@ -1,11 +1,12 @@
-<div class="col-md-6 well">
+<div class="col-md-6 col-xs-6 well">
+  
 <fieldset>
       <legend>Editar informações cadastrais:</legend>
 <% disable = false %>
 <% if @user.role == "active"%>
 <% disable = true %>
 <% end %>
-<%= form_tag nil, class:"editForm", remote: true %>
+<%= form_tag "/dashboard/layouts/editInfo", class:"editForm", remote: true %>
   <div class="form-group">
     <%= label_tag :first_name, "Primeiro nome" %>
     <%= text_field_tag :first_name, @user.first_name, class: 'form-control', disabled: disable  %>
@@ -64,8 +65,8 @@
   </fieldset>
   </div>
   
-  <div class="col-md-1"></div>
-  <div class="col-md-5 well">
+  <div class="col-md-1 col-xs-1"></div>
+  <div class="col-md-5 col-xs-5 well">
     <fieldset>
       <legend>Status da conta:</legend>
     <% if current_user.role == "inactive" %>
@@ -81,10 +82,44 @@
     <% else %>
     <p><b>Stauts: </b><i class="green fa fa-check-circle-o fa-2x" aria-hidden="true"></i> - Conta verificada.</p>
     <% end %>
+    </fieldset><br>
+    <fieldset>
+      <legend>Contas bancárias</legend>
+      <div align="center">
+        <span data-toggle="modal" data-target="#new_bank_account" data-partial><%= button_tag 'Nova <i class="fa fa-plus" aria-hidden="true"></i>'.html_safe, class: 'new_bank btn btn-primary button_small'  %></span>
+      </div>
+      <div class="wallets_brl">
+        <div align="center" class="text-center light-yellow mb-darkgray-text dashed text-uppercase margin20-vertical">
+          <i class="fa red fa-warning font26 padding10-horizontal"></i>
+          <% doc = current_user.document %>
+          A conta bancária deve pertencer ao CPF: <strong class="red"><%= "#{doc.first(3)}.#{doc[4..6]}.#{doc[7..9]}-#{doc.last(2)}" %></strong>
+      </div>
+      <%= render 'users/wallets_brl' %>
+      </div>
     </fieldset>
   </div>
-  
+  <%= render partial: "/layouts/generic_modal", locals: {id: "new_bank_account", titulo: "Nova Conta bancária"} %>
+  <%= render partial: "/layouts/generic_modal", locals: {id: "edit_bank_account", titulo: "Conta bancária"} %>
   <script>
+    $('button[data-operation]').click(function(){
+      id = $(this).data("bank-account");
+      op = $(this).data("operation");
+      if (op == "delete"){
+        if (confirm("Essa operação não pode ser desfeita, prosseguir?")){
+          $.get(`/bank/${op}/${id}`)
+        }else{
+        }
+      }else{
+        $.get(`/bank/${op}/${id}`)
+      }
+      
+    });
+    
+    
+    $(".new_bank").click(function(){
+      $.get('/editInfo/bank')
+    });
+    
     $("a[data-active-menu]").click(function(){
       $.ajax({
           url: `layouts/${$(this).data("active-menu")}`,

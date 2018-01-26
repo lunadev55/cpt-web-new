@@ -3,11 +3,22 @@
 <% if current_user.role != "admin" %>
 Permissão negada.
 <% else %>
-Usuário: <%= "#{current_user.first_name} #{current_user.last_name}" %>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
+       <fieldset>
+            <legend>Depósitos a confirmar</legend>
+            <div class="well"><%= render 'admin/deposits_list' %></div>
+        </fieldset>
+    </div>
+    <div class="col-md-5">
         <fieldset>
-            <legend>Confirmar depósito</legend>
+            <legend>Detalhes</legend>
+            <div class="well user_details deposit_detail">Selecione um depósito ao lado.</div>
+        </fieldset>
+    </div>
+    <div class="col-md-4">
+     <fieldset>
+            <legend>Adicionar saldo</legend>
             <div class="well">
                 <%= form_tag 'confirmar_deposito', :remote => true, class: 'admin_form' %>
                 <div class="form-group">
@@ -45,12 +56,6 @@ Usuário: <%= "#{current_user.first_name} #{current_user.last_name}" %>
                 <%= submit_tag 'Enviar', :class => 'form-control' %>
             </div>
         </fieldset>
-    </div>
-    <div class="col-md-4">
-        <fieldset>
-            <legend>Depósitos a confirmar (BRL)</legend>
-            <div class="well"></div>
-        </fieldset>
-    </div>
+        </div>
 </div>
 <% end %>

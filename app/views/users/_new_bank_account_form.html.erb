@@ -1,0 +1,80 @@
+<%= form_tag '/editInfo/bank', remote: true %>
+    <% wallet_exists = !@wallet.nil?%>
+    <% if wallet_exists %>
+    <%= hidden_field_tag :id, @wallet.id %>
+    <% end %>
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+                <%= label_tag :banco, "Banco" %>
+                <% if wallet_exists %>
+                <%= select_tag :banco, options_for_select(BANCOS,@wallet.dest_tag), class: 'form-control', required: true %>
+                <% else %>
+                <%= select_tag :banco, options_for_select(BANCOS), class: 'form-control', required: true %>
+                <% end %>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+                <small><label for="id_tipo_conta">Tipo de conta</label></small>
+                <select class="form-control" name="tipo_conta" id="id_tipo_conta">
+                    <% if wallet_exists %>
+                        <option value="cc" <% if @hash[:tipo_conta] == "cc" %>selected="selected"<% end %>>Conta corrente</option>
+                        <option value="cp" <% if @hash[:tipo_conta] == "cp" %>selected="selected"<% end %>>Conta poupança</option>
+                    <% else %>
+                        <option value="cc" selected="selected">Conta corrente</option>
+                        <option value="cp">Conta poupança</option>
+                    <% end %>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <%= label_tag :joint_account, "Vínculo da conta" %>
+        <% if wallet_exists %>
+        <%= select_tag :joint_account, options_for_select(VINCULOS,@hash[:joint_account]), class: 'form-control', required: true %>
+        <% else %>
+        <%= select_tag :joint_account, options_for_select(VINCULOS), class: 'form-control', required: true %>
+        <% end %>
+    </div>
+    <div class="form-group">
+        <!-- <input autocomplete="off" name="account_holder" id="id_account_holder" type="text" required="true" placeholder="Nome do(a) titular" class="form-control display-none" size="40"> -->
+        <% if wallet_exists %>
+        <%= text_field_tag :account_holder, @hash[:account_holder], autocomplete: 'off', placeholder: "Nome do(a) titular", required: true, class: 'form-control display-none', size: 40 %>
+        <% else %>
+        <%= text_field_tag :account_holder, nil, autocomplete: 'off', placeholder: "Nome do(a) titular", required: true, class: 'form-control display-none', size: 40 %>
+        <% end %>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <small><label for="id_agencia">Agência (e dígito, se houver)</label></small>
+                <% if wallet_exists %>
+                <%= text_field_tag :agencia, @hash[:agencia], autocomplete: 'off', maxlength: 6, placeholder: "XXXX-X", required: true, class: 'form-control' %>
+                <% else %>
+                <%= text_field_tag :agencia, nil, autocomplete: 'off', maxlength: 6, placeholder: "XXXX-X", required: true, class: 'form-control' %>
+                <% end %>
+                
+                <!-- <input class="form-control" autocomplete="off" name="agencia" maxlength="6" placeholder="XXXX-X" required="true" type="text" id="id_agencia"> -->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <small><label for="id_conta">Conta (e dígito, se houver)</label></small>
+                <% if wallet_exists %>
+                    <%= text_field_tag :conta, @hash[:conta], autocomplete: 'off', maxlength: 16, placeholder: "XXXXXXX-X", required: true, class: 'form-control' %>
+                <% else %>
+                    <%= text_field_tag :conta, nil, autocomplete: 'off', maxlength: 16, placeholder: "XXXXXXX-X", required: true, class: 'form-control' %>
+                <% end %>
+            </div>            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-xs-2"></div>
+        <div class="col-md-8 col-xs-8 form-group">
+            <%= submit_tag 'Salvar', class: 'form-control' %>
+        </div>
+        <div class="col-md-2 col-xs-2"></div>
+    </div>

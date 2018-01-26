@@ -12213,20 +12213,39 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
   },
 
   received: function(data) {
-        // caso esteja vendo tabelas, atualizá-las
+        // página de negociações
         if ($(".current_place").prop("place") == "business"){
-          table = $(`.${data.tipo}_table_${data.pair}`);
-          if (table != undefined){
+          var table = $(`.${data.tipo}_table_${data.pair}`);
+          if ((table != undefined) && (data.status == "executada")){
+            updatePriceTables(data)
+          } else {
             updateTable(table,data)
           }
           table_prices = $(`.${data.pair}_executed`)
-          if (table_prices != undefined){
+          if ((table_prices != undefined) && data.executed_list != undefined){
             updateExecTable(table_prices,data);
           }
+          $(`.ticker_index_price_${data.pair}`).html(data.last_price);
+          if (data.percentage_24h != undefined ){
+            if (data.percentage_24h == 0){
+              color = "yellow" 
+            } else if(data.percentage_24h > 0){
+              color = "green"
+            } else if(data.percentage_24h < 0){
+              color = "red"
+            }
+            $(`.ticker_percentage_${data.pair}`).removeClass("yellow");
+            $(`.ticker_percentage_${data.pair}`).removeClass("green");
+            $(`.ticker_percentage_${data.pair}`).removeClass("red");
+            $(`.ticker_percentage_${data.pair}`).addClass(color);
+            $(`.ticker_percentage_${data.pair}`).html(`${data.percentage_24h}%`);
+          }
+          
         }
         // atualizar preço atual no slide de últimas operações
         if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
           $(`.${data.pair}_${data.tipo}`).html(data.last_price); // atualizar preço de orden executada
+          
         }
         
         
@@ -12276,7 +12295,6 @@ function updateExecTable(table,data){
   var content = '';
   var currency1 = data.pair.split("_")[0];
   var currency2 = data.pair.split("_")[1];
-  console.log(data.executed_list)
   content += `<tr>`;
   content += `<th colspan="2" class="text-center">Ordens executadas (${data.pair.replace("_","/")})</th></tr><tr class="active">`;
   content += `<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>`;
@@ -12289,41 +12307,49 @@ function updateExecTable(table,data){
   table.html(content);
   
 }
-function updateTable(table,data){
-    var arrayLength = data.orders.length;
+function updatePriceTables(data){
     if (data.tipo == "buy"){
       var string = "compra"
       var currency1 = data.pair.split("_")[0]
       var currency2 = data.pair.split("_")[1]
+      var opposite = "sell"
     }else{
       string = "venda"
       currency1 = data.pair.split("_")[1]
       currency2 = data.pair.split("_")[0]
-    }
-    var content = ''
-    content += `<tr>`
-    content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
-    if (data.tipo == "buy"){
-      content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
-      for (var i = 0; i < arrayLength; i++) {
-        content += '<tr>';
-        content += `<td class="small_lines">${data.orders[i].amount} ${currency1}</td>`;
-        content += `<td class="small_lines">${data.orders[i].price} ${currency2}</td>`;
-        content += '</tr>';
-      }
-    } else {
-      content += '<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>'
-      for (var i = 0; i < arrayLength; i++) {
-        content += '<tr>';
-        content += `<td class="small_lines">${data.orders[i].price} ${currency1}</td>`;
-        content += `<td class="small_lines">${data.orders[i].amount} ${currency2}</td>`;
-        content += '</tr>';
-      }
+      opposite = "buy"
     }
     
-    table.html(content);
+    var table = $(`.${data.tipo}_table_${data.pair}`);
+    var table_opposite = $(`.${opposite}_table_${data.pair}`);
+    var table_content = mountTableContent(string,data,data.orders.length,currency1,currency2,data.tipo,data.orders);
+    var table_opposite_content = mountTableContent(string,data,data.opposite_orders.length,currency1,currency2,opposite,data.opposite_orders);
+    table.html(table_content);
+    table_opposite.html(table_opposite_content);
 }
-
+function mountTableContent(string,data,arrayLength,currency1,currency2,type,orders){
+  var content = ''
+  content += `<tr>`
+  content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+  if (type == "buy"){
+    content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
+    for (var i = 0; i < arrayLength; i++) {
+      content += '<tr>';
+      content += `<td class="small_lines">${orders[i].amount} ${currency1}</td>`;
+      content += `<td class="small_lines">${orders[i].price} ${currency2}</td>`;
+      content += '</tr>';
+    }
+  } else {
+    content += '<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>'
+    for (var i = 0; i < arrayLength; i++) {
+      content += '<tr>';
+      content += `<td class="small_lines">${orders[i].price} ${currency1}</td>`;
+      content += `<td class="small_lines">${orders[i].amount} ${currency2}</td>`;
+      content += '</tr>';
+    }
+  }
+  return content
+}
 function calc(price){
     var a = elemento.find(":selected").text().replace(/ /,'')
     var b = a.replace(/ /,'')
@@ -12359,6 +12385,40 @@ function calc(price){
     }
 
 }
+function updateTable(table,data){
+    var arrayLength = data.orders.length;
+    if (data.tipo == "buy"){
+      var string = "compra"
+      var currency1 = data.pair.split("_")[0]
+      var currency2 = data.pair.split("_")[1]
+    }else{
+      string = "venda"
+      currency1 = data.pair.split("_")[1]
+      currency2 = data.pair.split("_")[0]
+    }
+    var content = ''
+    content += `<tr>`
+    content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+    if (data.tipo == "buy"){
+      content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
+      for (var i = 0; i < arrayLength; i++) {
+        content += '<tr>';
+        content += `<td class="small_lines">${data.orders[i].amount} ${currency1}</td>`;
+        content += `<td class="small_lines">${data.orders[i].price} ${currency2}</td>`;
+        content += '</tr>';
+      }
+    } else {
+      content += '<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>'
+      for (var i = 0; i < arrayLength; i++) {
+        content += '<tr>';
+        content += `<td class="small_lines">${data.orders[i].price} ${currency1}</td>`;
+        content += `<td class="small_lines">${data.orders[i].amount} ${currency2}</td>`;
+        content += '</tr>';
+      }
+    }
+    
+    table.html(content);
+}
 ;
 // This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
@@ -12377,6 +12437,4 @@ function calc(price){
 
 
 
-// require jquery.ui.widget
-// require z.jquery.fileupload
 ;

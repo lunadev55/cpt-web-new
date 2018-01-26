@@ -166,13 +166,16 @@ class ExchangeController < ApplicationController
     def broadcast_order(order, *args)
         case order.status
         when "executada"
+            percentage = price_percentage(order.par)
             executed = Exchangeorder.where("par = :str_par AND status = :stt", {str_par: order.par, stt: "executada"}).order("updated_at DESC").limit(20)
             ActionCable.server.broadcast 'last_orders',
                 status: order.status,
                 last_price: order.price,
                 pair: order.par.tr("/","_"),
                 orders: args[0][:order_list],
+                opposite_orders: args[0][:opposite_orders],
                 tipo: order.tipo,
+                percentage_24h: percentage.tr(",","."),
                 executed_list: executed
         when "cancelled", "open"
             ActionCable.server.broadcast 'last_orders',
@@ -187,13 +190,16 @@ class ExchangeController < ApplicationController
     end
     
     def check_active_orders(order,consulta_ordem_oposta,buysell)
+        string_type = ""
+        order_to_broadcast = order
         inicial_amount = BigDecimal(order.amount,8)
         current_amount = inicial_amount
         if consulta_ordem_oposta.empty?
             if order.save
                 list = table_orders(order.par,order.tipo)[:table]
                 if list.include?(order)
-                    broadcast_order(order,{order_list: list})
+                    list_opposite = table_orders(order.par,order_type(order.tipo))[:table]
+                    broadcast_order(order,{order_list: list,list_opposite: list_opposite})
                 end
             end
             return 
@@ -278,14 +284,11 @@ class ExchangeController < ApplicationController
                     Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)
                     string_type = "buy"
                 end
-                list = table_orders(order.par,string_type)[:table]
-                broadcast_order(order_to_broadcast,{order_list: list})
-                list_opposite = table_orders(order.par,order_type(string_type))[:table]
-                if broadcast_user_order
-                    broadcast_order(order,{order_list: list_opposite})
-                end
             end
         end
+        list = table_orders(order.par,string_type)[:table]
+        list_opposite = table_orders(order.par,order_type(string_type))[:table]
+        broadcast_order(order_to_broadcast,{order_list: list, opposite_orders: list_opposite})
         #head :ok
     end
     

@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo, :check_user_documents, :price_percentage
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo, :check_user_documents, :price_percentage, :color_type_percentage, :encrypt_data, :decrypt_data
   require 'sendgrid-ruby'
   include SendGrid 
   private
@@ -20,9 +20,20 @@ class ApplicationController < ActionController::Base
       a = BigDecimal(last_order.price,8)
       b = BigDecimal(last_order_24h.price,8)
       c = ((a-b)/b) * 100
-      return "#{c.to_s.split(".")[0].first(3)}"
+      return "#{c.to_s.split(".")[0].first(3)},#{c.to_s.split(".")[1].first(2)}"
     end
-    return "-"
+    return "0"
+  end
+  def color_type_percentage(decimal)
+    decimal_o = BigDecimal(decimal,8)
+    case 
+    when decimal_o == 0
+      "yellow"
+    when decimal_o < 0
+      "red"
+    when decimal_o > 0
+      "green"
+    end
   end
   def check_user_documents
     case current_user.role
@@ -34,11 +45,39 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def decrypt_data(message)
+    decipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+    decipher.decrypt
+    decipher.key = ENV["CIPHER_RANDOM"]
+    decipher.iv = ENV["CIPHER_IV"]
+    tempkey = Base64.decode64(message)
+    crypt = decipher.update(tempkey)
+    crypt << decipher.final()
+    return crypt
+  end
+  
+  def encrypt_data(message)
+    cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+    cipher.encrypt # We are encypting
+    # The OpenSSL library will generate random keys and IVs
+    cipher.key = ENV["CIPHER_RANDOM"]
+    cipher.iv = ENV["CIPHER_IV"]
+    
+    encrypted_data = cipher.update(message) # Encrypt the data.
+    encrypted_data << cipher.final
+    crypt_string = (Base64.encode64(encrypted_data))
+    return crypt_string
+  end
+  
   def search_saldo
     eval(get_saldo(current_user))
   end
   def exchange_label(text)
     case text.downcase
+    when "deposit_operation_verified"
+      return "Depósito verificado"
+    when "deposit_cancelled"
+      return "Depósito Cancelado"
     when "deposit_operation"
       return "Aguardando documento"
     when "deposit_operation_pendent"

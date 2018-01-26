@@ -15,5 +15,3 @@
 //= require warn
 //= require generic
 //= require_tree ./channels
-// require jquery.ui.widget
-// require z.jquery.fileupload

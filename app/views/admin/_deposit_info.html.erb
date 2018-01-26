@@ -1,0 +1,56 @@
+<%= form_tag '/admin/deposit_confirm', data: {remote: true} %>
+  <div class="form-group">
+    <fieldset>
+        <legend>Foto de comprovante: </legend>
+        <img class="active_img" src="<%= @deposit.endereco %>">
+    </fieldset>
+  </div>
+  
+  <div class="form-group">
+    <%=  label_tag :amount, "Quantidade" %>
+    <%=  text_field_tag :amount, "#{@deposit.volume} #{@deposit.network}", class: 'form-control', disabled: true %>
+  </div>
+  <div class="form-group">
+    <%=  label_tag :method, "Método" %>
+    <%=  text_field_tag :method, @deposit.description, class: 'form-control', disabled: true %>
+  </div>
+  
+  <%= hidden_field_tag :request_id, @deposit.id %>
+  <div class="form-group">
+    <%=  label_tag :hex, "Id bancário" %>
+    <div class="alias-tooltip" title="Insira O identificador da transação bancária, mínimo de 6 caracteres." data-toggle="tooltip" data-placement="top"><%=  text_field_tag :hex, nil, class: 'hex-input form-control' %></div>
+  </div>
+  <%=  submit_tag 'Confirmar', disabled: true, class: 'btn btn-primary btn-lg confirm_deposit_submit' %>
+  
+  <div class="form-group">
+    <%=  label_tag :justify, "Justificativa" %>
+    <div class="alias-tooltip" title="Insira a justificativa do por quê o depósito foi cancelado, mínimo de 30 caracteres." data-toggle="tooltip" data-placement="top"><%=  text_field_tag :justify, nil, class: 'justify-input form-control' %></div>
+  </div>
+  
+  <%=  submit_tag 'Cancelar', disabled: true, class: 'btn btn-primary btn-lg submit_deactivate' %>
+</form>
+<script>
+  $(document).ready(function(){
+    $('.alias-tooltip').tooltip();
+  });
+  $('.hex-input').keyup(function(){
+    input = $(this)
+    minimum = 6
+    submit = $('.confirm_deposit_submit')
+    enableSubmit(submit,input,minimum)
+  })
+  
+  $('.justify-input').keyup(function(){
+    input = $(this)
+    minimum = 30
+    submit = $('.submit_deactivate')
+    enableSubmit(submit,input,minimum)
+  })
+  function enableSubmit(submit,input,minimum){
+    if (input.val().length >= minimum){
+      submit.prop("disabled",false)
+    } else{
+      submit.prop("disabled",true)
+    } 
+  }
+</script>

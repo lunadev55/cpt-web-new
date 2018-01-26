@@ -19,6 +19,15 @@ $('.deposit_currency').click(function(e) {
   $(this).addClass('active');
 });
 
+function clear_window(){
+  $('.centered-flash').html('');
+};
+
+$(document).ready(function(){
+setTimeout( 'clear_window()', 5000 )
+
+});
+
 $( ".fa-window-close" ).click(function() {
   $('.centered-flash').html('');
 });

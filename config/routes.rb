@@ -28,9 +28,13 @@ Rails.application.routes.draw do
   post '/deposit/new', to: 'exchange#deposit_new'
   get '/deposit/verify/:id', to: 'static_pages#deposit_form'
   post '/deposit/verify/new', to: 'dashboard#deposit_verify'
+  get '/deposit_detail/:id', to: 'admin#deposit_detail'
   
+  match '/editInfo/bank', to: 'users#new_bank_account', via: [:get, :post]
+  get 'bank/:op/:id', to: 'users#bank_operation'
 
   post '/active_requests/new', to: 'users#active_request_new'
+  #post '/bank/account/new', to: 'users#new_bank_account'
 #aliases
   get '/sign_out', to: 'user_sessions#destroy', as: :sign_out
   get '/sign_in', to: 'user_sessions#new', as: :sign_in
@@ -44,6 +48,7 @@ Rails.application.routes.draw do
   get '/api/is_valid_address/:currency/:address', to: 'api#test_address'
   get '/request_detail/:request_id', to: 'admin#request_details'
   post '/admin/activation', to: 'admin#active_account'
+  post '/admin/deposit_confirm', to: 'admin#deposit_confirm'
   
   
   mount ActionCable.server => '/cable'

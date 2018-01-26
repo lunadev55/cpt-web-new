@@ -2,7 +2,14 @@ $('.centered-flash').html('<% flash.each do |key, value| %><div class="alert ale
 $( ".fa-window-close" ).click(function() {
   $('.centered-flash').html('');
 });
+function clear_window(){
+  $('.centered-flash').html('');
+};
 
+$(document).ready(function(){
+setTimeout( 'clear_window()', 5000 )
+
+});
 $( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
 $(".exchange_form_element")[0].reset();
 $('.user_orders').html( "<%= escape_javascript( render( :partial => "exchange/open_orders" )) %>" );

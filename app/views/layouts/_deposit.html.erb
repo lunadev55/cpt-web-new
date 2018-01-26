@@ -17,7 +17,7 @@
             <%= form_tag nil, remote: true, class: "editForm" %>
             <%= hidden_field_tag :currency, @currency , class: 'hidden' %>
             <%= submit_tag "Gerar carteira", class: "submit btn btn-warning" %>
-            </form>
+            </form><br>
             <div class="qrcode" align="center">
                 <i class="fa fa-spinner fa-spin fa-5x" aria-hidden="true"></i>
             </div>

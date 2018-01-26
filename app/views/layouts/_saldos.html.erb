@@ -9,7 +9,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><a><i style="font-size: 145%;" class="fa fa-money" aria-hidden="true"></i></a> </div>
-							<div class="col-md-10 col-xs-10">R$ <%= @saldos["BTC"].to_s.split(".")[0] %>,<%= @saldos["BRL"].to_s.split(".")[1].first(2) %> </div>
+							<div class="col-md-10 col-xs-10">R$ <%= @saldos["BRL"].to_s.split(".")[0] %>,<%= @saldos["BRL"].to_s.split(".")[1].first(2) %> </div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'btc.png' %>" width="20px" height="20px" alt="Bitcoin"> </div>

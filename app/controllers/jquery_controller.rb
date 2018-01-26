@@ -18,12 +18,18 @@ class JqueryController < ApplicationController
         if !payment.nil?
             if payment.status == "incomplete"
                 payment.status = "canceled"
-                payment.hex = ""
-                payment.save
-                add_saldo(current_user,payment.network,payment.volume,"withdrawal_cancel")
-                flash[:success] = "Saque cancelado. "
+                case payment.label.downcase
+                when "saque"
+                    payment.hex = ""
+                    payment.save
+                    add_saldo(current_user,payment.network,payment.volume,"withdrawal_cancel")
+                    flash[:success] = "Saque cancelado. "
+                else
+                    payment.save
+                    flash[:success] = "Depósito cancelado. "
+                end
             else
-                flash[:success] = "Saque já realizado ou cancelado. "
+                flash[:success] = "Operação já realizada ou cancelada. "
             end
         else
             flash[:success] = "Operação não encontrada. "

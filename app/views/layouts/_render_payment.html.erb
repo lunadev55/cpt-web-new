@@ -13,8 +13,20 @@ Quantidade <%= debit_credit %>: <b><%= (BigDecimal(@payment.volume,8)).to_s.spli
 Par de troca: <b><%= @payment.endereco %></b><br>
 Status da operação: <b><%= exchange_label(@payment.status) %></b>
 
+<% elsif "#{@payment.label.match(/deposit_operation/)}" == "deposit_operation"%>
+Tipo: <b><%= exchange_label(@payment.label) %></b><br>
+<% if (exchange_label(@payment.label).downcase == "aguardando documento") && @payment.status != "canceled" %>
+<font class="red">Utilize a sessão <b>"Depósito bancário"</b> para fazer o upload do comprovante de depósito.</font><br>
+<% end %>
+Total do depósito: <b><%= @payment.volume %> <%= @payment.network %></b><br>
+<% decimal = BigDecimal(@payment.volume,8) %>
+Comissão (1%): <b><%= "#{(decimal * 0.01).to_s.split('.')[0]}.#{(decimal * 0.01).to_s.split('.')[1].first(2)} #{@payment.network}" %></b><br>
+Valor a ser creditado: <b><%= (decimal - (decimal * 0.01)).to_s.split('.')[0] %>.<%= (decimal - (decimal * 0.01)).to_s.split('.')[1].first(2) %> <%= @payment.network %></b><br>
+Status da operação: <b><%= exchange_label(@payment.status) %></b>
+<% if @payment.hex != nil %>
+Motivo do cancelamento: <%= @payment.hex %>
+<% end %>
 <% else %>
-
 Tipo: <b><%= @payment.label %></b><br>
 Endereço depositado: <b><%= @payment.endereco %></b><br>
 Valor total da transação: <b><%= @payment.volume %> <%= @payment.network %></b><br>

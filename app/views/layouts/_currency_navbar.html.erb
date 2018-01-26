@@ -1,5 +1,7 @@
 <ul class="nav nav-tabs">
   <% MOEDAS_ATIVAS.each do |moeda| %>
-  <li data-currency-options="<%= moeda %>" data-route="<%= route %>" class="<% if MOEDAS_ATIVAS_NAMES[moeda] == MOEDAS_ATIVAS_NAMES['BTC'] %> active <% end %> pointer <%= classe %>"><a class="padding-right-left-wallet"><%= MOEDAS_ATIVAS_NAMES[moeda] %></a></li>
+    <% if moeda != "BRL" %>
+      <li data-currency-options="<%= moeda %>" data-route="<%= route %>" class="<% if MOEDAS_ATIVAS_NAMES[moeda] == MOEDAS_ATIVAS_NAMES['BTC'] %> active <% end %> pointer <%= classe %>"><a class="padding-right-left-wallet"><%= MOEDAS_ATIVAS_NAMES[moeda] %></a></li>
+    <% end %>
   <% end %>
 </ul>
