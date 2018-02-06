@@ -78,7 +78,7 @@
 <div class="centered-flash">
   <% flash.each do |key, value| %>
     <div class="alert alert-<%= key %>">
-      <%= value %>
+      <%= value.html_safe %>
       <i class="fa fa-window-close pointer" aria-hidden="true"></i>
     </div>
   <% end %>
