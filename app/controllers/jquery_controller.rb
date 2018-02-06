@@ -51,7 +51,7 @@ class JqueryController < ApplicationController
         payment.volume = params[:amount]
         payment.description = params[:description]
         saldo = eval(get_saldo(current_user))
-        if saldo["#{payment.network}"] > BigDecimal(payment.volume,8)
+        if  BigDecimal(saldo["#{payment.network}"],8) > BigDecimal(payment.volume,8)
             payment.label = "Saque"
             payment.status = "incomplete"
             payment.hex = SecureRandom.hex
