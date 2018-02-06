@@ -209,7 +209,7 @@ class JqueryController < ApplicationController
                             discounted = (BigDecimal(pay.volume,8) - pay_discount).truncate(8)
                             savePayment(pay,discounted,user)
                         else #pagamento já existe
-                            if payment.status == "incomplete" && payment.op_id == nil #realizar update
+                            if payment.op_id == nil #realizar update
                                 pay_discount = BigDecimal(payment.volume,8) * BigDecimal(0.01,2)
                                 discounted = (BigDecimal(payment.volume,8) - pay_discount).truncate(8)
                                 savePayment(payment,discounted,user)
