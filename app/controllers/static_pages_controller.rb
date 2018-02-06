@@ -17,11 +17,15 @@ class StaticPagesController < ApplicationController
       payment.hex = ""
       discounted = ((BigDecimal(payment.volume,8)  * 0.99) - optax(payment.network)).truncate(8)
       response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
-      payment.status = "complete"
-      payment.txid = response.id
-      p response
-      if payment.save
-        flash[:success] = "Transação enviada para o blockchain! "
+      if response == "#{payment.network.upcase} is currently disabled!"
+        flash[:success] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
+      else
+        payment.status = "complete"
+        payment.txid = response.id
+        p response
+        if payment.save
+          flash[:success] = "Transação enviada para o blockchain! "
+        end
       end
     end
     redirect_to '/dashboard/index'
