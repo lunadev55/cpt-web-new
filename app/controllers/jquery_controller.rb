@@ -67,7 +67,7 @@ class JqueryController < ApplicationController
             Comissão: <b>#{comission.to_s}</b><br>
             Taxa de operação: <b>#{optax(payment.network)}</b><br>
             Volume a sacar:<b> #{discounted}</b><br>
-            <a href='www.cptcambio.com/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
+            <a href='http://www.cptcambio.com/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
             "
             deliver_generic_email(current_user,text,"Confirmação de saque")
             flash[:success] = "Pedido de saque realizado! Verifique seu email. "
