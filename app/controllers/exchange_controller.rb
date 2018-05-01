@@ -261,24 +261,24 @@ class ExchangeController < ApplicationController
                 case order.tipo
                 when "buy"
                     #adicionar saldo order.amount ao dono da order (compra)
-                    saldo1 = (BigDecimal(saldo_buy,8)*0.995).to_s
+                    saldo1 = (BigDecimal(saldo_buy,8)*0.997).to_s
                     #p "adicionar saldo de #{saldo1} #{params[:coin1]} para #{User.find(order.user_id).first_name}"
                     saldo1_id = add_saldo(User.find(order.user_id),params[:coin1],saldo1,"exchange_credit")
                     Payment.exchange_payment(User.find(order.user_id),saldo1_id,params[:coin1],saldo1,"#{order.tipo}_order_execution",order.par)
                     #adicionar saldo b.amount * b.price ao dono da b (compra)
-                    saldo2 = (BigDecimal(((saldo_buy * BigDecimal(b.price,8))*0.995),8)).to_s
+                    saldo2 = (BigDecimal(((saldo_buy * BigDecimal(b.price,8))*0.997),8)).to_s
                     #p "adicionar saldo de #{saldo2} #{params[:coin2]} para #{User.find(b.user_id).first_name}"
                     saldo2_id = add_saldo(User.find(b.user_id),params[:coin2],saldo2,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),saldo2_id,params[:coin2],saldo2,"#{b.tipo}_order_execution",b.par)
                     string_type = "sell"
                 when "sell"
                     
-                    coin2_sell_price = ((BigDecimal(saldo_sell,8) * BigDecimal(b.price,8)) * 0.995).to_s
+                    coin2_sell_price = ((BigDecimal(saldo_sell,8) * BigDecimal(b.price,8)) * 0.997).to_s
                     #p "adicionar saldo de #{BigDecimal(coin2_sell_price,8)} #{params[:coin2]} para #{User.find(order.user_id).first_name}"
                     coin2_sell_id = add_saldo(User.find(order.user_id),params[:coin2],BigDecimal(coin2_sell_price,8),"exchange_credit")
                     Payment.exchange_payment(User.find(order.user_id),coin2_sell_id,params[:coin2],BigDecimal(coin2_sell_price,8).to_s,"#{order.tipo}_order_execution",order.par)
                     
-                    coin1_sell_price = (BigDecimal((saldo_sell * 0.995),8)).to_s
+                    coin1_sell_price = (BigDecimal((saldo_sell * 0.997),8)).to_s
                     #p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
                     coin1_sell_id = add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)

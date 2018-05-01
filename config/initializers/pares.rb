@@ -1,11 +1,11 @@
 #Arquivo de configuração de pares de moedas negociáveis
 
-EXCHANGE_PARES = ["LTC / BTC", "BTC / BRL", "LTC / BRL", "ETH / BRL", "ETH / BTC","DOGE / BTC", "ETH / LTC", "BCH / BTC", "DASH / BTC"]
+EXCHANGE_PARES = ["BTC / BCH", "LTC / BTC", "ETH / BTC","DOGE / BTC", "ETH / LTC", "BCH / ETH", "BCH / LTC", "DASH / BTC", "DASH / LTC"]
 
 #Quais moedas a exchange suporta
 MOEDAS_SUPORTADAS = ["BTC","LTC","DOGE","ETH","BCH", "DASH","XMR","BRL"]
 #Moedas ativas
-MOEDAS_ATIVAS = ["BTC","LTC","DOGE","ETH", "BCH", "DASH","BRL"]
+MOEDAS_ATIVAS = ["BTC","LTC","DOGE","ETH", "BCH", "DASH"]
 
 #Nomes das moedas
 MOEDAS_ATIVAS_NAMES = Hash.new 

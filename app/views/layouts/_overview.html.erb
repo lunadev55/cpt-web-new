@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Overview</h2>
-        <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <font color="red"><br>Atenção! Nossa plataforma ainda está em desenvolvimento. Aguardem maiores informações!</font></div></p>
+        <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <br><% if current_user.role = "inactive" %>
+        <a class="pointer" data-painel-menu="business"> Ative </a>sua conta para começar a negociar agora!<% end %></div></p>
     </div>
     <div class="col-md-7">
         <fieldset>
@@ -62,7 +63,7 @@
                 <legend>Comissões</legend>
               <div class="well well-lg">
                 Operações (saque, depósito): 1%<br>
-                Ordens (negociações): 0,5%
+                Ordens (negociações): 0,3%
               </div>
               </fieldset>
         </div>
