@@ -94,7 +94,7 @@ class ExchangeController < ApplicationController
             when "buy"
                 order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "sell", stt: "open"}).order(price: :asc).limit(1)[0]
                 if order_open.nil?
-                    flash[:success] = "Não disponível. "
+                    flash[:danger] = "Não disponível. "
                     return
                 end
                 order.price = order_open.price
@@ -103,7 +103,7 @@ class ExchangeController < ApplicationController
             when "sell"
                 order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
                 if order_open.nil?
-                    flash[:success] = "Não disponível. "
+                    flash[:danger] = "Não disponível. "
                     return
                 end
                 order.price = order_open.price
@@ -113,7 +113,7 @@ class ExchangeController < ApplicationController
             if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
                 order.amount = order_open.amount
                 label_bool = false
-                flash[:success] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+                flash[:danger] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
             end
             order.status = "open"
         else
@@ -146,7 +146,7 @@ class ExchangeController < ApplicationController
                 flash[:success] = "Ordem adicionada ao livro! "
             end
         else
-            flash[:success] = "Não há saldo para iniciar esta negociação "
+            flash[:danger] = "Não há saldo para iniciar esta negociação "
         end
         @order = order
     end

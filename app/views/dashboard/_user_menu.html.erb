@@ -1,8 +1,29 @@
 <%= stylesheet_link_tag params[:controller] %>
 <div class="menu_background well paragraph">
 <div class="color-div"></div>
-<div class="row menu saldos">
-        <%= render 'layouts/saldos' %>
+<div class="row menu">
+		<div class="col-md-12">
+			<h4 class="heading-colored">Seu saldo <a id="sld" data-show class="pointer" data-hide-menu="saldo"><i class="fa fa-angle-double-down" title="Esconder / Mostrar saldos" aria-hidden="true"></i></a></h4>
+		</div>
+		<script>
+			$('#sld').click(function(){
+				if ($(this).data('show') == true){
+				    $('#showSaldoFather').html('<%= escape_javascript( render( :partial => "layouts/saldos") ) %>');
+					$('.fa-angle-double-up').addClass("fa-angle-double-down")
+					$('.fa-angle-double-up').removeClass("fa-angle-double-up")
+					$('#showSaldoFather').addClass("saldos");
+				} else {
+					$('#showSaldoFather').html('');
+					$('#showSaldoFather').removeClass("saldos");
+					$('.fa-angle-double-down').addClass("fa-angle-double-up")
+					$('.fa-angle-double-down').removeClass("fa-angle-double-down")
+				}
+				$(this).data("show",!($(this).data("show")))
+			})
+		</script>
+		<div id="showSaldoFather" class="saldos">
+            <%= render 'layouts/saldos' %>
+        </div>
 </div>
 <hr>
 <% if current_user.role == "admin" %>

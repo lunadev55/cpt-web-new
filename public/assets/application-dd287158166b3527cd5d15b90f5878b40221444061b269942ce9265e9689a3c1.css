@@ -8785,7 +8785,7 @@ button.close {
 }
 /* line 1, /home/ubuntu/workspace/app/assets/stylesheets/backgrounds.scss */
 .gtco-cover, body {
-  background-image: url(http://planet-design.com.ua/wp-content/uploads/2013/01/2172301.jpg);
+  background-image: url(/images/2172301.jpg);
 }
 
 /* line 7, /home/ubuntu/workspace/app/assets/stylesheets/backgrounds.scss */
@@ -12806,17 +12806,28 @@ fesh-green {
     background-color: unset;
   }
 }
-/* line 21, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 5, /home/ubuntu/workspace/app/assets/stylesheets/static_pages.scss */
+.hide {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* line 10, /home/ubuntu/workspace/app/assets/stylesheets/static_pages.scss */
+.pointer {
+  cursor: pointer;
+}
+
+/* line 22, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .warning {
   color: red;
 }
 
-/* line 24, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 25, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .modal-open {
   overflow-y: scroll !important;
 }
 
-/* line 27, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 28, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .navbar li > span {
   padding-bottom: 15px;
   padding-top: 15px;
@@ -12825,13 +12836,13 @@ fesh-green {
   display: block;
 }
 
-/* line 35, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 36, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 .pointer {
   cursor: pointer;
   z-index: 5 !important;
 }
 
-/* line 40, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
+/* line 41, /home/ubuntu/workspace/app/assets/stylesheets/application.scss */
 #footer {
   margin-top: 50px;
 }

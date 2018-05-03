@@ -18,7 +18,7 @@ class StaticPagesController < ApplicationController
       discounted = ((BigDecimal(payment.volume,8)  * 0.99) - optax(payment.network)).truncate(8)
       response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
       if response == "#{payment.network.upcase} is currently disabled!"
-        flash[:success] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
+        flash[:info] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
       else
         payment.status = "complete"
         payment.txid = response.id
@@ -43,12 +43,12 @@ class StaticPagesController < ApplicationController
       route = "/dashboard/overview/wallet/"
     elsif params[:partial] == "deposit"
       if current_user.active_request.any?
-            flash[:success] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
       else
             if check_user_documents
-                flash[:success] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end
@@ -67,12 +67,12 @@ class StaticPagesController < ApplicationController
       @pays = current_user.payment.all.order(created_at: :desc).page params[:page]
     elsif params[:partial] == "withdrawal"
       if current_user.active_request.any?
-            flash[:success] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
       else
             if check_user_documents
-                flash[:success] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end
@@ -84,12 +84,12 @@ class StaticPagesController < ApplicationController
       @user = current_user
     elsif params[:partial] == "business"
         if current_user.active_request.any?
-            flash[:success] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
         else
             if check_user_documents
-                flash[:success] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end

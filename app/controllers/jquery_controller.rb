@@ -23,16 +23,16 @@ class JqueryController < ApplicationController
                     payment.hex = ""
                     payment.save
                     add_saldo(current_user,payment.network,payment.volume,"withdrawal_cancel")
-                    flash[:success] = "Saque cancelado. "
+                    flash[:info] = "Saque cancelado. "
                 else
                     payment.save
-                    flash[:success] = "Depósito cancelado. "
+                    flash[:info] = "Depósito cancelado. "
                 end
             else
-                flash[:success] = "Operação já realizada ou cancelada. "
+                flash[:info] = "Operação já realizada ou cancelada. "
             end
         else
-            flash[:success] = "Operação não encontrada. "
+            flash[:danger] = "Operação não encontrada. "
         end
     end
     
@@ -145,12 +145,12 @@ class JqueryController < ApplicationController
                 if @user_session.save
                     @user.save
                     cpt_update_user(@user)
-                    flash[:success] = "Informações atualizadas!"
+                    flash[:info] = "Informações atualizadas!"
                 else
-                    flash[:success] = "Senha incorreta!"
+                    flash[:danger] = "Senha incorreta!"
                 end
             else
-                flash[:success] = "Senhas Não coincidem!"
+                flash[:danger] = "Senhas Não coincidem!"
             end
             return
         end
@@ -266,6 +266,12 @@ class JqueryController < ApplicationController
             @minimum = 0.002
             @tax = 0.001
         elsif @currency == "BCH"
+            @minimum = 0.001
+            @tax = 0.0002
+        elsif @currency == "DGB"
+            @minimum = 0.02
+            @tax = 0.02
+        elsif @currency == "ZEC"
             @minimum = 0.001
             @tax = 0.0002
         end

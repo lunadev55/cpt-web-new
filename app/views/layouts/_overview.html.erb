@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <h2>Overview</h2>
         <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <br><% if current_user.role = "inactive" %>
-        <a class="pointer" data-painel-menu="business"> Ative </a>sua conta para começar a negociar agora!<% end %></div></p>
+        <label class="red"><a class="pointer" data-painel-menu="business"> Ative </a>sua conta para começar a negociar agora!<% end %></div></p></label>
     </div>
     <div class="col-md-7">
         <fieldset>
@@ -48,7 +48,7 @@
         <div class="col-md-4">
             <fieldset>
                 <legend>Informações de login</legend>
-              <div class="well well-lg">
+              <div class="padding-left-soft margin-left well well-lg">
                 <ul>
                   <li>Qtd. de logins: <%= current_user.login_count %></li>
                   <li>Última requisição: <%= current_user.last_request_at %></li>

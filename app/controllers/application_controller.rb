@@ -124,7 +124,7 @@ class ApplicationController < ActionController::Base
     require_user
     current_user.role.to_s
     unless current_user.role.to_s == "admin" 
-      flash[:success] = "Esta página requer permissões administrativas!"
+      flash[:danger] = "Esta página requer permissões administrativas!"
       redirect_to '/'
     end
   end
@@ -178,7 +178,7 @@ class ApplicationController < ActionController::Base
   
   def require_user
     unless !current_user.nil? 
-      flash[:success] = "Esta página requer login!"
+      flash[:danger] = "Esta página requer login!"
       redirect_to '/sign_in'
     end
   end
