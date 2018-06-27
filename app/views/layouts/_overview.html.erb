@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Overview</h2>
-        <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <br><% if current_user.role = "inactive" %>
+        <p><div class="well well-lg small-font">Informações gerais sobre sua conta. <br><% if current_user.role == "inactive" %>
         <label class="red"><a class="pointer" data-painel-menu="business"> Ative </a>sua conta para começar a negociar agora!<% end %></div></p></label>
     </div>
     <div class="col-md-7">
