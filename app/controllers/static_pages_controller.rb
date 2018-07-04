@@ -1,7 +1,9 @@
 class StaticPagesController < ApplicationController
     before_action :set_s3_direct_post, only: [:partial,:deposit_form]
   def index
-
+    flash.each do |f|
+      f = nil
+    end
   end
   
   def deposit_form
