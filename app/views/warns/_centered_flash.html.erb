@@ -1,0 +1,18 @@
+<% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>">
+      <%= value.html_safe %>
+      <i class="fa fa-window-close pointer" aria-hidden="true"></i>
+    </div>
+<% end %>
+
+<script>
+$( ".fa-window-close" ).click(function() {
+  $('.centered-flash').html('');
+});
+function clear_window(){
+  $('.centered-flash').html('');
+};
+
+    $(document).ready(function(){
+    setTimeout( 'clear_window()', 5000 )})
+</script>
