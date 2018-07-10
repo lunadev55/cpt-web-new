@@ -14,10 +14,10 @@
         <% Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "executada"}).order("updated_at DESC").limit(20).each do |m| %>
         <tr>
             <td class="small_lines">
-                <%= m.price %>
+                <%= m.price %> <%= session[:currency2] %>
             </td>
             <td class="small_lines">
-                <%= m.amount %>
+                <%= m.amount %> <%= session[:currency1] %>
             </td>
         </tr>
         <% end %>

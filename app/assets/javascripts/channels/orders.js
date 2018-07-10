@@ -112,8 +112,8 @@ function updateExecTable(table,data){
   content += `<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>`;
   for (var i = 0; i < arrayLength; i++) {
     content += '<tr>';
-    content += `<td class="small_lines">${data.executed_list[i].price} </td>`;
-    content += `<td class="small_lines">${data.executed_list[i].amount} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].price} ${currency1} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].amount} ${currency2} </td>`;
     content += '</tr>';
   }
   table.html(content);
@@ -121,12 +121,12 @@ function updateExecTable(table,data){
 }
 function updatePriceTables(data){
     if (data.tipo == "buy"){
-      var string = "compra"
+      var string = "venda"
       var currency1 = data.pair.split("_")[0]
       var currency2 = data.pair.split("_")[1]
       var opposite = "sell"
     }else{
-      string = "venda"
+      string = "compra"
       currency1 = data.pair.split("_")[1]
       currency2 = data.pair.split("_")[0]
       opposite = "buy"
@@ -141,8 +141,7 @@ function updatePriceTables(data){
 }
 function mountTableContent(string,data,arrayLength,currency1,currency2,type,orders){
   var content = ''
-  content += `<tr>`
-  content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+  content += `<tr class="active">`
   if (type == "buy"){
     content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
     for (var i = 0; i < arrayLength; i++) {

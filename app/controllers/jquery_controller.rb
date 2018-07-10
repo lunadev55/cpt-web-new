@@ -71,8 +71,10 @@ class JqueryController < ApplicationController
             "
             deliver_generic_email(current_user,text,"Confirmação de saque")
             flash[:success] = "Pedido de saque realizado! Verifique seu email. "
+            flash[:danger] = nil
         else
-            flash[:success] = "Saldo Insuficiente! "
+            flash[:success] = nil
+            flash[:danger] = "Saldo Insuficiente! "
         end
         render 'withdrawal_form_result'
     end

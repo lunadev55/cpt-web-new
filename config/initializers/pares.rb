@@ -1,6 +1,6 @@
 #Arquivo de configuração de pares de moedas negociáveis
 
-EXCHANGE_PARES = ["LTC / BTC", "BTC / BCH", "ETH / BTC","DOGE / BTC", "ETH / LTC", "BCH / ETH", "BCH / LTC", "DASH / BTC", "DASH / LTC", "DGB / BTC", "DGB / DOGE","ZEC / BTC", "ZEC / ETH"]
+EXCHANGE_PARES = ["LTC / BTC", "BCH / BTC", "ETH / BTC","DOGE / BTC", "ETH / LTC", "BCH / ETH", "BCH / LTC", "DASH / BTC", "DASH / LTC", "DGB / BTC", "DGB / DOGE","ZEC / BTC", "ZEC / ETH"]
 
 #Quais moedas a exchange suporta
 MOEDAS_SUPORTADAS = ["BTC","LTC","DOGE","ETH","BCH", "DASH","XMR","BRL", "DGB"]

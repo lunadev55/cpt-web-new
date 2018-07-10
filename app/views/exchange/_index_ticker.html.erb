@@ -1,10 +1,10 @@
-<div align="center" class="ticker_index row">
-    <div class=" col-md-12 col-xs-12 ticker_margin">
+<div align="center" class="ticker_index row no-padding">
+    <div class=" col-md-12 col-xs-12 ticker_margin no-padding">
         <div class="row">
             <% MOEDAS_ATIVAS.each do |m| %>
-            <% if m != "BRL" %>
+            <% if m != "BRL" and m != "BTC" %>
             <div class="col-md-3 col-xs-3 col-lg-2 ticker_block">
-                    <div class="row" class="ticker-list ticker-list-DATUSD" data-pair="DATUSD">
+                    <div class="row" class="ticker-list">
                         <div class="col-md-12 col-xs-12"><h4 class="white no-margin"><%= MOEDAS_ATIVAS_NAMES[m] %> (<%= m %>)</h4></div>
                     </div>
                     <% EXCHANGE_PARES.each do |pair| %>
