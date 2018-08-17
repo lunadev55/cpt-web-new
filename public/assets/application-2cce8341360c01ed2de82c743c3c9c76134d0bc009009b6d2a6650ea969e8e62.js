@@ -12300,8 +12300,8 @@ function updateExecTable(table,data){
   content += `<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>`;
   for (var i = 0; i < arrayLength; i++) {
     content += '<tr>';
-    content += `<td class="small_lines">${data.executed_list[i].price} </td>`;
-    content += `<td class="small_lines">${data.executed_list[i].amount} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].price} ${currency1} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].amount} ${currency2} </td>`;
     content += '</tr>';
   }
   table.html(content);
@@ -12309,12 +12309,12 @@ function updateExecTable(table,data){
 }
 function updatePriceTables(data){
     if (data.tipo == "buy"){
-      var string = "compra"
+      var string = "venda"
       var currency1 = data.pair.split("_")[0]
       var currency2 = data.pair.split("_")[1]
       var opposite = "sell"
     }else{
-      string = "venda"
+      string = "compra"
       currency1 = data.pair.split("_")[1]
       currency2 = data.pair.split("_")[0]
       opposite = "buy"
@@ -12329,8 +12329,7 @@ function updatePriceTables(data){
 }
 function mountTableContent(string,data,arrayLength,currency1,currency2,type,orders){
   var content = ''
-  content += `<tr>`
-  content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+  content += `<tr class="active">`
   if (type == "buy"){
     content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
     for (var i = 0; i < arrayLength; i++) {
@@ -12369,7 +12368,7 @@ function calc(price){
     currency2 = pair[1];
     
     if ($('#type').prop("value") == "buy"){
-      discount = (quantity * 0.005).toFixed(8);
+      discount = (quantity *  0.0005).toFixed(8);
       receive = (quantity - discount).toFixed(8);
       total = (price * quantity).toFixed(8);
       
@@ -12377,7 +12376,7 @@ function calc(price){
       $(".total_instant").html(total + " " + currency2);
     }else{
       total = (price * quantity).toFixed(8);
-      discount = (total * 0.005).toFixed(8);
+      discount = (total *  0.0005).toFixed(8);
       receive = (total - discount).toFixed(8);
       
       $(".receber_instant").html(receive + " " + currency2);
@@ -12397,8 +12396,7 @@ function updateTable(table,data){
       currency2 = data.pair.split("_")[0]
     }
     var content = ''
-    content += `<tr>`
-    content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+    content += `<tr class="active">`
     if (data.tipo == "buy"){
       content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
       for (var i = 0; i < arrayLength; i++) {
