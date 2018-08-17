@@ -85,9 +85,6 @@
     <script>
         $( document ).ready(function() {
             $.get('/dashboard/overview/wallets/BTC');
-            setTimeout(function(){
-                $.get('payments_details');
-            }, 1000);
         });
     </script>
     <% end %>

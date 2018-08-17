@@ -1,3 +1,4 @@
 $('.centered-flash').html('<%= escape_javascript( render( :partial => 'warns/centered_flash') ) %>');
 $( ".saldos" ).html( "<%= escape_javascript( render( :partial => "layouts/saldos") ) %>" );
 $( ".user_orders" ).html( "<%= escape_javascript( render( :partial => "exchange/open_orders") ) %>" );
+$("#<%= @id %>").html("");

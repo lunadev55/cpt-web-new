@@ -1,50 +1,60 @@
 <h2>Suas Ordens</h2>
 <div class="col-md-11  well">
         <ul class="nav nav-tabs">
-    <li data-currency-options="ALL" class="active pointer open_orders"><a class="padding-right-left-wallet">Todos </a></li>
-        <li data-currency-options="BTC" class="pointer open_orders"><a class="padding-right-left-wallet">Bitcoin</a></li>
-        <li data-currency-options="LTC" class="pointer open_orders"><a class="padding-right-left-wallet">Litecoin</a></li>
-        <li data-currency-options="DOGE" class="pointer open_orders"><a class="padding-right-left-wallet">Dogecoin</a></li>
-        <li data-currency-options="ETH" class="pointer open_orders"><a class="padding-right-left-wallet">Ethereum</a></li>
-        <li data-currency-options="BCH" class="pointer open_orders"><a class="padding-right-left-wallet">BitcoinCash</a></li>
-        <li data-currency-options="DASH" class="pointer open_orders"><a class="padding-right-left-wallet">Dash</a></li>
-        <li data-currency-options="DGB" class="pointer open_orders"><a class="padding-right-left-wallet">Digibyte</a></li>
-        <li data-currency-options="ZEC" class="pointer open_orders"><a class="padding-right-left-wallet">Zcash</a></li>
+    <li class="active pointer open_orders"><a data-myOrders-menu="myOrders" class="padding-right-left-wallet">Todos </a></li>
+    <% EXCHANGE_PARES.each do |par| %>
+        <li data-myorders="myOrders/<%= (par.tr(" ","")).tr("/","_") %>" class="pointer open_orders"><a class="padding-right-left-wallet"><%= par %></a></li>
+    <% end %>
 </ul>
         <div class="well row">
-            <div class="table-responsive result_lines col-md-6 col-xs-6">
+            <div class="table-responsive result_lines col-md-9 col-xs-6">
           
 
             <table width="90%" class="table table-striped">
-                <tbody><tr>
-                    <th>Status</th>
+                <tbody id="myOrdersTable">
+                <tr>
+                    <th>Par</th>
                     <th>Tipo</th>
                     <th>Volume (bruto)</th>
                     <th>Excluir ordem</th>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <%= paginate @orders, left: 1, right: 3, remote: true %>
+                <% @orders.each do |order| %>
+                <tr id="<%= order.id %>">
+                    <td><%= order.par %></td>
+                    <td><%= order.tipo %></td>
+                    <td><%= order.amount %></td>
+                    <td><button type="button" data-order-id="<%= order.id %>" class="btn btn-danger cancel-order"><i class="fa fa-ban" aria-hidden="true"></i></button></td>
                 </tr>
+                <% end %>
             </tbody></table>
             
-                
-            </div>
-            <form action="/dashboard/layouts/depositHistory" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓">
-            <div class="form-group col-md-6 col-xs-6">
-                <h3>Como funciona?</h3>
-                <div class="row">
-                    <div class="col-md-6 col-xs-9 well padding-dep">
-                        <ul class="list-group">
-                            <li class="list-item">Selecione a moeda acima</li>
-                            <li class="list-item">Clique no item para detalhes</li>
-                        </ul>
-                    </div>
-                </div>
                 
             </div>
             </form>
         </div>
     </div>
+    
+    <script>
+    $('.cancel-order').click(function (){
+        r = confirm("Deseja cancelar esta ordem?");
+        if (r==true)
+          {
+          $.ajax({
+            url: ("/exchange/order/cancel/" + $(this).data("order-id")),
+            cache: false,
+            type: "POST",
+            success: function(response) {
+                
+            },
+            error: function(xhr) {
+                
+            }
+            })
+          }
+        
+        
+    })
+    
+</script>
+<%= javascript_include_tag "myOrders" %>

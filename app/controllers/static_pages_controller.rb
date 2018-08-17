@@ -18,15 +18,17 @@ class StaticPagesController < ApplicationController
     if !payment.nil?
       payment.hex = ""
       discounted = ((BigDecimal(payment.volume,8)  * 0.99) - optax(payment.network)).truncate(8)
-      response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
-      if response == "#{payment.network.upcase} is currently disabled!"
-        flash[:info] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
-      else
-        payment.status = "complete"
-        payment.txid = response.id
-        p response
-        if payment.save
-          flash[:success] = "Transação enviada para o blockchain! "
+      if payment.status != "complete"
+        response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
+        if response == "#{payment.network.upcase} is currently disabled!"
+          flash[:info] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
+        else
+          payment.status = "complete"
+          payment.txid = response.id
+          p response
+          if payment.save
+            flash[:success] = "Transação enviada para o blockchain! "
+          end
         end
       end
     end
@@ -98,7 +100,16 @@ class StaticPagesController < ApplicationController
         end
     elsif params[:partial] == "active"
       @request = current_user.active_request.new
+    elsif params[:partial] == "myOrders"
+      if !params[:pair].nil?
+        @orders = (current_user.exchangeorder.where("pair = :par AND status = 'open'", {cur: params[:pair]})).order(created_at: :desc).page params[:page]
+      else
+        @orders = current_user.exchangeorder.where("status = 'open'").order(created_at: :desc).page params[:page]
+      end
+    elsif params[:partial] == "api"
+      @keys = current_user.apiInfo.all
     end
+    
     
     
     render partial: "layouts/painelMenus"

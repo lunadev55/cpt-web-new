@@ -1,0 +1,4 @@
+$("#apiTable").html("<%= escape_javascript( render( :partial => "/api/apiTable") ) %>");
+<% if !@message_response.nil? %>
+$(".apiChaves").html("<%= escape_javascript( render( :text => @message_response.html_safe) ) %>");
+<% end %>

@@ -180,7 +180,7 @@ function calc(price){
     currency2 = pair[1];
     
     if ($('#type').prop("value") == "buy"){
-      discount = (quantity * 0.005).toFixed(8);
+      discount = (quantity *  <%= 1 - BigDecimal(ENV["EXCHANGE_TAX"],4) %>).toFixed(8);
       receive = (quantity - discount).toFixed(8);
       total = (price * quantity).toFixed(8);
       
@@ -188,7 +188,7 @@ function calc(price){
       $(".total_instant").html(total + " " + currency2);
     }else{
       total = (price * quantity).toFixed(8);
-      discount = (total * 0.005).toFixed(8);
+      discount = (total *  <%= 1 - BigDecimal(ENV["EXCHANGE_TAX"],4) %>).toFixed(8);
       receive = (total - discount).toFixed(8);
       
       $(".receber_instant").html(receive + " " + currency2);
@@ -208,8 +208,7 @@ function updateTable(table,data){
       currency2 = data.pair.split("_")[0]
     }
     var content = ''
-    content += `<tr>`
-    content += `<th colspan="2" class="text-center">Ordens de ${string}</th></tr><tr class="active">`
+    content += `<tr class="active">`
     if (data.tipo == "buy"){
       content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
       for (var i = 0; i < arrayLength; i++) {

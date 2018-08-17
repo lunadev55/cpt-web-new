@@ -14,7 +14,7 @@
     <div class="col-md-6 well well-lg">
         <%= render :partial => 'layouts/currency_navbar', :locals => { :classe => "histo_currency", route: nil } %>
         <div class="well" align="center">
-            <%= form_tag nil, remote: true, class: "editForm" %>
+            <%= form_tag '/dashboard/layouts/deposit/', remote: true, class: "editForm" %>
             <%= hidden_field_tag :currency, @currency , class: 'hidden' %>
             <%= submit_tag "Gerar carteira", class: "submit btn btn-warning" %>
             </form><br>

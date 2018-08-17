@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :active_requests, only: [:new, :edit]
   
   get '/dashboard/index', to: 'dashboard#index'
+  match '/dashboard/layouts/:partial/:params', to: 'jquery#dashboard_options', via: [:get,:post]
   post '/dashboard/layouts/:partial', to: 'jquery#dashboard_options'
   get '/dashboard/payments_details', to: 'jquery#payments_details'
   get 'dashboard/layouts/:partial', to: 'static_pages#partial'
@@ -45,11 +46,25 @@ Rails.application.routes.draw do
   get '/withdrawal/form/:currency', to: 'jquery#withdrawal_get'
   get '/withdrawal/:code', to: 'static_pages#withdrawal'
   
-  get '/api/is_valid_address/:currency/:address', to: 'api#test_address'
+  
   get '/request_detail/:request_id', to: 'admin#request_details'
   post '/admin/activation', to: 'admin#active_account'
   post '/admin/deposit_confirm', to: 'admin#deposit_confirm'
   
+  get '/api/is_valid_address/:currency/:address', to: 'api#test_address'
+  post '/api/newKey', to: 'api#generate_api_key'
+  post '/api/deleteKey/:key', to: 'api#delete_api_key'
+  post '/api/:method/:message', to: 'api#proxyRequest'
+  post '/api/:method', to: 'api#proxyRequest'
+  
+  namespace :api do
+    namespace :public do 
+      
+    end
+    namespace :trade do
+      
+    end
+  end
   
   mount ActionCable.server => '/cable'
   

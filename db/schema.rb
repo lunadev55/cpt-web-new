@@ -10,10 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109000244) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20180715014044) do
 
   create_table "active_requests", force: :cascade do |t|
     t.string   "user_id"
@@ -22,6 +19,14 @@ ActiveRecord::Schema.define(version: 20180109000244) do
     t.string   "status"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+  end
+
+  create_table "api_infos", force: :cascade do |t|
+    t.string   "user_id"
+    t.string   "key"
+    t.string   "secret"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "exchangeorders", force: :cascade do |t|
@@ -47,6 +52,7 @@ ActiveRecord::Schema.define(version: 20180109000244) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "op_id"
+    t.         "string"
     t.string   "hex"
     t.string   "description"
   end
@@ -73,7 +79,7 @@ ActiveRecord::Schema.define(version: 20180109000244) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "role"
-    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "wallets", force: :cascade do |t|

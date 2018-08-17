@@ -2,21 +2,17 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo, :check_user_documents, :price_percentage, :color_type_percentage, :encrypt_data, :decrypt_data
+  helper_method :current_user_session, :current_user, :get_saldo, :require_user, :deliver_deposit_email, :blocker_link, :optax, :last_price, :deliver_generic_email, :check_cur_nil, :broadcast_order, :recent_orders, :exchange_label, :search_saldo, :check_user_documents, :price_percentage, :color_type_percentage, :encrypt_data, :decrypt_data, :exchange_tax
   require 'sendgrid-ruby'
   include SendGrid 
   private
+  def exchange_tax(input)
+    return (BigDecimal((BigDecimal(input,8) * BigDecimal(ENV["EXCHANGE_TAX"],4)),8)).to_s
+  end
   def price_percentage(pair)
     last_order = Exchangeorder.where("par = :str_pair AND status = :stt", {str_pair: pair, stt: "executada" }).order("updated_at DESC").first
     last_order_24h = Exchangeorder.where("par = :str_pair AND status = :stt AND updated_at > :date", {str_pair: pair, stt: "executada" , date: Time.now - 1.days}).first
     if !(last_order.nil?) && !(last_order_24h.nil?) #calculável
-      #A1: 6517457
-      #B1: 8133825
-      #  
-      #  then
-      #  C1: =(B1-A1)/A1
-      p last_order.price
-      p last_order_24h.price
       a = BigDecimal(last_order.price,8)
       b = BigDecimal(last_order_24h.price,8)
       c = ((a-b)/b) * 100
@@ -273,8 +269,6 @@ class ApplicationController < ActionController::Base
     mail = Mail.new(from, subject, to, content)
 
     sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
-    response = sg.client.mail._("send").post(request_body: mail.to_json)
-    puts 'email enviado aqui'
-    puts response.status_code
+    sg.client.mail._("send").post(request_body: mail.to_json)
   end
 end

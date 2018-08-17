@@ -1,0 +1,23 @@
+<div class="table-responsive result_lines col-md-9 col-xs-6">
+    <table width="90%" class="table table-striped">
+    <tbody id="myOrdersTable">
+        <tr>
+            <th>Data de criação</th>
+            <th>Chave</th>
+            <th>Excluir</th>
+        </tr>
+        <% @keys.each do |key| %>
+        <tr>
+            <td><%= key.created_at %></td>
+            <td><%= key.key %></td>
+            <td class="api-method" data-api-alert="Esta é uma ação destrutiva. Prosseguir?" data-api-route="/api/deleteKey/<%= key.id %>"><button type="button" data-key="<%= key.key %>" class="btn btn-danger"><i class="fa fa-ban" aria-hidden="true"></i></button></td>
+        </tr>
+        <% end %>
+    </tbody></table>
+    
+<p>Para consultar a documentação de integração da API acesse <a href="<%= ENV["INTEGRACAO_API_LINK"]%>">este Link</a></p>
+</div>
+<div class="col-md-3">
+     <button data-api-alert="Criar nova chave?" data-api-route="/api/newKey" class="btn btn-primary btn-lg api-method"><i class="fa fa-plus" aria-hidden="true"></i> Nova Chave</button>
+</div>
+<%= javascript_include_tag 'api' %>

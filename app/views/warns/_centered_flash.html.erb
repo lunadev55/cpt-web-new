@@ -1,5 +1,5 @@
 <% flash.each do |key, value| %>
-  <%= if value !- nil %>
+  <% if value != nil %>
     <div class="alert alert-<%= key %>">
       <%= value.html_safe %>
       <i class="fa fa-window-close pointer" aria-hidden="true"></i>

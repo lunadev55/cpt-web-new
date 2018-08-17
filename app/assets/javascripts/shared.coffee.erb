@@ -1,0 +1,53 @@
+@call_new_screen = (object,view) ->
+    view.preventDefault()
+    $(".loading_menu").remove()
+    $(".active").removeClass("active")
+    $(object).addClass("active")
+    option = $(object).data("painel-menu")
+    if option is undefined
+        option = $(object).data("myOrders-menu")
+    else
+        $(object).append('<i class="fa fa-spinner fa-pulse fa-fw loading_menu"></i>')
+    if option is "deposit"
+        get_ajax(option,'/dashboard/info/getwallets')
+    else
+        get_ajax(option,'')
+
+@executeQuery = () ->
+    if $(".current_place").prop("place") != "overview"
+        $.get('/exchange/open_orders')
+    else
+        $.ajax '/exchange/open_orders',
+                type: 'GET',
+                dataType: "json"
+                error: (jqXHR, textStatus, errorThrown) ->
+                    console.log("AJAX Error: #{textStatus}")
+                success: (data, textStatus, jqXHR) ->
+                    <% EXCHANGE_PARES.each do |par| %>
+                    <% atual = par.tr(" ", "") %>
+                    <% obj = atual.tr("/","_") %>
+                        $('.<%= obj %>_buy').html(data["<%= atual %>_buy"])
+                        $('.<%= obj %>_sell').html(data["<%= atual %>_sell"])
+                    <% end %>
+                    
+
+
+#    setInterval(executeQuery, 9000)
+
+
+@post_ajax = (route) ->
+    $.ajax route,
+        type: 'POST'
+
+@get_ajax = (route,callbackroute) -> 
+    if callbackroute is ''
+        $.ajax 'layouts/'+route,
+                type: 'GET'
+    else
+        $.ajax 'layouts/'+route,
+                type: 'GET'
+                error: (jqXHR, textStatus, errorThrown) ->
+                    $('body').append "AJAX Error: #{textStatus}"
+                success: (data, textStatus, jqXHR) ->
+                    $.ajax callbackroute, 
+                        type: 'GET' 

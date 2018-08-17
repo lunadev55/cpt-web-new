@@ -27,39 +27,60 @@ class ExchangeController < ApplicationController
         end
     end
     
-    def cancel_order
-        @order = current_user.exchangeorder.find(params[:id])
+    def cancel_order(user=nil,prm=Hash.new)
+        if prm['id'].nil?
+            @userOrder = current_user
+            id = params[:id]
+        else
+            @userOrder = user
+            id = prm['id']
+        end
+        begin
+            
+            @order = @userOrder.exchangeorder.find(id)
+        rescue
+            return {error: 'Ordem não encontrada'}
+        end
+        
         inicial_order = @order
         par = @order.par.split('/')
         if (@order.status != "open") and (@order.status != "executada")
-            return
+            return {error: 'Ordem já cancelada'}
         end
         @order.status = "cancelled"
-        flash[:success] = "Ordem cancelada! "
-        recent_orders = table_orders(@order.par,@order.tipo)
+        if prm['id'].nil?
+            flash[:success] = "Ordem cancelada! "
+            recent_orders = table_orders(@order.par,@order.tipo)
+            array_compare = recent_orders[:table]
+            if array_compare.include?(inicial_order)
+                count = 0
+                array = array_compare.to_a
+                result = Array.new
+                array.each do |k|
+                    count += 1
+                    if k != inicial_order
+                        result << k
+                    end
+                end
+                broadcast_order(@order,{order_list: result})
+            end
+        end
+        
+        
         case @order.tipo
         when "buy"
             amount = (BigDecimal(@order.amount,8) * BigDecimal(@order.price,8)).to_s
-            id = add_saldo(current_user,par[1],amount,"cancel_buy")
-            Payment.exchange_payment(current_user,id,par[1],amount,"cancel_buy",@order.par)
+            id = add_saldo(@userOrder,par[1],amount,"cancel_buy")
+            Payment.exchange_payment(@userOrder,id,par[1],amount,"cancel_buy",@order.par)
         when "sell"
-            id = add_saldo(current_user,par[0],@order.amount,"cancel_sell")
-            Payment.exchange_payment(current_user,id,par[0],@order.amount,"cancel_sell",@order.par)
+            id = add_saldo(@userOrder,par[0],@order.amount,"cancel_sell")
+            Payment.exchange_payment(@userOrder,id,par[0],@order.amount,"cancel_sell",@order.par)
         end
-        array_compare = recent_orders[:table]
-        if array_compare.include?(inicial_order)
-            count = 0
-            array = array_compare.to_a
-            result = Array.new
-            array.each do |k|
-                count += 1
-                if k != inicial_order
-                    result << k
-                end
-            end
-            broadcast_order(@order,{order_list: result})
-        end
+        @id = @order.id
         @order.save
+        if !prm['id'].nil?
+            return @order
+        end
     end
     
     def table_orders(pair,type)
@@ -261,24 +282,24 @@ class ExchangeController < ApplicationController
                 case order.tipo
                 when "buy"
                     #adicionar saldo order.amount ao dono da order (compra)
-                    saldo1 = (BigDecimal(saldo_buy,8)*0.997).to_s
+                    saldo1 = exchange_tax(saldo_buy)
                     #p "adicionar saldo de #{saldo1} #{params[:coin1]} para #{User.find(order.user_id).first_name}"
                     saldo1_id = add_saldo(User.find(order.user_id),params[:coin1],saldo1,"exchange_credit")
                     Payment.exchange_payment(User.find(order.user_id),saldo1_id,params[:coin1],saldo1,"#{order.tipo}_order_execution",order.par)
                     #adicionar saldo b.amount * b.price ao dono da b (compra)
-                    saldo2 = (BigDecimal(((saldo_buy * BigDecimal(b.price,8))*0.997),8)).to_s
+                    saldo2 = exchange_tax(BigDecimal((saldo_buy * BigDecimal(b.price,8))))
                     #p "adicionar saldo de #{saldo2} #{params[:coin2]} para #{User.find(b.user_id).first_name}"
                     saldo2_id = add_saldo(User.find(b.user_id),params[:coin2],saldo2,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),saldo2_id,params[:coin2],saldo2,"#{b.tipo}_order_execution",b.par)
                     string_type = "sell"
                 when "sell"
                     
-                    coin2_sell_price = ((BigDecimal(saldo_sell,8) * BigDecimal(b.price,8)) * 0.997).to_s
+                    coin2_sell_price = exchange_tax(BigDecimal(saldo_sell,8) * BigDecimal(b.price,8))
                     #p "adicionar saldo de #{BigDecimal(coin2_sell_price,8)} #{params[:coin2]} para #{User.find(order.user_id).first_name}"
                     coin2_sell_id = add_saldo(User.find(order.user_id),params[:coin2],BigDecimal(coin2_sell_price,8),"exchange_credit")
                     Payment.exchange_payment(User.find(order.user_id),coin2_sell_id,params[:coin2],BigDecimal(coin2_sell_price,8).to_s,"#{order.tipo}_order_execution",order.par)
                     
-                    coin1_sell_price = (BigDecimal((saldo_sell * 0.997),8)).to_s
+                    coin1_sell_price = exchange_tax(saldo_sell)
                     #p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
                     coin1_sell_id = add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
                     Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)
