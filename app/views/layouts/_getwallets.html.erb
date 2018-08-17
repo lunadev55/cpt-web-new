@@ -1,42 +1,40 @@
 <style>
-
-.wallet_content {
-    font-size:90%;
-    word-break: break-all;
-}
     .qr-table {
   border-width: 0;
   border-style: none;
   border-color: #0000ff;
   border-collapse: collapse;
-  width: 200px;
-  height: 200px;
 }
-.qr-td {
-  border-width: 0;
-  border-style: none;
-  border-color: #0000ff;
-  border-collapse: collapse;
-  padding: 0;
-  margin: 0;
-  width: 7px;
-  height: 7px;
+
+    .td-table {
+  border-left: solid 6px #000;
+  padding: 0; 
+  margin: 0; 
+  width: 0px; 
+  height: 6px; 
 }
-td.black { background-color: #000; }
-td.white { background-color: #fff; }
+
+td.black { border-color: #000; }
+td.white { border-color: #fff; }
+.wallet_content {
+    font-size:90%;
+    word-break: break-all;
+}
+
+
 </style>
 <% if !@wallet.empty? %>
 <% @wallet.each do |wallet|  %>
-    <% qr = RQRCode::QRCode.new("bitcoin:#{wallet.address}") %>
+    <% qr = RQRCode::QRCode.new("#{wallet.currency.downcase}:#{wallet.address}") %>
     <div class="row">
     <table class="qr-table">
         <% qr.modules.each_index do |x| %>
-          <tr class="qr-tr">
+          <tr class="">
           <% qr.modules.each_index do |y| %>
            <% if qr.dark?(x,y) %>
-            <td class="black"/>
+            <td class="td-table black"/>
            <% else %>
-            <td class="white"/>
+            <td class="td-table white"/>
            <% end %>
           <% end %>
           </tr>

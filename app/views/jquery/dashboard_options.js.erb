@@ -5,7 +5,7 @@ $('.centered-flash').html('<% flash.each do |key, value| %><div class="alert ale
     $('.editForm').get(0).reset();
     $.get("/dashboard/layouts/editInfo");
 <% end %>
-$( ".qrcode" ).html( "<%= escape_javascript( render( :text => "Operação de solicitação concluída.<br> Endereço: #{@endereco}".html_safe) ) %>" );
+$( ".qrcode" ).html( "<%= escape_javascript( render( :partial => "layouts/getwallets" )) %>" );
 <% if !(@pays.nil?) %>
   $( ".result_lines" ).html( "<%= escape_javascript( render( :partial => "layouts/getpayments" )) %>" );
 <% end %>

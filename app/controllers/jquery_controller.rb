@@ -116,6 +116,10 @@ class JqueryController < ApplicationController
             params[:currency] = "BTC"
         end
         @wallet = current_user.wallet.where(currency: params[:currency]).page params[:page]
+        @qrs = []
+        @wallet.each do |w|
+            @qrs << RQRCode::QRCode.new("#{w.currency.downcase}:#{w.address}") 
+        end
     end
     def editInfo
         @user = User.find(params['user_id'])
@@ -173,6 +177,7 @@ class JqueryController < ApplicationController
             wal.dest_tag = transaction.dest_tag
         end
         wal.save
+        get_wallets
         flash[:success] = "Endereço #{params[:currency]} gerado com sucesso!"
     end
     
