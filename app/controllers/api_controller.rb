@@ -42,23 +42,66 @@ class ApiController < ApplicationController
             if @message[:limit].nil?
                 list_orders
             else
-                list_orders(@message[:limit])
+                if BigDecimal(@message[:limit]) > 100
+                    list_orders(100)
+                else
+                    list_orders(@message[:limit])
+                end
+                
             end
         when 'send_order'
             send_order
         when 'cancel_order'
             cancel_order
         when 'list_deposits'
-            list_deposits
+            if @message["limit"].nil?
+                list_deposits
+            else
+                if BigDecimal(@message["limit"]) > 100
+                    list_deposits(100)
+                else
+                    list_deposits(@message["limit"])
+                end
+            end
         when "list_withdrawals"
-            list_withdrawals
+            if @message["limit"].nil?
+                list_withdrawals
+            else
+                if BigDecimal(@message["limit"]) > 100
+                    list_withdrawals(100)
+                else
+                    list_withdrawals(@message["limit"])
+                end
+            end
         when "list_history"
-            list_history
+            if !@message["limit"].nil?
+                if BigDecimal(@message["limit"]) > 100
+                    @message["limit"] = 100
+                end
+                if @message["pair"].nil?
+                    list_history(@message["limit"])
+                else
+                    list_history(@message["limit"],@message["pair"].upcase)
+                end
+            else
+                list_history
+            end
         when "instant_buy_price"
             instant_buy_price
+        when "list_pairs"
+            list_pairs
         else
             render json: {error: "Método não encontrado."}
         end
+    end
+    
+    def list_pairs
+        resp = Hash.new
+        resp[:pairs] = Array.new
+        EXCHANGE_PARES.each do |pair|
+            resp[:pairs] << pair.tr(" ","")
+        end
+        render json: resp
     end
     
     def list_orders(limit=25)
@@ -66,6 +109,9 @@ class ApiController < ApplicationController
     end
     
     def send_order
+        exchange = ExchangeController.new
+        result = exchange.create_order(pair: @message["currency_base"], amount: @message["amount"], price: @message["price"], type: @message["type"], user: @user.id)
+        render json: result
     end
     
     def cancel_order #{id => x}
@@ -87,10 +133,15 @@ class ApiController < ApplicationController
     end
     
     def list_history(limit=25,par=nil)
+        validate = ExchangeController.new
         if par.nil?
             jeyson = Exchangeorder.where("status = :stt", {stt: "executada"}).order("updated_at DESC").limit(limit)
         else
-            jeyson = Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{par}", stt: "executada"}).order("updated_at DESC").limit(limit)
+            if validate.pairExists(par.upcase)
+                jeyson = Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{par}", stt: "executada"}).order("updated_at DESC").limit(limit)
+            else
+                render json: {error: "Este par não existe."} and return
+            end
         end
         render json: jeyson
     end
@@ -111,9 +162,10 @@ class ApiController < ApplicationController
     end
     
     def instant_buy_price
+        p params
         if params[:tipo] == "buy"
             a = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{params[:coin1]}/#{params[:coin2]}", tupe: "sell", stt: "open"}).order(price: :asc).limit(1)
-        elsif params[:tipo] == "sell"
+        else
             a = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{params[:coin1]}/#{params[:coin2]}", tupe: "buy", stt: "open"}).order(price: :desc).limit(1)
         end
         session[:currency1] = params[:coin1]
@@ -148,9 +200,11 @@ class ApiController < ApplicationController
     
     def test_enviar
         params = Hash.new
-        params[:limit] = 10
-        key = "8Bz6kfwx94uo7nSJbQlxLA=="
-        secret = "S3Ul99bx1X1K9dmkVEukcA=="
+        params[:coin1] = "LTC"
+        params[:coin2] = "BTC"
+        params[:tipo] = "buy"
+        key = "pqWLVxov3816MHrhtiz0kQ=="
+        secret = "pPA5GsDnpBVcBiFNc1L8fw=="
         
         cipher = OpenSSL::Cipher.new('AES-128-CBC')
         cipher.encrypt # We are encypting
@@ -161,7 +215,7 @@ class ApiController < ApplicationController
                     "key" => key,
                     "secret" => secret,
         }
-        url = URI.parse("https://cpt-cambio-new-rbm4.c9users.io/api/list_history/")
+        url = URI.parse("https://cpt-cambio-new-rbm4.c9users.io/api/instant_buy_price/")
         req = Net::HTTP::Post.new(url.request_uri, initheader = headers)
         message = cipher.update(params.to_json) + cipher.final
         
@@ -172,7 +226,12 @@ class ApiController < ApplicationController
         http = Net::HTTP.new(url.host, url.port)
         http.use_ssl = (url.scheme == "https")
         response = http.request(req)
-        p JSON.parse(response.body)
+        begin
+            p JSON.parse(response.body)
+        rescue
+            p response.body
+        end
+        
     end
     def delete_api_key
         key = current_user.apiInfo.where("id = :ky", {ky: params[:key]})

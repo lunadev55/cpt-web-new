@@ -101,46 +101,86 @@ class ExchangeController < ApplicationController
         end
     end
     
+    def pairExists(pair)
+        EXCHANGE_PARES.each do |exnchange_pair|
+            if pair.upcase == exnchange_pair.tr(" ","").upcase
+                return true
+            end
+        end
+        return false
+    end
+    
     def create_order(*args)
         label_bool = true
         if args.count >= 1
-            order = current_user.exchangeorder.new
+            if current_user.nil?
+                order = User.find(args[0][:user]).exchangeorder.new
+            else
+                order = current_user.exchangeorder.new
+            end
+            params = Hash.new
             params[:coin1] = args[0][:pair].tr(" ","").split("/")[0]
             params[:coin2] = args[0][:pair].tr(" ","").split("/")[1]
-            order.par = "#{params[:coin1]}/#{params[:coin2]}"
-            order.tipo = args[0][:type]
-            total_amount_instant = args[0][:amount]
-            order.amount = args[0][:amount]
-            case args[0][:type]
-            when "buy"
-                order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "sell", stt: "open"}).order(price: :asc).limit(1)[0]
-                if order_open.nil?
-                    flash[:danger] = "Não disponível. "
-                    return
-                end
-                order.price = order_open.price
-                label_message = "comprar"
-                label_currency = params[:coin1]
-            when "sell"
-                order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
-                if order_open.nil?
-                    flash[:danger] = "Não disponível. "
-                    return
-                end
-                order.price = order_open.price
-                label_message = "vender"
-                label_currency = params[:coin2]
+            params[:type] = args[0][:type]
+            
+            order.par = ("#{params[:coin1]}/#{params[:coin2]}").upcase
+            if !(pairExists(order.par))
+                return {error: 'Par não suportado'}
             end
-            if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
-                order.amount = order_open.amount
-                label_bool = false
-                flash[:danger] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+            order.tipo = args[0][:type]
+            amount_str = args[0][:amount].tr(",",".")
+            total_amount_instant = "%0.8f" % amount_str
+            order.amount = args[0][:amount]
+            
+            
+            #Definição de preço, caso seja instant ou não
+            if args[0][:price].nil?
+                case args[0][:type]
+                when "buy"
+                    order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "sell", stt: "open"}).order(price: :asc).limit(1)[0]
+                    if order_open.nil?
+                        flash[:danger] = "Não disponível. "
+                        return
+                    end
+                    order.price = order_open.price
+                    label_message = "comprar"
+                    label_currency = params[:coin1]
+                when "sell"
+                    order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
+                    if order_open.nil?
+                        flash[:danger] = "Não disponível. "
+                        return
+                    end
+                    order.price = order_open.price
+                    label_message = "vender"
+                    label_currency = params[:coin2]
+                end
+                if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
+                    order.amount = order_open.amount
+                    label_bool = false
+                    flash[:danger] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+                end
+            else
+                order.price = args[0][:price]
+                case args[0][:type]
+                when "buy"
+                    label_message = "comprar"
+                    label_currency = params[:coin1]
+                when "sell"
+                    label_message = "vender"
+                    label_currency = params[:coin2]
+                end
             end
             order.status = "open"
         else
             order = parseOrder(params)
         end
-        saldos = eval(get_saldo(current_user))
+        if current_user.nil?
+            user = User.find(args[0][:user])
+            saldos = eval(get_saldo(user))
+        else
+            saldos = eval(get_saldo(current_user))
+        end
         order.has_execution = false
         total_value = BigDecimal(order.amount,8) * BigDecimal(order.price,8)
         case params[:type]
@@ -158,16 +198,29 @@ class ExchangeController < ApplicationController
             consulta_ordem_oposta = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt AND price >= :preco", {str_par: order.par, tupe: "buy", stt: "open", preco: order.price}).order(price: :desc)
         end
         if BigDecimal(saldo,8) >= BigDecimal(compare_value,8)
+            if current_user.nil?
+                id = add_saldo(user,discount_currency,compare_value.to_s,operation)
+                Payment.exchange_payment(user,id,discount_currency,compare_value.to_s,"open_order_#{order.tipo}",order.par)
+            else
+                id = add_saldo(current_user,discount_currency,compare_value.to_s,operation)
+                Payment.exchange_payment(current_user,id,discount_currency,compare_value.to_s,"open_order_#{order.tipo}",order.par)
+            end
             
-            id = add_saldo(current_user,discount_currency,compare_value.to_s,operation)
-            Payment.exchange_payment(current_user,id,discount_currency,compare_value.to_s,"open_order_#{order.tipo}",order.par)
+            
             
             check_active_orders(order,consulta_ordem_oposta,params[:type])
+            if !args[0][:price].nil?
+                return order
+            end
             if label_bool
                 flash[:success] = "Ordem adicionada ao livro! "
             end
         else
-            flash[:danger] = "Não há saldo para iniciar esta negociação "
+            if !(args.count >= 1)
+                flash[:danger] = "Não há saldo para iniciar esta negociação "
+            else
+                return {error: "Não há saldo para iniciar esta negociação "}
+            end
         end
         @order = order
     end
@@ -279,30 +332,32 @@ class ExchangeController < ApplicationController
                         broadcast_user_order = true
                     end    
                 end
+                coin1 = order.par.split("/").first
+                coin2 = order.par.split("/").last
                 case order.tipo
                 when "buy"
                     #adicionar saldo order.amount ao dono da order (compra)
                     saldo1 = exchange_tax(saldo_buy)
                     #p "adicionar saldo de #{saldo1} #{params[:coin1]} para #{User.find(order.user_id).first_name}"
-                    saldo1_id = add_saldo(User.find(order.user_id),params[:coin1],saldo1,"exchange_credit")
-                    Payment.exchange_payment(User.find(order.user_id),saldo1_id,params[:coin1],saldo1,"#{order.tipo}_order_execution",order.par)
+                    saldo1_id = add_saldo(User.find(order.user_id),coin1,saldo1,"exchange_credit")
+                    Payment.exchange_payment(User.find(order.user_id),saldo1_id,coin1,saldo1,"#{order.tipo}_order_execution",order.par)
                     #adicionar saldo b.amount * b.price ao dono da b (compra)
                     saldo2 = exchange_tax(BigDecimal((saldo_buy * BigDecimal(b.price,8))))
                     #p "adicionar saldo de #{saldo2} #{params[:coin2]} para #{User.find(b.user_id).first_name}"
-                    saldo2_id = add_saldo(User.find(b.user_id),params[:coin2],saldo2,"exchange_credit")
-                    Payment.exchange_payment(User.find(b.user_id),saldo2_id,params[:coin2],saldo2,"#{b.tipo}_order_execution",b.par)
+                    saldo2_id = add_saldo(User.find(b.user_id),coin2,saldo2,"exchange_credit")
+                    Payment.exchange_payment(User.find(b.user_id),saldo2_id,coin2,saldo2,"#{b.tipo}_order_execution",b.par)
                     string_type = "sell"
                 when "sell"
                     
                     coin2_sell_price = exchange_tax(BigDecimal(saldo_sell,8) * BigDecimal(b.price,8))
-                    #p "adicionar saldo de #{BigDecimal(coin2_sell_price,8)} #{params[:coin2]} para #{User.find(order.user_id).first_name}"
-                    coin2_sell_id = add_saldo(User.find(order.user_id),params[:coin2],BigDecimal(coin2_sell_price,8),"exchange_credit")
-                    Payment.exchange_payment(User.find(order.user_id),coin2_sell_id,params[:coin2],BigDecimal(coin2_sell_price,8).to_s,"#{order.tipo}_order_execution",order.par)
+                    #p "adicionar saldo de #{BigDecimal(coin2_sell_price,8)} #{coin2} para #{User.find(order.user_id).first_name}"
+                    coin2_sell_id = add_saldo(User.find(order.user_id),coin2,BigDecimal(coin2_sell_price,8),"exchange_credit")
+                    Payment.exchange_payment(User.find(order.user_id),coin2_sell_id,coin2,BigDecimal(coin2_sell_price,8).to_s,"#{order.tipo}_order_execution",order.par)
                     
                     coin1_sell_price = exchange_tax(saldo_sell)
-                    #p "adicionar saldo de #{coin1_sell_price} #{params[:coin1]} para #{User.find(b.user_id).first_name}"
-                    coin1_sell_id = add_saldo(User.find(b.user_id),params[:coin1],coin1_sell_price,"exchange_credit")
-                    Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,params[:coin1],coin1_sell_price,"#{b.tipo}_order_execution",b.par)
+                    #p "adicionar saldo de #{coin1_sell_price} #{coin1} para #{User.find(b.user_id).first_name}"
+                    coin1_sell_id = add_saldo(User.find(b.user_id),coin1,coin1_sell_price,"exchange_credit")
+                    Payment.exchange_payment(User.find(b.user_id),coin1_sell_id,coin1,coin1_sell_price,"#{b.tipo}_order_execution",b.par)
                     string_type = "buy"
                 end
             end
