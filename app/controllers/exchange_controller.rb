@@ -90,6 +90,9 @@ class ExchangeController < ApplicationController
             resp[:table] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "buy", stt: "open"}).order(price: :desc).limit(15)
         when "sell"
             resp[:table] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "sell", stt: "open"}).order(price: :asc).limit(15)
+        when nil        
+            resp[:bid] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "buy", stt: "open"}).order(price: :desc).limit(25)
+            resp[:ask] = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{pair}", tupe: "sell", stt: "open"}).order(price: :asc).limit(25)
         end
         resp
     end
@@ -104,6 +107,8 @@ class ExchangeController < ApplicationController
     def pairExists(pair)
         EXCHANGE_PARES.each do |exnchange_pair|
             if pair.upcase == exnchange_pair.tr(" ","").upcase
+                return true
+            else if "#{pair.tr("/").last}/#{pair.tr("/").first}" == exnchange_pair.tr(" ","").upcase
                 return true
             end
         end

@@ -90,9 +90,16 @@ class ApiController < ApplicationController
             instant_buy_price
         when "list_pairs"
             list_pairs
+        when "orderbook"
+            orderbook
         else
             render json: {error: "Método não encontrado."}
         end
+    end
+    
+    def orderbook
+        controller = ExchangeController.new
+        render json: controller.table_orders(@message["pair"].upcase,nil)
     end
     
     def list_pairs
@@ -162,7 +169,6 @@ class ApiController < ApplicationController
     end
     
     def instant_buy_price
-        p params
         if params[:tipo] == "buy"
             a = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{params[:coin1]}/#{params[:coin2]}", tupe: "sell", stt: "open"}).order(price: :asc).limit(1)
         else
