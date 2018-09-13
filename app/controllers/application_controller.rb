@@ -209,11 +209,13 @@ class ApplicationController < ActionController::Base
     params = {'username'=> user.username, 'email'=> user.email, 'id_original'=> user.id, 'name'=> "#{user.first_name} #{user.last_name}"}
     cpt_push(route,params)
   end
+  
   def cpt_update_user(user)
     route = 'update_users'
     params = {'username'=> user.username, 'email'=> user.email, 'id_original'=> user.id, 'name'=> "#{user.first_name} #{user.last_name}"}
     cpt_push(route,params)
   end
+  
   def add_saldo(usuario,moeda,qtd,tipo) #função para adicionar saldo
     route = 'add_saldo'
     params = {'email' => usuario.email, 'id_original' => usuario.id, 'currency' => moeda, 'amount' => (BigDecimal(qtd,8)).to_s, 'type' => tipo}
@@ -229,17 +231,20 @@ class ApplicationController < ActionController::Base
       end #if
     end #while
   end #def
+  
   def get_saldo(usuario)
     route = 'get_saldo'
     params = {'id_original'=> usuario.id}
     a = cpt_push(route,params)
     a
   end
+  
   def cpt_transaction_add(currency,type,user_id,debit_credit,amount)
     route 'add_transaction'
     params = {'currency'=> currency, 'type'=> type, 'user_id'=> user_id, 'debit_credit'=> debit_credit, 'amount'=> amount}
     cpt_push(route,params)
   end
+  
   def deliver_generic_email(user,text,title)
     string_body = text
     from = Email.new(email: 'no-reply@cptcambio.com')

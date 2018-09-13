@@ -99,7 +99,24 @@ class ApiController < ApplicationController
     
     def orderbook
         controller = ExchangeController.new
-        render json: controller.table_orders(@message["pair"].upcase,nil)
+        resp = Hash.new
+        resp[:pairs] = Array.new
+        EXCHANGE_PARES.each do |pair|
+            resp[:pairs] << pair.tr(" ","")
+        end
+        input_coin = @message["pair"].split("/").first
+        output_coin = @message["pair"].split("/").last
+        result = Hash.new
+        resp[:pairs].each do |pair_cpt|
+            if (@message["pair"].upcase == pair_cpt)
+                result = controller.table_orders(@message["pair"].upcase,nil)
+                break
+            elsif ("#{output_coin.upcase}/#{input_coin.upcase}" == pair_cpt)
+                result = controller.table_orders("#{output_coin.upcase}/#{input_coin.upcase}".upcase,nil)
+                break
+            end
+        end
+        render json: result 
     end
     
     def list_pairs

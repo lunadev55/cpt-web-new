@@ -108,7 +108,7 @@ class ExchangeController < ApplicationController
         EXCHANGE_PARES.each do |exnchange_pair|
             if pair.upcase == exnchange_pair.tr(" ","").upcase
                 return true
-            else if "#{pair.tr("/").last}/#{pair.tr("/").first}" == exnchange_pair.tr(" ","").upcase
+            elsif "#{pair.tr("/").last}/#{pair.tr("/").first}" == exnchange_pair.tr(" ","").upcase
                 return true
             end
         end
@@ -117,18 +117,21 @@ class ExchangeController < ApplicationController
     
     def create_order(*args)
         label_bool = true
+        @paramers = params
+        isApi = false
         if args.count >= 1
+            isApi = true
             if current_user.nil?
                 order = User.find(args[0][:user]).exchangeorder.new
             else
                 order = current_user.exchangeorder.new
             end
-            params = Hash.new
-            params[:coin1] = args[0][:pair].tr(" ","").split("/")[0]
-            params[:coin2] = args[0][:pair].tr(" ","").split("/")[1]
-            params[:type] = args[0][:type]
+            @paramers = Hash.new
+            @paramers[:coin1] = args[0][:pair].tr(" ","").split("/")[0]
+            @paramers[:coin2] = args[0][:pair].tr(" ","").split("/")[1]
+            @paramers[:type] = args[0][:type]
             
-            order.par = ("#{params[:coin1]}/#{params[:coin2]}").upcase
+            order.par = ("#{@paramers[:coin1]}/#{@paramers[:coin2]}").upcase
             if !(pairExists(order.par))
                 return {error: 'Par não suportado'}
             end
@@ -149,7 +152,7 @@ class ExchangeController < ApplicationController
                     end
                     order.price = order_open.price
                     label_message = "comprar"
-                    label_currency = params[:coin1]
+                    label_currency = @paramers[:coin1]
                 when "sell"
                     order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
                     if order_open.nil?
@@ -158,7 +161,7 @@ class ExchangeController < ApplicationController
                     end
                     order.price = order_open.price
                     label_message = "vender"
-                    label_currency = params[:coin2]
+                    label_currency = @paramers[:coin2]
                 end
                 if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
                     order.amount = order_open.amount
@@ -170,15 +173,17 @@ class ExchangeController < ApplicationController
                 case args[0][:type]
                 when "buy"
                     label_message = "comprar"
-                    label_currency = params[:coin1]
+                    label_currency = @paramers[:coin1]
                 when "sell"
                     label_message = "vender"
-                    label_currency = params[:coin2]
+                    label_currency = @paramers[:coin2]
                 end
             end
             order.status = "open"
         else
-            order = parseOrder(params)
+            
+            @paramers
+            order = parseOrder(@paramers)
         end
         if current_user.nil?
             user = User.find(args[0][:user])
@@ -188,17 +193,17 @@ class ExchangeController < ApplicationController
         end
         order.has_execution = false
         total_value = BigDecimal(order.amount,8) * BigDecimal(order.price,8)
-        case params[:type]
+        case @paramers[:type]
         when "buy"
             compare_value = total_value
-            saldo = saldos[params[:coin2]]
-            discount_currency = params[:coin2]
+            saldo = saldos[@paramers[:coin2]]
+            discount_currency = @paramers[:coin2]
             operation = "exchange_buy"
             consulta_ordem_oposta = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt AND price <= :preco", {str_par: order.par, tupe: "sell", stt: "open", preco: order.price}).order(price: :asc)
         when "sell"
             compare_value = order.amount
-            saldo = saldos[params[:coin1]]
-            discount_currency = params[:coin1]
+            saldo = saldos[@paramers[:coin1]]
+            discount_currency = @paramers[:coin1]
             operation = "exchange_sell"
             consulta_ordem_oposta = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt AND price >= :preco", {str_par: order.par, tupe: "buy", stt: "open", preco: order.price}).order(price: :desc)
         end
@@ -213,8 +218,8 @@ class ExchangeController < ApplicationController
             
             
             
-            check_active_orders(order,consulta_ordem_oposta,params[:type])
-            if !args[0][:price].nil?
+            check_active_orders(order,consulta_ordem_oposta,@paramers[:type])
+            if isApi
                 return order
             end
             if label_bool
@@ -381,12 +386,12 @@ class ExchangeController < ApplicationController
         end
     end
     
-    def parseOrder(params)
+    def parseOrder(prms)
         new_order = current_user.exchangeorder.new
-        new_order.par = "#{params[:coin1]}/#{params[:coin2]}"
-        new_order.tipo = params[:type]
-        new_order.amount = params[:amount]
-        new_order.price = params[:price]
+        new_order.par = "#{prms[:coin1]}/#{prms[:coin2]}"
+        new_order.tipo = prms[:type]
+        new_order.amount = prms[:amount]
+        new_order.price = prms[:price]
         new_order.status = "open"
         new_order
     end
