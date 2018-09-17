@@ -11,16 +11,16 @@ class User < ApplicationRecord
   
   def as_json
     {
-      "id": 2,
+      "id": self.id,
       "email": self.email,
       "qtd_logins": self.login_count,
-      "failed_login_count": 0,
-      "last_login_at": "2018-07-12T21:58:42.187Z",
-      "current_login_ip": "45.224.25.32",
-      "last_login_ip": "177.38.34.53",
+      "failed_login_count": self.failed_login_count,
+      "last_login_at": self.last_login_at,
+      "last_login_ip": self.last_login_ip,
       "username": self.username,
       "document": self.document,
       "full_name": "#{self.first_name} #{self.last_name}",
+      "wallets": (self.wallet.all).as_json
     }
   end
   

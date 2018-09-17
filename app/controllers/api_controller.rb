@@ -37,7 +37,7 @@ class ApiController < ApplicationController
         when 'userInfo'
             saldo = get_saldo(@user).to_str
             str1 = saldo.tr("=", ":").tr("{", "[").tr("}", "]").tr(">","")
-            render json: (@user.as_json).merge!({balance: str1  })
+            render json: (@user.as_json).merge!({balance: str1})
         when 'list_orders'
             if @message[:limit].nil?
                 list_orders
