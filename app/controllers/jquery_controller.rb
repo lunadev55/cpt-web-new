@@ -79,9 +79,6 @@ class JqueryController < ApplicationController
         render 'withdrawal_form_result'
     end
     
-    
-    
-    
     def get_payments
         if params[:end] != nil && params[:end] != ""
             date_final = Date.parse(params[:end])
@@ -111,6 +108,7 @@ class JqueryController < ApplicationController
             end
         end
     end
+    
     def get_wallets
         if params[:currency].nil?
             params[:currency] = "BTC"
@@ -121,6 +119,7 @@ class JqueryController < ApplicationController
             @qrs << RQRCode::QRCode.new("#{w.currency.downcase}:#{w.address}") 
         end
     end
+    
     def editInfo
         @user = User.find(params['user_id'])
         login_hash = Hash.new
@@ -182,7 +181,6 @@ class JqueryController < ApplicationController
     end
     
     def coinpayments_deposit
-        p "inicio"
         if params["merchant"] == ENV["COINPAYMENT_ID"]
             p "merchant validado"
             if params["status"] == "0" #esperando receber
@@ -202,7 +200,6 @@ class JqueryController < ApplicationController
                         p "carteira validada"
                         user = User.find(wallet.user_id)
                         payment = Payment.find_by_txid(params["txn_id"])
-                        p payment
                         if payment.nil? && !user.nil? 
                             p "usuario validado"
                             pay = user.payment.new
@@ -212,14 +209,10 @@ class JqueryController < ApplicationController
                             pay.volume = params["amount"]
                             pay.network = params["currency"]
                             pay.txid = params["txn_id"]
-                            pay_discount = BigDecimal(pay.volume,8) * BigDecimal(0.01,2)
-                            discounted = (BigDecimal(pay.volume,8) - pay_discount).truncate(8)
-                            savePayment(pay,discounted,user)
+                            savePayment(pay,pay.volume,user)
                         else #pagamento já existe
                             if payment.op_id == nil #realizar update
-                                pay_discount = BigDecimal(payment.volume,8) * BigDecimal(0.01,2)
-                                discounted = (BigDecimal(payment.volume,8) - pay_discount).truncate(8)
-                                savePayment(payment,discounted,user)
+                                savePayment(payment,payment.volume,user)
                             end
                         end
                     end
