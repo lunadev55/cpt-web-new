@@ -1,6 +1,6 @@
 <!-- montagem de jquery quando o cara for mudar configurações -->
 $('.centered-flash').html('<% flash.each do |key, value| %><div class="alert alert-<%= key %>"><%= value %><i class="fa fa-window-close pointer" aria-hidden="true"></i></div><% end %>');
-<% if flash[:success] == "Informações atualizadas!" %>
+<% if flash[:info] == "Informações atualizadas!" %>
     $('.form-control').removeAttr('value');
     $('.editForm').get(0).reset();
     $.get("/dashboard/layouts/editInfo");

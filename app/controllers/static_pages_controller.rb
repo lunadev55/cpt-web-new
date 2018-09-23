@@ -1,9 +1,7 @@
 class StaticPagesController < ApplicationController
     before_action :set_s3_direct_post, only: [:partial,:deposit_form]
   def index
-    flash.each do |f|
-      f = nil
-    end
+
   end
   
   def deposit_form
@@ -17,23 +15,22 @@ class StaticPagesController < ApplicationController
     payment = Payment.find_by_hex(params[:code])
     if !payment.nil?
       payment.hex = ""
-      discounted = ((BigDecimal(payment.volume,8)  * 0.99) - optax(payment.network)).truncate(8)
-      if payment.status != "complete"
-        response = Coinpayments.create_withdrawal(discounted, payment.network, payment.endereco, options = { auto_confirm: 1 })
+      if payment.status != "complete" and payment.status != "canceled"
+        response = Coinpayments.create_withdrawal(payment.amount, payment.network, payment.endereco, options = { auto_confirm: 1 })
         if response == "#{payment.network.upcase} is currently disabled!"
           flash[:info] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
         else
           payment.status = "complete"
           payment.txid = response.id
-          p response
           if payment.save
-            flash[:success] = "Transação enviada para o blockchain! "
+            flash[:info] = "Transação enviada para o blockchain! "
           end
         end
       end
     end
     redirect_to '/dashboard/index'
   end
+  
   def partial
     @part = params[:partial]
     session[:current_place] = @part
@@ -47,12 +44,12 @@ class StaticPagesController < ApplicationController
       route = "/dashboard/overview/wallet/"
     elsif params[:partial] == "deposit"
       if current_user.active_request.any?
-            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:info] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
       else
             if check_user_documents
-                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:info] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end
@@ -71,29 +68,29 @@ class StaticPagesController < ApplicationController
       @pays = current_user.payment.all.order(created_at: :desc).page params[:page]
     elsif params[:partial] == "withdrawal"
       if current_user.active_request.any?
-            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:info] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
       else
             if check_user_documents
-                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:info] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end
       end
       @currency = "BTC"
-      @minimum = 0.001
-      @tax = 0.0007
+      @minimum = (optax(@currency) * 2).round(8)
+      @tax = optax(@currency)
     elsif params[:partial] == "editSecurity"
       @user = current_user
     elsif params[:partial] == "business"
         if current_user.active_request.any?
-            flash[:danger] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
+            flash[:info] = "Você precisa esperar sua validação ser concluída para acessar essa área! "
             params[:partial] = "editInfo"
             @user = current_user
         else
             if check_user_documents
-                flash[:danger] = "Você precisa ativar seu cadastro para utilizar esta função! "
+                flash[:info] = "Você precisa ativar seu cadastro para utilizar esta função! "
                 params[:partial] = "active"
                 @request = current_user.active_request.new
             end

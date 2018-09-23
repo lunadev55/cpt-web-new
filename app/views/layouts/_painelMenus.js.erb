@@ -132,11 +132,13 @@ $( ".amount_input" ).keyup(function() {
   this.value = this.value.replace(',','.');
   this.value = this.value.replace(/[^0-9\,.]/g,'');
   quantity = parseFloat($(this).val().replace(",","."));
-  discount = (quantity * 0.01).toFixed(8);
+  discount_percentage = (quantity * 0.005).toFixed(8);
+  parsedCost = parseFloat($(".withdrawal_tax_operation").html());
+  discount = parsedCost + parseFloat(discount_percentage);
   currency = $(".hidden_cur_withd").prop("value");
-  total = (quantity - discount).toFixed(8);
+  total = (quantity + discount).toFixed(8);
   
-  $(".comission").html(discount + " " + currency)
+  $(".comission").html(discount.toFixed(8) + " " + currency)
   $(".total").html(total + " " + currency)
 });
 

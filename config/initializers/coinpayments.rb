@@ -3,3 +3,4 @@ Coinpayments.configure do |config|
   config.public_api_key  = ENV["COINPAYMENT_PUB"]
   config.private_api_key = ENV["COINPAYMENT_PRIV"]
 end
+

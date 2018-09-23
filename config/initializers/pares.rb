@@ -11,8 +11,14 @@ MOEDAS_ATIVAS = ["BTC","LTC","DOGE","ETH", "BCH", "DASH", "DGB", "ZEC"]
 MOEDAS_ATIVAS_NAMES = Hash.new 
 array_nomes = ["Bitcoin","Litecoin","Dogecoin","Ethereum","BitcoinCash","Dash","Digibyte","Zcash"]
 counter = 0
-MOEDAS_ATIVAS.each do |names|
-    MOEDAS_ATIVAS_NAMES[names] = array_nomes[counter]
+
+TAXES = Hash.new
+
+result = Coinpayments.rates({accepted: "1"})
+
+MOEDAS_ATIVAS.each do |symbol|
+    MOEDAS_ATIVAS_NAMES[symbol] = array_nomes[counter]
+    TAXES[symbol] = result[symbol][:tx_fee]
     counter += 1
 end
 

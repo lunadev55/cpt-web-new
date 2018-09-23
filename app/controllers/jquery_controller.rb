@@ -32,7 +32,7 @@ class JqueryController < ApplicationController
                 flash[:info] = "Operação já realizada ou cancelada. "
             end
         else
-            flash[:danger] = "Operação não encontrada. "
+            flash[:info] = "Operação não encontrada. "
         end
     end
     
@@ -41,7 +41,7 @@ class JqueryController < ApplicationController
         text = "Usuário #{params[:name]} (#{params[:email]}) escreveu: <br> #{params[:message]}"
         title = "Email de contato para suporte"
         deliver_generic_email(user,text,title)
-        flash[:success] = "Mensagem enviada para o suporte!"
+        flash[:info]= "Mensagem enviada para o suporte!"
     end
     
     def withdrawal_coin
@@ -51,30 +51,29 @@ class JqueryController < ApplicationController
         payment.volume = params[:amount]
         payment.description = params[:description]
         saldo = eval(get_saldo(current_user))
-        if  BigDecimal(saldo["#{payment.network}"],8) > BigDecimal(payment.volume,8)
+        volume_dec = BigDecimal(payment.volume,8)
+        comission = (volume_dec * 0.995 + optax(payment.network)).round(8)
+        required_amount = (volume_dec + comission).round(8)
+        if  BigDecimal(saldo["#{payment.network}"],8) > required_amount
             payment.label = "Saque"
             payment.status = "incomplete"
             payment.hex = SecureRandom.hex
-            payment.op_id = add_saldo(current_user,payment.network,payment.volume,"withdrawal")
+            payment.op_id = add_saldo(current_user,payment.network,required_amount,"withdrawal")
             payment.save
-            comission = (BigDecimal(payment.volume,8) * 0.01).truncate(8)
-            discounted = BigDecimal(payment.volume,8) - comission - optax(payment.network)
             text = "Olá #{current_user.first_name.capitalize} #{current_user.last_name.capitalize}. <br>
             Você iniciou um processo de <b>saque</b> em sua conta na Cripto Câmbio Exchange.<br>
             Verifique abaixo os dados do saque e clique no link abaixo para confirmar:<br>
             Nota: <b>Se você não iniciou este processo você deve fazer uma recuperação de senha imediata, pois quem o iniciou tem sua senha correta.</b><br>
-            Volume total: <b> #{payment.volume} #{payment.network}</b><br>
+            Volume total: <b> #{required_amount.to_s} #{payment.network}</b><br>
             Comissão: <b>#{comission.to_s}</b><br>
             Taxa de operação: <b>#{optax(payment.network)}</b><br>
-            Volume a sacar:<b> #{discounted}</b><br>
-            <a href='http://www.cptcambio.com/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
+            Volume a sacar:<b> #{payment.volume}</b><br>
+            <a href='https://www.cptcambio.com/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
             "
             deliver_generic_email(current_user,text,"Confirmação de saque")
-            flash[:success] = "Pedido de saque realizado! Verifique seu email. "
-            flash[:danger] = nil
+            flash[:info] = "Pedido de saque realizado! Verifique seu email. "
         else
-            flash[:success] = nil
-            flash[:danger] = "Saldo Insuficiente! "
+            flash[:info] = "Saldo Insuficiente! "
         end
         render 'withdrawal_form_result'
     end
@@ -152,10 +151,10 @@ class JqueryController < ApplicationController
                     cpt_update_user(@user)
                     flash[:info] = "Informações atualizadas!"
                 else
-                    flash[:danger] = "Senha incorreta!"
+                    flash[:info] = "Senha incorreta!"
                 end
             else
-                flash[:danger] = "Senhas Não coincidem!"
+                flash[:info] = "Senhas Não coincidem!"
             end
             return
         end
@@ -164,7 +163,7 @@ class JqueryController < ApplicationController
     def deposit
         wallets = current_user.wallet.where("currency = :cur", {cur: params[:currency]})
         if wallets.size >= 5
-            flash[:success] = "Você já possui 5 endereços de carteira nesta moeda! "
+            flash[:info] = "Você já possui 5 endereços de carteira nesta moeda! "
             return
         end
         transaction = Coinpayments.get_callback_address(params[:currency], options = { ipn_url: "https://#{ENV['BASE_URL']}/#{ENV['COINPAYMENTS_ROUTE']}"})
@@ -177,7 +176,7 @@ class JqueryController < ApplicationController
         end
         wal.save
         get_wallets
-        flash[:success] = "Endereço #{params[:currency]} gerado com sucesso!"
+        flash[:info] = "Endereço #{params[:currency]} gerado com sucesso!"
     end
     
     def coinpayments_deposit
@@ -236,45 +235,20 @@ class JqueryController < ApplicationController
             end
         end
     end
+    
     def render_payment
         @payment = current_user.payment.find(params[:id])
         @href = blocker_link(@payment.network)
     end
+    
     def render_withdrawal_details
         @payment = current_user.payment.find(params[:id])
     end
+    
     def withdrawal_get
         @currency = params[:currency]
-        if @currency == "LTC"
-            @minimum = 0.01
-            @tax = 0.001
-        elsif @currency == "BTC"
-            @minimum = 0.001
-            @tax = 0.0007
-        elsif @currency == "DOGE"
-            @minimum = 5
-            @tax = 1
-        elsif @currency == "ETH"
-            @minimum = 0.002
-            @tax = 0.0012
-        elsif @currency == "BRL"
-            @minimum = 30
-        elsif @currency == "XMR"
-            @minimum = 0.02
-            @tax = 0.01
-        elsif @currency == "DASH"
-            @minimum = 0.002
-            @tax = 0.001
-        elsif @currency == "BCH"
-            @minimum = 0.001
-            @tax = 0.0002
-        elsif @currency == "DGB"
-            @minimum = 0.02
-            @tax = 0.02
-        elsif @currency == "ZEC"
-            @minimum = 0.001
-            @tax = 0.0002
-        end
+        @minimum = ((TAXES[params[:currency]].to_f) * 2).round(8)
+        @tax = TAXES[params[:currency]].to_f
     end
     def payments_details
         @payments = current_user.payment.where("status = :status_type",  {status_type: "incomplete"}).page params[:page]

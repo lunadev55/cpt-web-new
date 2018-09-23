@@ -16,7 +16,7 @@ class UsersController < ApplicationController
       @hash = eval(decrypt_data(@wallet.address))
     when "delete"
       @account.delete
-      flash[:success] = "Conta deletada do sistema! "
+      flash[:info] = "Conta deletada do sistema! "
     end
   end
   def new_bank_account
@@ -27,10 +27,10 @@ class UsersController < ApplicationController
       if params[:id] == nil
         account = current_user.wallet.new
         account.currency = "BRL"
-        flash[:success] = "Conta cadastrada! "
+        flash[:info] = "Conta cadastrada! "
       else
         account = current_user.wallet.find(params[:id])
-        flash[:success] = "Alterações salvas! "
+        flash[:info] = "Alterações salvas! "
       end
       account.dest_tag = params[:banco]
       account_data = Hash.new
@@ -54,11 +54,11 @@ class UsersController < ApplicationController
     @user.role = "inactive"
     if @user.save
       if isNew != false
-        flash[:success] = "Cadastrado com Sucesso!"
+        flash[:info]= "Cadastrado com Sucesso!"
         cpt_transaction_user(@user)
         redirect_to '/dashboard/index'
       else
-        flash[:success] = "Sucesso!"
+        flash[:info] = "Sucesso!"
         redirect_to '/dashboard/index'
       end
     else

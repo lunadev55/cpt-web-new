@@ -112,8 +112,8 @@ function updateExecTable(table,data){
   content += `<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>`;
   for (var i = 0; i < arrayLength; i++) {
     content += '<tr>';
-    content += `<td class="small_lines">${data.executed_list[i].price} ${currency1} </td>`;
-    content += `<td class="small_lines">${data.executed_list[i].amount} ${currency2} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].price} ${currency2} </td>`;
+    content += `<td class="small_lines">${data.executed_list[i].amount} ${currency1} </td>`;
     content += '</tr>';
   }
   table.html(content);

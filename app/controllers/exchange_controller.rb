@@ -21,9 +21,9 @@ class ExchangeController < ApplicationController
         new_deposit.hex = nil
         new_deposit.description = params[:method]
         if new_deposit.save
-            flash[:success] = "Operação de depósito solicitada. Verifique detalhes na tabela a direita. "
+            flash[:info] = "Operação de depósito solicitada. Verifique detalhes na tabela a direita. "
         else 
-            flash[:success] = "Algo deu errado. Por favor, tente novamente!. "
+            flash[:info] = "Algo deu errado. Por favor, tente novamente!. "
         end
     end
     
@@ -49,7 +49,7 @@ class ExchangeController < ApplicationController
         end
         @order.status = "cancelled"
         if prm['id'].nil?
-            flash[:success] = "Ordem cancelada! "
+            flash[:info] = "Ordem cancelada! "
             recent_orders = table_orders(@order.par,@order.tipo)
             array_compare = recent_orders[:table]
             if array_compare.include?(inicial_order)
@@ -108,7 +108,7 @@ class ExchangeController < ApplicationController
         EXCHANGE_PARES.each do |exnchange_pair|
             if pair.upcase == exnchange_pair.tr(" ","").upcase
                 return true
-            elsif "#{pair.tr("/").last}/#{pair.tr("/").first}" == exnchange_pair.tr(" ","").upcase
+            elsif "#{pair.split("/").last}/#{pair.split("/").first}" == exnchange_pair.tr(" ","").upcase
                 return true
             end
         end
@@ -147,7 +147,7 @@ class ExchangeController < ApplicationController
                 when "buy"
                     order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "sell", stt: "open"}).order(price: :asc).limit(1)[0]
                     if order_open.nil?
-                        flash[:danger] = "Não disponível. "
+                        flash[:info] = "Não disponível. "
                         return
                     end
                     order.price = order_open.price
@@ -156,7 +156,7 @@ class ExchangeController < ApplicationController
                 when "sell"
                     order_open = Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: order.par, tupe: "buy", stt: "open"}).order(price: :desc).limit(1)[0]
                     if order_open.nil?
-                        flash[:danger] = "Não disponível. "
+                        flash[:info] = "Não disponível. "
                         return
                     end
                     order.price = order_open.price
@@ -166,7 +166,7 @@ class ExchangeController < ApplicationController
                 if BigDecimal(order_open.amount,8) < BigDecimal(order.amount,8)
                     order.amount = order_open.amount
                     label_bool = false
-                    flash[:danger] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
+                    flash[:info] = "Você tentou #{label_message} mais #{label_currency} do que a ordem no preço indicado tinha disponível. Sua operação foi reajustada para a quantidade total disponível de #{order.amount} #{label_currency}. Caso queira realizar mais operações instantâneas neste par, utilize o formulário novamente. "
                 end
             else
                 order.price = args[0][:price]
@@ -223,11 +223,11 @@ class ExchangeController < ApplicationController
                 return order
             end
             if label_bool
-                flash[:success] = "Ordem adicionada ao livro! "
+                flash[:info] = "Ordem adicionada ao livro! "
             end
         else
             if !(args.count >= 1)
-                flash[:danger] = "Não há saldo para iniciar esta negociação "
+                flash[:info] = "Não há saldo para iniciar esta negociação "
             else
                 return {error: "Não há saldo para iniciar esta negociação "}
             end

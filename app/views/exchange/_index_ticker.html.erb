@@ -5,7 +5,7 @@
             <% if m != "BRL" and m != "BTC" %>
             <div class="col-md-3 col-xs-3 col-lg-2 ticker_block">
                     <div class="row" class="ticker-list">
-                        <div class="col-md-12 col-xs-12"><h4 class="white no-margin"><%= MOEDAS_ATIVAS_NAMES[m] %> (<%= m %>)</h4></div>
+                        <div class="col-md-12 col-xs-12"><h4 class="white no-margin lesser-font-h4"><%= MOEDAS_ATIVAS_NAMES[m] %> (<%= m %>)</h4></div>
                     </div>
                     <% EXCHANGE_PARES.each do |pair| %>
                         <% compare = pair.tr(" ","") %>

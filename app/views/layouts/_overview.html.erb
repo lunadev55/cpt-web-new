@@ -63,8 +63,8 @@
               <fieldset>
                 <legend>Comissões</legend>
               <div class="well well-lg">
-                Operações (saque, depósito): 1%<br>
-                Ordens (negociações): 0,3%
+                Operações (saque): 0.5%<br>
+                Ordens (negociações): <%= (1 - BigDecimal(ENV['EXCHANGE_TAX'])).round(4) %>%
               </div>
               </fieldset>
         </div>

@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
     require_user
     current_user.role.to_s
     unless current_user.role.to_s == "admin" 
-      flash[:danger] = "Esta página requer permissões administrativas!"
+      flash[:info] = "Esta página requer permissões administrativas!"
       redirect_to '/'
     end
   end
@@ -153,19 +153,9 @@ class ApplicationController < ActionController::Base
   end
   
   def optax(currency)
-        case currency
-        when "BTC"
-            return 0.0007
-        when "ETH"
-            return 0.0012
-        when "LTC"
-            return 0.001
-        when "DOGE"
-            return 1
-        when "BRL"
-            return 0
-        end
+        TAXES[currency.upcase].to_f
   end
+  
   
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
@@ -174,7 +164,7 @@ class ApplicationController < ActionController::Base
   
   def require_user
     unless !current_user.nil? 
-      flash[:danger] = "Esta página requer login!"
+      flash[:info] = "Esta página requer login!"
       redirect_to '/sign_in'
     end
   end

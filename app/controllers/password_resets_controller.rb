@@ -7,10 +7,10 @@ class PasswordResetsController < ApplicationController
     @user = User.find_by_email(params[:email])
     if @user
       @user.deliver_password_reset_instructions!
-      flash[:success] = "Instruções de reset foram enviadas para o seu email."
+      flash[:info] = "Instruções de reset foram enviadas para o seu email."
       redirect_to root_path
     else
-      flash[:warning] = "Email não encontrado!"
+      flash[:info] = "Email não encontrado!"
       render :new
     end
   end
@@ -23,7 +23,7 @@ class PasswordResetsController < ApplicationController
     @user = current_user
     @session = UserSession.new(password_reset_params)
     if password_reset_params['new_password'] != password_reset_params['password_confirmation']
-      flash[:success] = "Senhas não coincidem! "
+      flash[:info] = "Senhas não coincidem! "
       return
     end
     if @session.save
@@ -32,17 +32,17 @@ class PasswordResetsController < ApplicationController
       @user.password_confirmation = password_reset_params['password_confirmation']
       if @user.changed? && @user.save
         UserSession.create(:email => @user.email, :password => password_reset_params['new_password'])
-        flash[:success] = "Senha atualizada com sucesso! "
+        flash[:info] = "Senha atualizada com sucesso! "
       end
     else
-      flash[:success] = "Senha incorreta, tente novamente. "
+      flash[:info] = "Senha incorreta, tente novamente. "
     end
   end
   
   def update
     @user = User.find_by(perishable_token: params[:id])
     if @user.update_attributes(password_reset_params)
-      flash[:success] = "Senha atualizada com sucesso! "
+      flash[:info] = "Senha atualizada com sucesso! "
       redirect_to root_path
     else
       render :edit
