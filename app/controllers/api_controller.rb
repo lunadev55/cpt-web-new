@@ -133,7 +133,13 @@ class ApiController < ApplicationController
     
     def send_order
         exchange = ExchangeController.new
-        result = exchange.create_order(pair: @message["currency_base"], amount: @message["amount"], price: @message["price"], type: @message["type"], user: @user.id)
+        if @message["type"].downcase == "sell"
+            result = exchange.create_order(pair: @message["currency_base"], amount: @message["amount"], price: @message["price"], type: @message["type"], user: @user.id)
+        elsif @message["type"].downcase == "buy"
+            result = exchange.create_order(pair: @message["currency_base"], amount: @message["amount"], price: @message["price"], type: @message["type"], user: @user.id)
+        else
+            result = {error: "Tipo invalido."}
+        end
         render json: result
     end
     

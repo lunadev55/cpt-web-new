@@ -117,7 +117,6 @@ class ExchangeController < ApplicationController
     
     def create_order(*args)
         label_bool = true
-        @paramers = params
         isApi = false
         if args.count >= 1
             isApi = true
@@ -181,8 +180,7 @@ class ExchangeController < ApplicationController
             end
             order.status = "open"
         else
-            
-            @paramers
+            @paramers = params
             order = parseOrder(@paramers)
         end
         if current_user.nil?
