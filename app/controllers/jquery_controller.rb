@@ -52,7 +52,7 @@ class JqueryController < ApplicationController
         payment.description = params[:description]
         saldo = eval(get_saldo(current_user))
         volume_dec = BigDecimal(payment.volume,8)
-        comission = (volume_dec * 0.995 + optax(payment.network)).round(8)
+        comission = (volume_dec * 0.005 + optax(payment.network)).round(8)
         required_amount = (volume_dec + comission).round(8)
         if  BigDecimal(saldo["#{payment.network}"],8) > required_amount
             payment.label = "Saque"

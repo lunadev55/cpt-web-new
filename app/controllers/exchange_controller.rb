@@ -138,8 +138,7 @@ class ExchangeController < ApplicationController
             amount_str = args[0][:amount].tr(",",".")
             total_amount_instant = "%0.8f" % amount_str
             order.amount = args[0][:amount]
-            
-            
+
             #Definição de preço, caso seja instant ou não
             if args[0][:price].nil?
                 case args[0][:type]
