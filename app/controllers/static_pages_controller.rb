@@ -16,7 +16,7 @@ class StaticPagesController < ApplicationController
     if !payment.nil?
       payment.hex = ""
       if payment.status != "complete" and payment.status != "canceled"
-        response = Coinpayments.create_withdrawal(payment.amount, payment.network, payment.endereco, options = { auto_confirm: 1 })
+        response = Coinpayments.create_withdrawal(payment.volume, payment.network, payment.endereco, options = { auto_confirm: 1 })
         if response == "#{payment.network.upcase} is currently disabled!"
           flash[:info] = "Os saques para esta moeda estão temporáriamente desabilitados por motivos de instabilidade na rede! <br> Por favor, tente novamente mais tarde." 
         else
