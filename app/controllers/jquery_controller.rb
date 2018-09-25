@@ -10,7 +10,15 @@ class JqueryController < ApplicationController
             get_payments
         elsif params[:partial] == "withdrawal"
             withdrawal_coin
+        elsif params[:partial] == "myOrders"
+            myOrders
         end
+    end
+    
+    def myOrders
+        pair = params[:params].tr("_","/")
+        @orders = (current_user.exchangeorder.where("par = :par AND status = 'open'", {par: pair})).order(created_at: :desc).page params[:page]
+        render 'my_order_result'
     end
     
     def cancel_withdrawal
@@ -66,7 +74,6 @@ class JqueryController < ApplicationController
             Nota: <b>Se você não iniciou este processo você deve fazer uma recuperação de senha imediata, pois quem o iniciou tem sua senha correta.</b><br>
             Volume total: <b> #{required_amount.to_s} #{payment.network}</b><br>
             Comissão: <b>#{comission.to_s}</b><br>
-            Taxa de operação: <b>#{optax(payment.network)}</b><br>
             Volume a sacar:<b> #{payment.volume}</b><br>
             <a href='https://www.cptcambio.com/withdrawal/#{payment.hex}'>Clique aqui</a> para concluir o saque.
             "

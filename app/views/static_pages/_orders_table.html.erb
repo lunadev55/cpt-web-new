@@ -1,0 +1,18 @@
+<table width="90%" class="table table-striped">
+    <tbody id="myOrdersTable">
+        <tr>
+            <th>Par</th>
+            <th>Tipo</th>
+            <th>Volume (bruto)</th>
+            <th>Excluir ordem</th>
+        </tr>
+    <%= paginate @orders, left: 1, right: 3, remote: true %>
+    <% @orders.each do |order| %>
+        <tr id="<%= order.id %>">
+            <td><%= order.par %></td>
+            <td><%= t(order.tipo) %></td>
+            <td><%= order.amount %></td>
+            <td><button type="button" data-order-id="<%= order.id %>" class="btn btn-danger cancel-order"><i class="fa fa-ban" aria-hidden="true"></i></button></td>
+        </tr>
+    <% end %>
+</tbody></table>

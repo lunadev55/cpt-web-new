@@ -5,7 +5,7 @@
     $(object).addClass("active")
     option = $(object).data("painel-menu")
     if option is undefined
-        option = $(object).data("myOrders-menu")
+        option = $(object).data("myorders")
     else
         $(object).append('<i class="fa fa-spinner fa-pulse fa-fw loading_menu"></i>')
     if option is "deposit"
