@@ -11,15 +11,22 @@ MOEDAS_ATIVAS = ["BTC","LTC","DOGE","ETH", "BCH", "DASH", "DGB", "ZEC"]
 MOEDAS_ATIVAS_NAMES = Hash.new 
 array_nomes = ["Bitcoin","Litecoin","Dogecoin","Ethereum","BitcoinCash","Dash","Digibyte","Zcash"]
 counter = 0
-
-TAXES = Hash.new
-
-result = Coinpayments.rates({accepted: "1"})
-
-MOEDAS_ATIVAS.each do |symbol|
-    MOEDAS_ATIVAS_NAMES[symbol] = array_nomes[counter]
-    TAXES[symbol] = result[symbol][:tx_fee]
-    counter += 1
+begin
+    TAXES = Hash.new
+    
+    result = Coinpayments.rates({accepted: "1"})
+    
+    MOEDAS_ATIVAS.each do |symbol|
+        MOEDAS_ATIVAS_NAMES[symbol] = array_nomes[counter]
+        TAXES[symbol] = result[symbol][:tx_fee]
+        counter += 1
+    end
+rescue
+    p 'erro'
+    MOEDAS_ATIVAS.each do |symbol|
+        MOEDAS_ATIVAS_NAMES[symbol] = array_nomes[counter]
+        counter += 1
+    end
 end
 
 BANCOS = ["001 Banco do Brasil","002 Banco Central do Brasil", "003 Banco da Amazônia"]

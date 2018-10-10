@@ -4,6 +4,12 @@ class StaticPagesController < ApplicationController
 
   end
   
+  def trader
+    @saldo = eval(get_saldo(current_user))
+    session[:currency1] = "LTC"
+    session[:currency2] = "BTC"
+  end
+  
   def deposit_form
     @deposit = current_user.payment.find(params[:id])
   end

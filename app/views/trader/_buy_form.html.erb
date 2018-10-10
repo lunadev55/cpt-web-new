@@ -1,0 +1,65 @@
+<%= form_tag "/trader/newOrder", remote: true, class: "exchange_form_element", :id => "buy_form"  %>
+<%= hidden_field_tag :type, "buy", class: "hidden_type_order" %>
+<%= hidden_field_tag :pair, "#{session[:currency1]}/#{session[:currency2]}", class: "hidden_type_order" %>
+<div class="form-group margin-exchange">
+    <div class="row">
+        <div class="col-md-10 row">
+            <div class="col-md-4 col-xs-4">
+                <h5><%= label_tag :amount, "Quantidade", class: "white" %></h5>
+            </div>
+            <div class="col-md-8 col-xs-8">
+                <%= text_field_tag :amount, nil, placeholder: "0.00000000 #{session[:currency1]}", title: 'Utilize "." (ponto) como separador das casas decimais' , required: true ,class: "amount_input_buy form-control", 'data-type' => "buy", "data-amount_quantity" => "amount_input_buy", "data-price_quantity" => "price_input_buy" %>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-10 row">
+            <div class="col-md-4 col-xs-4">
+                <h5><%= label_tag :price, "Preço", class: "white" %></h5>
+            </div>
+            <div class="col-md-8 col-xs-8">
+                <%= text_field_tag :price, nil, placeholder: "0.00000000 #{session[:currency2]}", required: true, class: "price_input_buy form-control", 'data-type' => "buy", "data-amount_quantity" => "amount_input_buy", "data-price_quantity" => "price_input_buy" %>
+            </div>
+        </div>
+        <div class="col-md-1 ok-icon">
+      
+            
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 col-xs-3">
+        <h6 class="white">Comissão (<%= (1 - BigDecimal(ENV["EXCHANGE_TAX"],4)) %>%): </h6>
+    </div>
+    <div class="col-md-8 col-xs-8">
+        <h6><b class="white comission_buy"></b></h6>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 col-xs-3">
+        <h6><k class="valor_total white">Valor total:</k> </h6>
+    </div>
+    <div class="col-md-8 col-xs-8">
+        <h6><b class="white total_buy"></b></h6>
+    </div>
+    
+</div>
+<div class="form-group row">
+     <div class="col-md-3 col-xs-3">
+        <h6><k class="receber white">Receber:</k> </h6>
+    </div>
+    <div class="col-md-8 col-xs-8">
+        <h6><b class="white receive_buy"></b></h6>
+    </div>
+    
+</div>
+<div class="form-group+">
+    <div class="row">
+        <div class="col-md-8">
+            <%= submit_tag "Comprar", class: "form-control withdrawal_button", :id => "buy_form_btn" %>
+        </div>
+    </div>
+</div>
+</form>

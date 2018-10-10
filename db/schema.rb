@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180715014044) do
+ActiveRecord::Schema.define(version: 20181003215237) do
 
   create_table "active_requests", force: :cascade do |t|
     t.string   "user_id"
@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(version: 20180715014044) do
   create_table "exchangeorders", force: :cascade do |t|
     t.string   "par"
     t.string   "tipo"
-    t.string   "amount"
+    t.float    "amount"
     t.boolean  "has_execution"
-    t.string   "price"
+    t.float    "price"
     t.string   "status"
     t.string   "user_id"
     t.datetime "created_at",    null: false

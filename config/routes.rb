@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get '/deposit/verify/:id', to: 'static_pages#deposit_form'
   post '/deposit/verify/new', to: 'dashboard#deposit_verify'
   get '/deposit_detail/:id', to: 'admin#deposit_detail'
+  get '/trader', to: 'static_pages#trader'
   
   match '/editInfo/bank', to: 'users#new_bank_account', via: [:get, :post]
   get 'bank/:op/:id', to: 'users#bank_operation'
@@ -56,6 +57,10 @@ Rails.application.routes.draw do
   post '/api/deleteKey/:key', to: 'api#delete_api_key'
   post '/api/:method/:message', to: 'api#proxyRequest'
   post '/api/:method', to: 'api#proxyRequest'
+  
+  get '/trader/:option', to: 'trader#proxyRequest'
+  get '/trader/orders_history/:pair/', to: 'trader#graph'
+  post '/trader/:option', to: 'trader#postRequests'
   
   namespace :api do
     namespace :public do 

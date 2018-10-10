@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs">
+    <li data-order_form-options="negociar" class="active pointer deposit_currency"><a class="padding-right-left-wallet">Negociar </a></li>
+    <li data-order_form-options="ordens_abertas" class="pointer deposit_currency"><a class="padding-right-left-wallet">Ordens Abertas</a></li>
+</ul>
+
+<div class="render_trader_helper">
+    <%= render "/trader/order_forms" %>
+</div>
+
+<%= javascript_include_tag 'views/trader/form_open_orders' %>

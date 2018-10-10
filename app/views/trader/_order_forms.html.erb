@@ -1,0 +1,107 @@
+
+<div class="hidden" id="pair" data-pair-option="<%= session[:currency1] %> / <%= session[:currency2] %>"></div>
+<div class="row white">
+    <div class="col-md-6 col-xs-6">
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <h4 class="white">Comprar <%= session[:currency1] %></h4>
+            </div>
+        </div>
+        <%= render '/trader/buy_form' %>
+    </div>
+    <div class="col-md-6 col-xs-6">
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <h4 class="white">Vender <%= session[:currency1] %></h4>
+            </div>
+        </div>
+        <%= render '/trader/sell_form' %>
+    </div>
+</div>
+
+<%= javascript_include_tag 'views/trader/orders_forms' %>
+
+<script>
+$(".buttonType").click(function(){
+    $('#type').prop("value",$(this).data("type"))
+    element = $(".price_input")
+    calc(element)
+})
+$( ".amount_input_buy" ).keyup(function() {
+    element = $(".amount_input_buy")
+    calc(element) 
+});
+
+$( ".amount_input_sell" ).keyup(function() {
+    element = $(".amount_input_sell")
+    calc(element) 
+});
+
+function calc(element){
+    element.val((element.val()).replace(/[,]+/,'.'));
+    element.val((element.val()).replace(/[.]+/,"."));
+    element.val((element.val()).replace(/[^0-9\,.]/g,''));
+    pair = $("#pair").data("pair-option").replace(/ /g, '').split("/");
+    currency1 = pair[0];
+    currency2 = pair[1];
+    string = element.val();
+    points = 0
+    formated = ""
+    
+    for (var i = 0, len = string.length; i < len; i++) {
+      if (string.charAt(i) == "."){
+          points = points + 1
+      }
+      if (points <= 1){
+        if ((string.charAt(i) != ".") && (points == 1)){
+            if (formated.split(".")[1].length >= 8){
+                element.val(formated)   
+            }else{
+                formated += string.charAt(i)
+            }
+        } else {
+         formated += string.charAt(i)   
+        }
+      } else{
+        element.val(formated)
+      }
+      
+    }
+    qtdclass = $(`.${element.data("amount_quantity")}`)
+    quantity = parseFloat(qtdclass.val().replace(",","."));
+    
+    priceClass = $(`.${element.data("price_quantity")}`)
+    price = parseFloat(priceClass.val().replace(",","."));
+    
+    
+    if (element.data("type") == "buy"){
+      discount = (quantity * <%= 1 - BigDecimal(ENV["EXCHANGE_TAX"],4) %>).toFixed(8);
+      receive = (quantity - discount).toFixed(8);
+      total = (price * quantity).toFixed(8);
+      
+      $(".comission_buy").html(discount + " " + currency1);
+      $(".receive_buy").html(receive + " " + currency1);
+      $(".total_buy").html(total + " " + currency2);
+    }else{
+      total = (price * quantity).toFixed(8);
+      discount = (total * <%= 1 - BigDecimal(ENV["EXCHANGE_TAX"],4) %>).toFixed(8);
+      receive = (total - discount).toFixed(8);
+      
+      $(".comission_sell").html(discount + " " + currency2);
+      $(".receive_sell").html(receive + " " + currency2);
+      $(".total_sell").html(total + " " + currency2);
+    }
+  
+
+}
+
+$( ".price_input_sell" ).keyup(function() {
+    element = $(".price_input_sell")
+    calc(element)
+});
+
+$( ".price_input_buy" ).keyup(function() {
+    element = $(".price_input_buy")
+    calc(element)
+});
+</script>

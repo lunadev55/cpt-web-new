@@ -11,6 +11,9 @@ Rails.application.config.assets.precompile += %w( jquery.fileupload.js )
 Rails.application.config.assets.precompile += %w( jquery.js )
 Rails.application.config.assets.precompile += %w( myOrders.js )
 Rails.application.config.assets.precompile += %w( api.js )
+Rails.application.config.assets.precompile += %w( views/trader/form_open_orders.js )
+Rails.application.config.assets.precompile += %w( views/trader/price_chart.js )
+Rails.application.config.assets.precompile += %w( views/trader/orders_forms.js )
 
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path

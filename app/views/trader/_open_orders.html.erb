@@ -1,0 +1,65 @@
+<% if !session[:currency1].nil? %>
+<div class="open_orders_div">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 buy-table non-pade-right">
+            <div class="row">
+                <div align="center" class="col-md-12 col-xs-12">
+                    Ordens de compra
+                </div>
+            </div>
+            <div class="row small-font">
+                <div class="col-md-4 col-xs-4">
+                    Preço(<%= session[:currency2] %>)
+                </div>
+                <div class="col-md-4 col-xs-4">
+                    Volume(<%= session[:currency1] %>)
+                </div>
+                <div class="col-md-4 col-xs-4">
+                    Total(<%= session[:currency2] %>)
+                </div>
+            </div>
+            <hr class="white no-margin">
+            <div id="buy_open_orders_trader_<%= session[:currency1] %>_<%= session[:currency2] %>">
+                <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "buy", stt: "open"}).limit(10).order(price: :desc).reverse.each do |m| %>
+                <div class="row">
+                    <div class="col-md-4 col-xs-4 small-font">
+                        <%= m.price %> 
+                    </div>
+                    <div class="col-md-4 col-xs-4 small-font">
+                        <%= m.amount %> 
+                    </div>
+                    <div class="col-md-4 col-xs-4 small-font">
+                        <%= (BigDecimal(m.price,8) * BigDecimal(m.amount,8)).round(8) %>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12 sell-table non-pade-right">
+            <div class="row">
+                <div align="center" class="col-md-12 col-xs-12">
+                    Ordens de venda
+                </div>
+            </div>
+            <hr class="white  no-margin">
+            <div id="sell_open_orders_trader_<%= session[:currency1] %>_<%= session[:currency2] %>">
+                <% Exchangeorder.where("par = :str_par AND tipo = :tupe AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", tupe: "sell", stt: "open"}).limit(10).order(price: :asc).each do |m| %>
+                  <div class="row" >
+                    <div class="col-md-4 col-xs-4 small-font ">
+                        <%= m.price %>
+                    </div>
+                    <div class="col-md-4 col-xs-4 small-font ">
+                        <%= m.amount %> 
+                    </div>
+                    <div class="col-md-4 col-xs-4 small-font ">
+                        <%= (BigDecimal(m.price,8) * BigDecimal(m.amount,8)).round(8) %>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+<% end %>

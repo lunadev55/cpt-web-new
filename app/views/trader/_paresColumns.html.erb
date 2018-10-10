@@ -1,0 +1,19 @@
+<br>
+<h4 class="white">Mercados: </h4>
+<% MOEDAS_ATIVAS.each do |m| %>
+        <% EXCHANGE_PARES.each do |pair| %>
+            <% compare = pair.tr(" ","") %>
+            <% if compare.split("/")[0] == m %>
+            <% price_cent = price_percentage(compare)%>
+                <div class="row market_info">
+                    <div class="col-md-7 col-xs-5 white"><%= pair %></div>
+                    <div class="col-md-4 col-xs-6 white align-right"><span title="<%= pair %> Variação (24h)" class="<%= color_type_percentage(price_cent.tr(",",".")) %> ticker_percentage_<%= pair.tr("/","_").tr(" ","") %>"><%= price_cent.to_s %>%</span></div>
+                </div>
+                <div class="row" data-pair="<%= compare.tr("/","_") %>">
+                    <div class="col-md-7 col-xs-5 white"><span title="<%= pair %> Cotação atual"><b class="ticker_index_price_<%= compare.tr("/","_") %> ticker-price"><%= last_price(compare,nil,nil).to_s %></b> <b><%= compare.split("/")[1] %></b></span></div>
+                    <div class="col-md-4 col-xs-6"></div>
+                </div>
+            <% end %>
+        <% end %>
+<% end %>
+    

@@ -54,6 +54,10 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
           }
           
         }
+        // página de trader
+        if ($(".current_place").prop("place") == "trader"){
+          updatePricesTrader(data);
+        }
         // atualizar preço atual no slide de últimas operações
         if ((data.status == "executada") && ($(".current_place").prop("place") == "overview")){
           $(`.${data.pair}_${data.tipo}`).html(data.last_price); // atualizar preço de orden executada
@@ -75,6 +79,54 @@ App.orders = App.cable.subscriptions.create("OrdersChannel", {
     // Called when there's incoming data on the websocket for this channel
   }
 });
+
+function updateTraderOpenOrders(data){
+  arrayLength = data.executed_list.length;
+  table = $(`.${data.pair}_executed`)
+  console.log(table)
+  content = ''
+  for (var i = 0; i < arrayLength; i++){
+    content += '<div class="row"> <div class="col-md-4 col-xs-4 small-font no-padding">'
+    content += data.executed_list[i].price
+    content += '</div> <div class="col-md-4 col-xs-4 small-font no-padding">'
+    content += data.executed_list[i].amount
+    content += '</div> <div class="col-md-4 col-xs-4 small-font no-padding">'
+    content += (data.executed_list[i].price * data.executed_list[i].amount).toFixed(8)
+    content += '</div></div>'
+  }
+  table.html(content);
+  
+}
+
+
+function updatePricesTrader(data){
+  var table = $(`.${data.tipo}_table_${data.pair}`);
+  if ((table != undefined) && (data.status == "executada")){
+    updateTablePrice(data)
+  }
+  
+  table_prices = $(`.${data.pair}_executed`)
+  if ((table_prices != undefined) && data.executed_list != undefined){
+    updateTraderOpenOrders(data);
+  }
+  
+  
+  $(`.ticker_index_price_${data.pair}`).html(data.last_price);
+  if (data.percentage_24h != undefined ){
+    if (data.percentage_24h == 0){
+      color = "yellow" 
+    } else if(data.percentage_24h > 0){
+      color = "green"
+    } else if(data.percentage_24h < 0){
+      color = "red"
+    }
+    $(`.ticker_percentage_${data.pair}`).removeClass("yellow");
+    $(`.ticker_percentage_${data.pair}`).removeClass("green");
+    $(`.ticker_percentage_${data.pair}`).removeClass("red");
+    $(`.ticker_percentage_${data.pair}`).addClass(color);
+    $(`.ticker_percentage_${data.pair}`).html(`${data.percentage_24h}%`);
+  }
+}
 
 function update_instant_price(pair){
   
@@ -108,7 +160,7 @@ function updateExecTable(table,data){
   var currency1 = data.pair.split("_")[0];
   var currency2 = data.pair.split("_")[1];
   content += `<tr>`;
-  content += `<th colspan="2" class="text-center">Ordens executadas (${data.pair.replace("_","/")})</th></tr><tr class="active">`;
+  content += `<th colspan="2" class="text-center">Ordens executadas (${data.pair.replace("_","/")})</th></tr><tr class="">`;
   content += `<th class="small_lines">Preço</th><th class="small_lines">Volume</th></tr>`;
   for (var i = 0; i < arrayLength; i++) {
     content += '<tr>';
@@ -119,6 +171,29 @@ function updateExecTable(table,data){
   table.html(content);
   
 }
+function updateTablePrice(data){
+  content = ''
+  length = data.orders.length
+  for (var i = 0; i < length; i++){
+    content += '<div class="col-md-4 col-xs-4 small-font">'
+    content += data.orders[i].price
+    content += '</div><div class="col-md-4 col-xs-4 small-font">'
+    content += data.orders[i].amount
+    content += '</div><div class="col-md-4 col-xs-4 small-font">'
+    content += (data.orders[i].price * data.orders[i].amount).toFixed(8)
+    content += '</div>'
+  }
+  if (data.tipo == "buy"){
+    table = $(`#buy_open_orders_trader_${data.pair}`)
+    console.log(table)
+  } else {
+    table = $(`#sell_open_orders_trader_${data.pair}`)
+    console.log(table)
+  }
+  
+  table.html(content);
+}
+
 function updatePriceTables(data){
     if (data.tipo == "buy"){
       var string = "venda"
@@ -141,7 +216,7 @@ function updatePriceTables(data){
 }
 function mountTableContent(string,data,arrayLength,currency1,currency2,type,orders){
   var content = ''
-  content += `<tr class="active">`
+  content += `<tr class="">`
   if (type == "buy"){
     content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
     for (var i = 0; i < arrayLength; i++) {
@@ -208,7 +283,7 @@ function updateTable(table,data){
       currency2 = data.pair.split("_")[0]
     }
     var content = ''
-    content += `<tr class="active">`
+    content += `<tr class="">`
     if (data.tipo == "buy"){
       content += '<th class="small_lines">Volume</th><th class="small_lines">Preço</th></tr>'
       for (var i = 0; i < arrayLength; i++) {

@@ -34,6 +34,13 @@
 
 #    setInterval(executeQuery, 9000)
 
+@get_specific = (route) ->
+    $.ajax route,
+            type: 'GET'
+            error: (jqXHR, textStatus, errorThrown) ->
+               console.log(textStatus)
+            success: (data, textStatus, jqXHR) ->
+                
 
 @post_ajax = (route) ->
     $.ajax route,
@@ -47,7 +54,7 @@
         $.ajax 'layouts/'+route,
                 type: 'GET'
                 error: (jqXHR, textStatus, errorThrown) ->
-                    $('body').append "AJAX Error: #{textStatus}"
+                    console.log(textStatus)
                 success: (data, textStatus, jqXHR) ->
                     $.ajax callbackroute, 
                         type: 'GET' 

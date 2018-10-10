@@ -1,3 +1,6 @@
 pt:
     sell: "Venda"
     buy: "Compra"
+    views:
+        paginate:
+            truncate: "..."

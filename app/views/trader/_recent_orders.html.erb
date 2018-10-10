@@ -1,0 +1,33 @@
+<div class="recent_orders_table ">
+    <div class="row">
+        <div align="center" class="col-md-12 col-xs-12">
+            Ordens executadas <%= "(#{session[:currency1]}/#{session[:currency2]})" %>
+        </div>
+    </div>
+    <div class="row small-font">
+        <div class="col-md-4 col-xs-4">
+            Preço(<%= session[:currency2] %>)
+        </div>
+        <div class="col-md-4 col-xs-4">
+            Volume(<%= session[:currency1] %>)
+        </div>
+        <div class="col-md-4 col-xs-4">
+            Total(<%= session[:currency2] %>)
+        </div>
+    </div>
+    <div class="<%= "#{session[:currency1]}_#{session[:currency2]}" %>_executed">
+        <% Exchangeorder.where("par = :str_par AND status = :stt", {str_par: "#{session[:currency1]}/#{session[:currency2]}", stt: "executada"}).order("updated_at DESC").limit(20).each do |m| %>
+        <div class="row">
+            <div class="col-md-4 col-xs-4 small-font no-padding">
+                <%= m.price %> 
+            </div>
+            <div class="col-md-4 col-xs-4 small-font no-padding">
+                <%= m.amount %> 
+            </div>
+            <div class="col-md-4 col-xs-4 small-font no-padding">
+                <%= (BigDecimal(m.price,8) * BigDecimal(m.amount,8)).round(8) %>
+            </div>
+        </div>
+        <% end %>
+    </div>
+</div>

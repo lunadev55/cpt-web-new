@@ -2,7 +2,7 @@
 					<% @saldos = search_saldo %>
 					
 					
-						<div id="row saldos_show_hide">
+						<div id="saldos_show_hide">
 							
 							<!--
 						<div class="row">
@@ -11,35 +11,59 @@
 						</div> -->
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'btc.png' %>" width="20px" height="20px" alt="Bitcoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["BTC"].to_s.split(".")[0] %>.<%= @saldos["BTC"].to_s.split(".")[1].first(8) %> BTC</div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["BTC"].to_s.split(".")[0] %>.<%= @saldos["BTC"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 col-xs-4 small-font">BTC</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'litecoin.png' %>" width="20px" height="20px" alt="Litecoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["LTC"].to_s.split(".")[0] %>.<%= @saldos["LTC"].to_s.split(".")[1].first(8) %> LTC</div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 small-font col-xs-8"><%= @saldos["LTC"].to_s.split(".")[0] %>.<%= @saldos["LTC"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 small-font col-xs-4">LTC</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'doge.png' %>" width="20px" height="20px" alt="Dogecoin"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["DOGE"].to_s.split(".")[0] %>.<%= @saldos["DOGE"].to_s.split(".")[1].first(5) %> DOGE</div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["DOGE"].to_s.split(".")[0] %>.<%= @saldos["DOGE"].to_s.split(".")[1].first(5) %></div>
+								<div class="col-md-4 col-xs-4 small-font">DOGE</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'eth.png' %>" width="20px" height="20px" alt="Ethereum"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["ETH"].to_s.split(".")[0] %>.<%= @saldos["ETH"].to_s.split(".")[1].first(8) %> ETH </div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["ETH"].to_s.split(".")[0] %>.<%= @saldos["ETH"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 col-xs-4 small-font">ETH </div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'bch.png' %>" width="20px" height="20px" alt="BitcoinCash"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["BCH"].to_s.split(".")[0] %>.<%= @saldos["BCH"].to_s.split(".")[1].first(8) %> BCH </div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["BCH"].to_s.split(".")[0] %>.<%= @saldos["BCH"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 col-xs-4 small-font">BCH</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'dash.png' %>" width="20px" height="20px" alt="Dash"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["DASH"].to_s.split(".")[0] %>.<%= @saldos["DASH"].to_s.split(".")[1].first(8) %> DASH </div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["DASH"].to_s.split(".")[0] %>.<%= @saldos["DASH"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 col-xs-4 small-font">DASH </div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'dgb.png' %>" width="20px" height="20px" alt="Digibyte"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["DGB"].to_s.split(".")[0] %>.<%= @saldos["DGB"].to_s.split(".")[1].first(8) %> DGB </div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["DGB"].to_s.split(".")[0] %>.<%= @saldos["DGB"].to_s.split(".")[1].first(8) %></div>
+								<div class="col-md-4 col-xs-4 small-font">DGB </div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'ZEC.png' %>" width="20px" height="20px" alt="Zcash"> </div>
-							<div class="col-md-10 col-xs-10"><%= @saldos["ZEC"].to_s.split(".")[0] %>.<%= @saldos["ZEC"].to_s.split(".")[1].first(8) %> ZEC </div>
+							<div class="col-md-10 col-xs-10 row">
+								<div class="col-md-8 col-xs-8 small-font"><%= @saldos["ZEC"].to_s.split(".")[0] %>.<%= @saldos["ZEC"].to_s.split(".")[1].first(8) %> </div>
+								<div class="col-md-4 col-xs-4 small-font">ZEC </div>
+							</div>
 						</div>
 				<!--		<div class="row">
 							<div class="col-md-1 col-xs-1"><img src="<%= asset_path 'xmr.png' %>" width="20px" height="20px" alt="Monero"> </div>

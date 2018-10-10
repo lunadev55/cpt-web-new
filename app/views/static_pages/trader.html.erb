@@ -1,0 +1,30 @@
+<div class="dashcontainer-trader">
+    <div class="col-md-2 col-xs-2 no-padding">
+        <div class="saldos_trader no-margin-left">
+            <%= render "trader/open_orders" %>
+        </div>
+        <div class="saldos_trader no-margin-left">
+            <%= render "layouts/saldos_menu" %>
+        </div>
+    </div>
+    <div class="col-md-7 col-xs-7">
+        <div class="row graph_box saldos_trader">
+            <%= render "trader/price_chart" %>
+        </div>
+        <div class="row graph_box saldos_trader">
+            <%= render "trader/form_open_orders" %>
+        </div>
+    </div>
+    <div class="col-md-3 col-xs-3 ">
+        <div class="row markets_trader">
+            <%= render "trader/paresColumns" %>
+        </div>
+            
+        <div class="row recent_orders">
+            <%= render "/trader/recent_orders" %>
+        </div>
+    </div>
+</div>
+<script>
+    $(".current_place").prop("place","trader")
+</script>
